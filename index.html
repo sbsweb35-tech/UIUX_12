@@ -499,16 +499,22 @@
             <!-- 탭 2: Tool 수업                            -->
             <!-- ========================================== -->
             <div id="tab-tool" class="tab-content">
-                <!-- 1차 뎁스: 포토샵 / 일러스트 / 피그마 서브 탭 -->
-                <div class="flex items-center gap-6 mb-4 border-b border-slate-200">
-                    <button id="sub-photoshop" onclick="switchTool('photoshop')" class="sub-tab-btn pb-3 text-[16px] font-bold text-figjam border-b-[3px] border-figjam transition-colors">포토샵</button>
-                    <button id="sub-illustrator" onclick="switchTool('illustrator')" class="sub-tab-btn pb-3 text-[16px] font-medium text-slate-400 hover:text-slate-700 transition-colors">일러스트</button>
-                    <button id="sub-figma" onclick="switchTool('figma')" class="sub-tab-btn pb-3 text-[16px] font-medium text-slate-400 hover:text-slate-700 transition-colors">피그마</button>
+                <!-- 1차 뎁스: 포토샵 / 일러스트 / 피그마 서브 탭 & 카드 수정 모드 버튼 -->
+                <div class="flex items-center justify-between mb-4 border-b border-slate-200">
+                    <div class="flex items-center gap-6">
+                        <button id="sub-photoshop" onclick="switchTool('photoshop')" class="sub-tab-btn pb-3 text-[16px] font-bold text-figjam border-b-[3px] border-figjam transition-colors">포토샵</button>
+                        <button id="sub-illustrator" onclick="switchTool('illustrator')" class="sub-tab-btn pb-3 text-[16px] font-medium text-slate-400 hover:text-slate-700 transition-colors">일러스트</button>
+                        <button id="sub-figma" onclick="switchTool('figma')" class="sub-tab-btn pb-3 text-[16px] font-medium text-slate-400 hover:text-slate-700 transition-colors">피그마</button>
+                    </div>
+                    <!-- 카드 수정 모드 토글 버튼 -->
+                    <button id="btn-tool-edit" onclick="toggleToolEditMode()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[13px] font-bold transition-colors mb-2">
+                        <i data-lucide="settings" class="w-4 h-4 inline-block mr-1"></i> 수정 모드 켜기
+                    </button>
                 </div>
 
                 <!-- [1] 포토샵 콘텐츠 -->
                 <div id="tool-photoshop" class="tool-content active">
-                    <!-- 2차 뎁스: 기초 / 심화 탭 (칩 스타일) -->
+                    <!-- 2차 뎁스: 기초 / 심화 탭 -->
                     <div class="flex items-center gap-2 mb-8">
                         <button id="btn-photoshop-basic" onclick="switchLevel('photoshop', 'basic')" class="level-btn px-4 py-1.5 text-[14px] font-bold text-figjam bg-figjamLight border border-figjamBorder rounded-full transition-all">기초</button>
                         <button id="btn-photoshop-advanced" onclick="switchLevel('photoshop', 'advanced')" class="level-btn px-4 py-1.5 text-[14px] font-medium text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-700 rounded-full transition-all shadow-sm">심화</button>
@@ -530,102 +536,8 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4">
-                            <!-- Step 1 -->
-                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
-                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">[기본 사용방법]</div>
-                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[px개념]</h3>
-                                <div class="flex-1 space-y-3">
-                                    <div class="flex items-start gap-2">
-                                        <i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i>
-                                        <p class="text-[13px] text-slate-600 font-medium leading-tight">(유)포토샵 인터페이스와 px, 레이어 개념</p>
-                                    </div>
-                                </div>
-                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">(D1) 포토샵 알아보기</button>
-                            </div>
-                            <!-- Step 2 -->
-                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
-                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">[레이어와 영역]</div>
-                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[레이어와 영역]</h3>
-                                <div class="flex-1 space-y-3">
-                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)레이어 더 알아보기</p></div>
-                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)포토샵에서 영역이란?</p></div>
-                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl border border-slate-100"><p class="text-[12px] text-slate-500 leading-relaxed font-medium">그라디언트, Magic Wand Tool, Quick Selection Tool, 레이어 마스크</p></div>
-                                </div>
-                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">(D2) 레이어 기초</button>
-                            </div>
-                            <!-- Step 3 -->
-                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
-                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">[영역과 펜툴]</div>
-                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[영역과 펜툴]</h3>
-                                <div class="flex-1 space-y-3">
-                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)포토샵에서 영역을 쉽게 따는 방법</p></div>
-                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)포토샵에서 영역을 깔끔하게 따는 방법</p></div>
-                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100"><p class="text-[11px] text-slate-500 leading-tight">(1) Object Selection Tool, Layer Mask</p><p class="text-[11px] text-slate-500 leading-tight">(2) Pen Tool, Layer Mask</p></div>
-                                </div>
-                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">(D3) 영역과 펜툴(과제)</button>
-                                <div class="absolute -bottom-3 -right-3 w-10 h-10 bg-[#10B981] text-white rounded-full flex items-center justify-center text-[13px] font-bold border-[3px] border-white shadow-md z-10">김</div>
-                            </div>
-                            <!-- Step 4 -->
-                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
-                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">[폰트와 도형툴]</div>
-                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[폰트와 도형툴]</h3>
-                                <div class="flex-1 space-y-3">
-                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)포토샵에서 펜툴로 특정 영역 제외, 아트보드 작업</p></div>
-                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)웹디자인 폰트 주의사항과 라이선스, 도형 툴 기초</p></div>
-                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100"><p class="text-[11px] text-slate-500 leading-tight">(1) Pen Tool Path 패널에서 Alt+click으로 제외</p><p class="text-[11px] text-slate-500 leading-tight">(2) Art Board 사이즈 설정하고 수정하기, 도형 툴 기초</p><p class="text-[11px] text-slate-500 leading-tight">(3) 눈누 사용방법, 웹디자인 주의사항(폰트 두께 갯수, 라이선스, 웹폰트)</p></div>
-                                </div>
-                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">(D4) 폰트와 도형툴</button>
-                                <div class="absolute -bottom-3 -right-3 w-10 h-10 bg-[#10B981] text-white rounded-full flex items-center justify-center text-[13px] font-bold border-[3px] border-white shadow-md z-10">김</div>
-                            </div>
-                            <!-- Step 5 -->
-                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
-                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">[가이드와 도형툴]</div>
-                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[가이드와 도형툴]</h3>
-                                <div class="flex-1 space-y-3">
-                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)도형툴 심화, 펜툴로 도형 레이어 생성</p></div>
-                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)Layout Grid 기초와 카드뉴스 과제 안내</p></div>
-                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100"><p class="text-[11px] text-slate-500 leading-tight">(1) 도형툴 병합, Pen Tool로 도형툴 작업</p><p class="text-[11px] text-slate-500 leading-tight">(2) 디자인 기본 Layout Grid 셋팅</p></div>
-                                </div>
-                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">(D5) 도형툴 심화, 포토샵 레이아웃 가이드(과제)</button>
-                                <div class="absolute -bottom-3 -right-3 w-10 h-10 bg-[#10B981] text-white rounded-full flex items-center justify-center text-[13px] font-bold border-[3px] border-white shadow-md z-10">김</div>
-                            </div>
-                            <!-- Step 6 -->
-                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
-                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">[레이어 심화, 아트보드]</div>
-                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[레이어 심화, 아트보드]</h3>
-                                <div class="flex-1 space-y-3">
-                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)레이어 영역 심화, 아트보드 디자인 작업 셋팅</p></div>
-                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)레이어 마스크 심화, 레이어 합성 기초</p></div>
-                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100"><p class="text-[11px] text-slate-500 leading-tight">(1) 레이어 영역 추가 작업, 아트보드로 디자인 작업하는 방법</p><p class="text-[11px] text-slate-500 leading-tight">(2) Layer Mask 심화, 레이어 패널 합성 기초</p></div>
-                                </div>
-                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">(D6) 레이어 영역 심화, 레이어 마스크 심화, 합성(과제)</button>
-                                <div class="absolute -bottom-3 -right-3 w-10 h-10 bg-[#10B981] text-white rounded-full flex items-center justify-center text-[13px] font-bold border-[3px] border-white shadow-md z-10">김</div>
-                            </div>
-                            <!-- Step 7 -->
-                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
-                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">[필터, 보정, 레이어 스타일]</div>
-                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[필터, 보정, 레이어 스타일]</h3>
-                                <div class="flex-1 space-y-3">
-                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)Convert for Smart Filters, Lens Flare</p></div>
-                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)Convert for Smart Filters, Layer Style, Adjustments</p></div>
-                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100"><p class="text-[11px] text-slate-500 leading-tight">(1) 수정할 수 있는 필터와 조정 기능</p><p class="text-[11px] text-slate-500 leading-tight">(2) 레이어 스타일 심화</p></div>
-                                </div>
-                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">(D7) 필터, 보정, 레이어 스타일</button>
-                            </div>
-                            <!-- Step 8 -->
-                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
-                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">[채널, 반창고, 도장]</div>
-                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[채널, 반창고, 도장]</h3>
-                                <div class="flex-1 space-y-3">
-                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)Channel 영역 작업</p></div>
-                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)반창고 툴, 도장 툴, Contents Aware</p></div>
-                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100"><p class="text-[11px] text-slate-500 leading-tight">(1) 채널로 구름 질감 영역 작업, 곡선 많은 이미지 영역 작업</p><p class="text-[11px] text-slate-500 leading-tight">(2) 불 질감 추출, 인물 보정에 사용하는 반창고 툴, 복제하는 도장툴</p></div>
-                                </div>
-                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">(D8) 채널, 반창고, 도장(과제)</button>
-                                <div class="absolute -bottom-3 -right-3 w-10 h-10 bg-[#10B981] text-white rounded-full flex items-center justify-center text-[13px] font-bold border-[3px] border-white shadow-md z-10">김</div>
-                            </div>
-                        </div>
+                        <!-- 렌더링 영역 (그리드) -->
+                        <div id="grid-photoshop-basic" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4"></div>
                     </div>
 
                     <div id="photoshop-advanced" class="level-content hidden">
@@ -633,9 +545,9 @@
                             <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">포토샵(심화 Tool) 🎨</h1>
                             <p class="text-slate-500 text-[15px]">포토샵 고급 활용 기법과 실전 예제를 다룹니다.</p>
                         </div>
-                        <div class="w-full min-h-[250px] flex items-center justify-center border-2 border-dashed border-slate-200 rounded-[24px]">
-                            <p class="text-slate-400 font-medium">여기에 포토샵 심화 콘텐츠가 들어갑니다.</p>
-                        </div>
+                        
+                        <!-- 렌더링 영역 (그리드) -->
+                        <div id="grid-photoshop-advanced" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4"></div>
                     </div>
                 </div> <!-- End of tool-photoshop -->
 
@@ -662,31 +574,8 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4">
-                            <!-- Step 1 (레이어와 선택) -->
-                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
-                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">
-                                    [레이어와 선택]
-                                </div>
-                                <div class="flex-1 space-y-3 mt-6">
-                                    <div class="flex items-start gap-2">
-                                        <i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i>
-                                        <p class="text-[13px] text-slate-600 font-medium leading-tight">(유)(일러스트)일러스트 기초(Layer, Selection)</p>
-                                    </div>
-                                    <div class="flex items-start gap-2">
-                                        <i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i>
-                                        <p class="text-[13px] text-slate-600 font-medium leading-tight">(유)(일러스트)Expand, PathFinder, Selection</p>
-                                    </div>
-                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100">
-                                        <p class="text-[11px] text-slate-500 leading-tight">(1)인터페이스 설정, Layer, Selection(전체, 부분, 그룹)</p>
-                                        <p class="text-[11px] text-slate-500 leading-tight">(2)효과와 선 확장, 도형 합치기, 패스 자르기</p>
-                                    </div>
-                                </div>
-                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">
-                                    (D12) 일러스트 알아보기
-                                </button>
-                            </div>
-                        </div>
+                        <!-- 렌더링 영역 (그리드) -->
+                        <div id="grid-illustrator-basic" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4"></div>
                     </div>
 
                     <div id="illustrator-advanced" class="level-content hidden">
@@ -694,51 +583,9 @@
                             <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">일러스트(심화 Tool) ✒️</h1>
                             <p class="text-slate-500 text-[15px]">디자인 실무에 필요한 일러스트 핵심 기능과 툴 사용법을 단계별로 학습합니다.</p>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4">
-                            <!-- Step 1 (라인 일러스트 1일차) -->
-                            <div id="card-line-illust" class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full scroll-mt-8">
-                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">
-                                    [라인 일러스트]
-                                </div>
-                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[라인 일러스트]</h3>
-                                <div class="flex-1 space-y-3">
-                                    <a href="https://youtu.be/RKWeylzOyMk" target="_blank" class="flex items-start gap-2 group">
-                                        <i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
-                                        <p class="text-[13px] text-slate-600 font-medium leading-tight group-hover:text-figjam transition-colors">(유)UIUXD_일러스트 심화(1일차) | 260423 (1)</p>
-                                    </a>
-                                </div>
-                                <div class="mt-5 w-full space-y-2">
-                                    <a href="https://drive.google.com/drive/folders/1FCGd15Rt8qvjMlPYgRSYpAu1DmqEQ-7L?usp=drive_link" target="_blank" class="w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[12px] flex justify-center items-center gap-1.5">
-                                        <i data-lucide="folder-down" class="w-4 h-4"></i> (과제용 예제 폴더)
-                                    </a>
-                                    <a href="https://drive.google.com/drive/folders/1S-Up1N7e-TQHGh5-OkXZTV5o2_QeCvcM?usp=drive_link" target="_blank" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-2.5 rounded-xl transition-colors text-[12px] flex justify-center items-center gap-1.5">
-                                        <i data-lucide="folder" class="w-4 h-4"></i> (수업 진행용 예제)
-                                    </a>
-                                </div>
-                            </div>
-                            
-                            <!-- Step 2 (라인 일러스트 2일차) -->
-                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
-                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">
-                                    [라인 일러스트]
-                                </div>
-                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[라인 일러스트]</h3>
-                                <div class="flex-1 space-y-3">
-                                    <a href="https://youtu.be/ZpJOrl5eqnk" target="_blank" class="flex items-start gap-2 group">
-                                        <i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
-                                        <p class="text-[13px] text-slate-600 font-medium leading-tight group-hover:text-figjam transition-colors">(유)UIUXD_일러스트 심화(2일차) | 260423 (1)</p>
-                                    </a>
-                                </div>
-                                <div class="mt-5 w-full space-y-2">
-                                    <a href="https://drive.google.com/drive/folders/1FCGd15Rt8qvjMlPYgRSYpAu1DmqEQ-7L?usp=drive_link" target="_blank" class="w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[12px] flex justify-center items-center gap-1.5">
-                                        <i data-lucide="folder-down" class="w-4 h-4"></i> (과제용 예제 폴더)
-                                    </a>
-                                    <a href="https://drive.google.com/drive/folders/1S-Up1N7e-TQHGh5-OkXZTV5o2_QeCvcM?usp=drive_link" target="_blank" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-2.5 rounded-xl transition-colors text-[12px] flex justify-center items-center gap-1.5">
-                                        <i data-lucide="folder" class="w-4 h-4"></i> (수업 진행용 예제)
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                        
+                        <!-- 렌더링 영역 (그리드) -->
+                        <div id="grid-illustrator-advanced" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4"></div>
                     </div>
                 </div> <!-- End of tool-illustrator -->
 
@@ -754,9 +601,9 @@
                             <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">피그마(기초 Tool) ✨</h1>
                             <p class="text-slate-500 text-[15px]">UI/UX 디자인 협업에 필수적인 피그마 기초 기능을 학습합니다.</p>
                         </div>
-                        <div class="w-full min-h-[250px] flex items-center justify-center border-2 border-dashed border-slate-200 rounded-[24px]">
-                            <p class="text-slate-400 font-medium">여기에 피그마 기초 콘텐츠가 들어갑니다.</p>
-                        </div>
+                        
+                        <!-- 렌더링 영역 (그리드) -->
+                        <div id="grid-figma-basic" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4"></div>
                     </div>
 
                     <div id="figma-advanced" class="level-content hidden">
@@ -764,9 +611,9 @@
                             <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">피그마(심화 Tool) ✨</h1>
                             <p class="text-slate-500 text-[15px]">피그마의 컴포넌트, 오토레이아웃 등 고급 기능을 학습합니다.</p>
                         </div>
-                        <div class="w-full min-h-[250px] flex items-center justify-center border-2 border-dashed border-slate-200 rounded-[24px]">
-                            <p class="text-slate-400 font-medium">여기에 피그마 심화 콘텐츠가 들어갑니다.</p>
-                        </div>
+                        
+                        <!-- 렌더링 영역 (그리드) -->
+                        <div id="grid-figma-advanced" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4"></div>
                     </div>
                 </div> <!-- End of tool-figma -->
 
@@ -1045,6 +892,116 @@
         </div>
     </div>
 
+    <!-- Tool 수업 카드 편집 모달 (전역 레이어) -->
+    <div id="tool-card-modal" class="fixed inset-0 bg-slate-900/20 hidden items-center justify-center z-[110] p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <div class="bg-white rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] w-full max-w-2xl overflow-hidden transform transition-all border border-white">
+            <div class="px-8 py-6 flex justify-between items-center bg-figjamLight/50 border-b border-figjamBorder/50">
+                <h2 class="text-xl font-extrabold text-slate-800">카드 정보 편집</h2>
+                <button onclick="closeToolCardModal()" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100 hover:bg-slate-50">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-8 max-h-[65vh] overflow-y-auto space-y-5">
+                <input type="hidden" id="tcm-toolId">
+                <input type="hidden" id="tcm-levelId">
+                <input type="hidden" id="tcm-cardId">
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">배지 텍스트 (좌상단)</label>
+                        <input type="text" id="tcm-badge" placeholder="예: [기본 사용방법]" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-bold text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">배지 텍스트 (우하단)</label>
+                        <input type="text" id="tcm-badgeRight" placeholder="예: 김" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-bold text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1.5">제목</label>
+                    <input type="text" id="tcm-title" placeholder="카드의 제목을 입력하세요." class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-bold text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">영상/링크 1 텍스트</label>
+                        <input type="text" id="tcm-yText1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-medium text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">영상/링크 1 URL (빈칸 시 텍스트만 표시)</label>
+                        <input type="text" id="tcm-yUrl1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-medium text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">영상/링크 2 텍스트</label>
+                        <input type="text" id="tcm-yText2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-medium text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">영상/링크 2 URL (빈칸 시 텍스트만 표시)</label>
+                        <input type="text" id="tcm-yUrl2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-medium text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1.5">설명 텍스트 (줄바꿈 시 새 문단 적용)</label>
+                    <textarea id="tcm-desc" rows="3" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-medium text-slate-700 bg-slate-50 hover:bg-white focus:bg-white"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">하단 버튼 1 텍스트</label>
+                        <input type="text" id="tcm-bText1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-bold text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">하단 버튼 1 URL</label>
+                        <input type="text" id="tcm-bUrl1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-medium text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">하단 버튼 2 텍스트</label>
+                        <input type="text" id="tcm-bText2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-bold text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">하단 버튼 2 URL</label>
+                        <input type="text" id="tcm-bUrl2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-medium text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                </div>
+            </div>
+            <div class="px-8 py-5 bg-slate-50/50 flex items-center justify-end gap-3 border-t border-slate-100">
+                <button onclick="deleteToolCard()" id="btn-tcm-delete" class="px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto hidden transition-colors">삭제</button>
+                <button onclick="closeToolCardModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shadow-sm transition-colors">취소</button>
+                <button onclick="saveToolCard()" class="px-6 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] shadow-md transition-all active:scale-95 flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4"></i> 저장
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 비밀번호 입력 모달 (전역 레이어) -->
+    <div id="pwd-modal" class="fixed inset-0 bg-slate-900/20 hidden items-center justify-center z-[120] p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <div class="bg-white rounded-[24px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] w-full max-w-sm overflow-hidden transform transition-all border border-white">
+            <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center">
+                <h2 id="pwd-modal-title" class="text-lg font-bold text-slate-800">수정 모드</h2>
+                <button onclick="closePwdModal()" class="text-slate-400 hover:text-red-500 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <p id="pwd-modal-msg" class="text-sm text-slate-500 mb-4 text-center">비밀번호를 입력하세요.</p>
+                <input type="password" id="pwd-input" class="w-full border-2 border-slate-100 rounded-xl p-3 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-center tracking-widest text-xl font-bold text-slate-700 bg-slate-50 hover:bg-white focus:bg-white" placeholder="****">
+                <p id="pwd-error" class="text-xs text-red-500 mt-3 text-center hidden">비밀번호가 일치하지 않습니다.</p>
+            </div>
+            <div class="px-6 py-4 bg-slate-50/50 flex justify-center gap-3 border-t border-slate-100">
+                <button onclick="closePwdModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors flex-1 shadow-sm">취소</button>
+                <button onclick="submitPwd()" class="px-5 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] transition-all flex-1 shadow-sm">확인</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 토스트 알림 (전역 레이어) -->
     <div id="toast" class="fixed bottom-8 right-8 bg-slate-800 text-white px-6 py-4 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] transform transition-all duration-300 translate-y-full opacity-0 flex items-center gap-3 z-[100] font-medium">
         <div class="w-6 h-6 rounded-full bg-emerald-400/20 flex items-center justify-center text-emerald-400">
@@ -1070,52 +1027,39 @@
 
             const progressPercent = Math.floor((elapsedDuration / totalDuration) * 100);
 
-            // 프로그레스 바 및 % 업데이트
             const percentEl = document.getElementById('course-progress-percent');
             const barEl = document.getElementById('course-progress-bar');
             if(percentEl) percentEl.textContent = `${progressPercent}%`;
             if(barEl) barEl.style.width = `${progressPercent}%`;
 
-            // D-Day 계산
             const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
             const endDateOnly = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
-            
             const diffTime = endDateOnly - todayDateOnly;
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
             let dDayText = '';
-            if (diffDays > 0) {
-                dDayText = `D-${diffDays}`;
-            } else if (diffDays === 0) {
-                dDayText = `D-Day`;
-            } else {
-                dDayText = `과정 종료`;
-            }
+            if (diffDays > 0) dDayText = `D-${diffDays}`;
+            else if (diffDays === 0) dDayText = `D-Day`;
+            else dDayText = `과정 종료`;
             
             const ddayEl = document.getElementById('course-dday');
             if(ddayEl) ddayEl.textContent = dDayText;
 
-            // 오늘 날짜 라벨 갱신 (YY.MM.DD 포맷)
             const yy = String(today.getFullYear()).slice(-2);
             const mm = String(today.getMonth() + 1).padStart(2, '0');
             const dd = String(today.getDate()).padStart(2, '0');
             
             const todayLabelEl = document.getElementById('course-today-label');
             if(todayLabelEl) {
-                todayLabelEl.innerHTML = `
-                    오늘 (${yy}.${mm}.${dd})
-                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-figjam rounded-full"></div>
-                `;
+                todayLabelEl.innerHTML = `오늘 (${yy}.${mm}.${dd})<div class="absolute -top-6 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-figjam rounded-full"></div>`;
             }
         }
 
-        // 아이콘 렌더링 초기화
         lucide.createIcons();
 
         // ----------------------------------------
         // 기존 탭 및 기능 로직
         // ----------------------------------------
-
         function switchTool(toolId) {
             document.querySelectorAll('.tool-content').forEach(el => el.classList.remove('active'));
             document.getElementById('tool-' + toolId).classList.add('active');
@@ -1163,10 +1107,7 @@
             activeBtn.classList.remove('font-medium', 'text-slate-400', 'hover:text-slate-700');
             activeBtn.classList.add('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
             
-            // 만약 수업 일정 탭을 열었다면 진행률 UI 다시 한 번 트리거
-            if(tabId === 'schedule') {
-                setTimeout(updateCourseProgress, 50);
-            }
+            if(tabId === 'schedule') setTimeout(updateCourseProgress, 50);
         }
 
         function toggleSidebar() {
@@ -1179,18 +1120,16 @@
             switchLevel('illustrator', 'advanced');
             
             setTimeout(() => {
-                const targetCard = document.getElementById('card-line-illust');
+                // 동적 렌더링 카드 ID 사용
+                const targetCard = document.getElementById('card_il_a_1'); 
                 if(targetCard) {
                     targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     targetCard.classList.add('ring-4', 'ring-figjam/50');
-                    setTimeout(() => {
-                        targetCard.classList.remove('ring-4', 'ring-figjam/50');
-                    }, 1500);
+                    setTimeout(() => { targetCard.classList.remove('ring-4', 'ring-figjam/50'); }, 1500);
                 }
             }, 150);
         }
 
-        // 메인 GNB 탭 전환 기능 (진척도 차트 로드 타이밍 제어 포함)
         let isProgressInitialized = false;
 
         function switchTab(tabId) {
@@ -1208,35 +1147,25 @@
                 activeBtn.classList.add('bg-figjam/10', 'text-figjam', 'font-bold');
             }
 
-            // 진척도 탭 최초 진입 시 렌더링 (display가 켜진 상태여야 차트 크기가 안 깨짐)
             if (tabId === 'progress') {
                 if (!isProgressInitialized) {
                     setTimeout(() => {
                         initProgress();
                         isProgressInitialized = true;
-                    }, 50); // DOM paint delay
+                    }, 50);
                 } else if (myChart) {
-                    myChart.resize(); // 탭 전환 후 리사이징 보정
+                    myChart.resize();
                 }
             }
-            
-            // 학습 로드맵 탭 진입 시 수업일정 갱신 확인
-            if (tabId === 'roadmap') {
-                setTimeout(updateCourseProgress, 50);
-            }
-
-            // 현재 탭 상태를 로컬 스토리지에 저장하여 새로고침 시 유지
+            if (tabId === 'roadmap') setTimeout(updateCourseProgress, 50);
             localStorage.setItem('dashboardActiveTab', tabId);
         }
-
 
         // ----------------------------------------
         // 진척도 (Progress) 로직 연동
         // ----------------------------------------
-
         const students = ['강은수', '길솔아', '김예지', '김윤겸', '김지원', '김한솜', '김희은', '박진희', '원채련', '이주환', '임도희'];
         const tasks = ['로고', '패키지 기획', '패키지 무드보드', '패키지 그리드', '패키지 와이어프레임', '패키지 초안', '패키지 수정안', '패키지 최종안', 'Web Wire', 'Web Wire Develop', 'Web Design', 'Web Design Develop'];
-        
         const studentColors = ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#22c55e', '#10b981', '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6'];
         
         let progressData = {};
@@ -1261,94 +1190,61 @@
         function updateSummary() {
             let totalScore = 0;
             let totalCount = students.length * tasks.length;
-            
-            students.forEach(std => {
-                tasks.forEach(task => {
-                    totalScore += progressData[std][task] || 0;
-                });
-            });
-            
+            students.forEach(std => tasks.forEach(task => totalScore += progressData[std][task] || 0));
             const avg = Math.round(totalScore / totalCount);
             document.getElementById('summary-avg').textContent = `${avg}%`;
         }
 
-        // 좌측 학생 목록 범례 (이미지 디자인 적용)
         function renderStudentLegend() {
             const legendContainer = document.getElementById('custom-legend');
             legendContainer.innerHTML = '';
             
             students.forEach((std, index) => {
                 let studentTotal = 0;
-                tasks.forEach(task => { studentTotal += progressData[std][task] || 0; });
+                tasks.forEach(task => studentTotal += progressData[std][task] || 0);
                 const studentAvg = Math.round(studentTotal / tasks.length);
-
                 const item = document.createElement('div');
                 item.className = 'legend-item-wrapper w-full';
-                
                 const color = studentColors[index % studentColors.length];
                 
                 item.innerHTML = `
                     <div class="flex items-center w-full bg-white hover:bg-slate-50 border border-transparent py-2.5 px-3 rounded-[16px] transition-all duration-200 cursor-pointer group" onclick="toggleDataset(${index}, this.querySelector('.std-name'))">
-                        
                         <button onclick="event.stopPropagation(); openModal('${std}')" class="bg-white border border-slate-200 text-slate-500 hover:text-figjam text-[11px] font-semibold py-1.5 px-3.5 rounded-full transition-colors flex items-center gap-1.5 shrink-0 shadow-sm mr-4">
                             <i data-lucide="edit-2" class="w-3 h-3"></i> 수정
                         </button>
-                        
                         <div class="flex items-center gap-2.5 flex-1 overflow-hidden">
                             <span class="w-2 h-2 rounded-full shrink-0" style="background-color: ${color}"></span>
                             <span class="std-name font-bold text-slate-800 text-[14px] select-none truncate transition-colors" title="${std}">${std}</span>
                         </div>
-                        
                         <span class="text-[12px] font-bold text-figjam bg-figjamLight/80 px-2.5 py-1 rounded-md shrink-0 ml-2">${studentAvg}%</span>
                     </div>
                 `;
                 legendContainer.appendChild(item);
             });
-            // 새로 생성된 DOM의 아이콘 렌더링
             lucide.createIcons();
         }
 
         function toggleDataset(index, labelElement) {
             if (!myChart) return;
             const isVisible = myChart.isDatasetVisible(index);
-            
             myChart.setDatasetVisibility(index, !isVisible);
             myChart.update();
-            
-            if (isVisible) {
-                labelElement.classList.add('line-through', 'opacity-40');
-            } else {
-                labelElement.classList.remove('line-through', 'opacity-40');
-            }
+            if (isVisible) labelElement.classList.add('line-through', 'opacity-40');
+            else labelElement.classList.remove('line-through', 'opacity-40');
         }
 
-        // 창 크기 변경 시 차트 업데이트
-        window.addEventListener('resize', () => {
-            if(myChart) myChart.update();
-        });
+        window.addEventListener('resize', () => { if(myChart) myChart.update(); });
 
         function renderChart() {
             const ctx = document.getElementById('progressChart').getContext('2d');
-            
             const datasets = students.map((std, i) => {
                 const dataPoints = tasks.map(task => progressData[std][task] || 0);
                 const color = studentColors[i % studentColors.length];
-                
                 return {
-                    label: std,
-                    data: dataPoints,
-                    borderColor: '#f1f5f9', // 배경선 연하게
-                    backgroundColor: color, 
-                    borderWidth: 2.5,
-                    tension: 0.45, 
-                    fill: false,
-                    pointBackgroundColor: color,
-                    pointBorderColor: '#ffffff',
-                    pointBorderWidth: 2,
-                    pointRadius: 5,
-                    pointHoverRadius: 8,
-                    pointHoverBackgroundColor: color,
-                    pointHoverBorderColor: '#ffffff'
+                    label: std, data: dataPoints, borderColor: '#f1f5f9', backgroundColor: color, 
+                    borderWidth: 2.5, tension: 0.45, fill: false, pointBackgroundColor: color,
+                    pointBorderColor: '#ffffff', pointBorderWidth: 2, pointRadius: 5,
+                    pointHoverRadius: 8, pointHoverBackgroundColor: color, pointHoverBorderColor: '#ffffff'
                 };
             });
 
@@ -1359,60 +1255,29 @@
             } else {
                 Chart.defaults.font.family = "'Pretendard', sans-serif";
                 Chart.defaults.color = '#94a3b8';
-                
                 myChart = new Chart(ctx, {
                     type: 'line',
                     data: { labels: tasks, datasets: datasets },
                     options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
+                        responsive: true, maintainAspectRatio: false,
                         layout: { padding: { top: 10, bottom: 20, right: 10 } },
                         interaction: { mode: 'index', intersect: false },
                         plugins: {
                             legend: { display: false },
                             tooltip: {
-                                backgroundColor: 'rgba(255, 255, 255, 0.98)',
-                                titleColor: '#1e293b',
-                                bodyColor: '#475569',
-                                borderColor: '#e2e8f0',
-                                borderWidth: 1,
-                                padding: 14,
-                                boxPadding: 8,
-                                usePointStyle: true,
-                                titleFont: { size: 14, weight: 'bold' },
-                                bodyFont: { size: 13, weight: 'bold' },
-                                cornerRadius: 12,
-                                boxShadow: '0 10px 25px rgba(0,0,0,0.05)'
+                                backgroundColor: 'rgba(255, 255, 255, 0.98)', titleColor: '#1e293b', bodyColor: '#475569',
+                                borderColor: '#e2e8f0', borderWidth: 1, padding: 14, boxPadding: 8,
+                                usePointStyle: true, titleFont: { size: 14, weight: 'bold' },
+                                bodyFont: { size: 13, weight: 'bold' }, cornerRadius: 12, boxShadow: '0 10px 25px rgba(0,0,0,0.05)'
                             }
                         },
                         scales: {
                             y: {
-                                position: 'right',
-                                min: 0, 
-                                max: 100,
-                                border: { display: false },
-                                grid: { 
-                                    color: '#f1f5f9',
-                                    drawTicks: false,
-                                    lineWidth: 1
-                                },
-                                ticks: { 
-                                    stepSize: 10,
-                                    callback: val => val + '%', 
-                                    padding: 15,
-                                    font: { size: 12, weight: '600' },
-                                    color: '#cbd5e1'
-                                }
+                                position: 'right', min: 0, max: 100, border: { display: false },
+                                grid: { color: '#f1f5f9', drawTicks: false, lineWidth: 1 },
+                                ticks: { stepSize: 10, callback: val => val + '%', padding: 15, font: { size: 12, weight: '600' }, color: '#cbd5e1' }
                             },
-                            x: {
-                                border: { display: false },
-                                grid: { display: false },
-                                ticks: { 
-                                    padding: 15, 
-                                    font: { weight: '800', size: 13 },
-                                    color: '#94a3b8' 
-                                }
-                            }
+                            x: { border: { display: false }, grid: { display: false }, ticks: { padding: 15, font: { weight: '800', size: 13 }, color: '#94a3b8' } }
                         }
                     }
                 });
@@ -1422,18 +1287,15 @@
         function openModal(std) {
             currentEditingStudent = std;
             document.getElementById('modal-title').textContent = `${std} 학생 진척도 수정`;
-            
             const formGrid = document.getElementById('modal-form-grid');
             formGrid.innerHTML = '';
             
-            tasks.forEach((task, idx) => {
+            tasks.forEach((task) => {
                 const val = progressData[std][task] || 0;
-                
                 formGrid.innerHTML += `
                     <div class="flex flex-col gap-2">
                         <label class="text-[13px] font-bold text-slate-700 pl-1 flex items-center gap-2 truncate" title="${task}">
-                            <span class="w-1.5 h-1.5 rounded-full bg-figjam"></span>
-                            ${task}
+                            <span class="w-1.5 h-1.5 rounded-full bg-figjam"></span>${task}
                         </label>
                         <div class="relative group">
                             <input type="number" id="input-${task}" value="${val}" min="0" max="100" 
@@ -1447,8 +1309,6 @@
             const modal = document.getElementById('modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            
-            // 애니메이션 부드럽게 (display block 적용 후 opacity 변경)
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
                 modal.classList.add('opacity-100');
@@ -1460,27 +1320,22 @@
             const modal = document.getElementById('modal');
             modal.classList.remove('opacity-100');
             modal.classList.add('opacity-0');
-            
             setTimeout(() => {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
-            }, 300); // transition 지속시간과 맞춤
+            }, 300);
         }
 
         function saveData() {
             tasks.forEach(task => {
                 const input = document.getElementById(`input-${task}`);
                 let val = parseInt(input.value);
-                
                 if (isNaN(val)) val = 0;
                 if (val < 0) val = 0;
                 if (val > 100) val = 100;
-                
                 progressData[currentEditingStudent][task] = val;
             });
-            
             localStorage.setItem('assignmentData_v2', JSON.stringify(progressData));
-            
             renderStudentLegend();
             renderChart();
             updateSummary();
@@ -1488,56 +1343,366 @@
             showToast(`'${currentEditingStudent}' 학생의 데이터가 갱신되었습니다.`);
         }
 
-        // 진척도 데이터 복사 함수
         function copyProgressData() {
             const dataStr = JSON.stringify(progressData, null, 2);
-            
-            // 호환성을 위한 텍스트 에어리어 생성 및 복사
             const textArea = document.createElement("textarea");
             textArea.value = dataStr;
             textArea.style.position = "fixed";
             textArea.style.left = "-9999px";
             document.body.appendChild(textArea);
             textArea.select();
-            
             try {
                 document.execCommand('copy');
                 showToast('진척도 데이터가 클립보드에 복사되었습니다.');
             } catch (err) {
                 showToast('데이터 복사에 실패했습니다.');
             }
-            
             document.body.removeChild(textArea);
         }
 
-        // 모달 외부 영역 클릭 시 닫기
-        document.getElementById('modal').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
+        // 엔터키 저장 지원 (진척도)
+        document.getElementById('modal-form-grid').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); saveData(); }
         });
 
-        // 엔터키 저장 지원
-        document.getElementById('modal-form-grid').addEventListener('keydown', function(e) {
+        // ----------------------------------------
+        // Tool 수업 탭 카드 동적 렌더링 및 편집 로직
+        // ----------------------------------------
+        
+        // 초기 기본 데이터 셋
+        const defaultToolData = {
+            photoshop: {
+                basic: [
+                    { id: 'ps_b_1', badge: '[기본 사용방법]', title: '[px개념]', yText1: '(유)포토샵 인터페이스와 px, 레이어 개념', yUrl1: '', yText2: '', yUrl2: '', desc: '', bText1: '(D1) 포토샵 알아보기', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ps_b_2', badge: '[레이어와 영역]', title: '[레이어와 영역]', yText1: '(유)레이어 더 알아보기', yUrl1: '', yText2: '(유)포토샵에서 영역이란?', yUrl2: '', desc: '그라디언트, Magic Wand Tool, Quick Selection Tool, 레이어 마스크', bText1: '(D2) 레이어 기초', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ps_b_3', badge: '[영역과 펜툴]', title: '[영역과 펜툴]', yText1: '(유)포토샵에서 영역을 쉽게 따는 방법', yUrl1: '', yText2: '(유)포토샵에서 영역을 깔끔하게 따는 방법', yUrl2: '', desc: '(1) Object Selection Tool, Layer Mask\n(2) Pen Tool, Layer Mask', bText1: '(D3) 영역과 펜툴(과제)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '김' },
+                    { id: 'ps_b_4', badge: '[폰트와 도형툴]', title: '[폰트와 도형툴]', yText1: '(유)포토샵에서 펜툴로 특정 영역 제외, 아트보드 작업', yUrl1: '', yText2: '(유)웹디자인 폰트 주의사항과 라이선스, 도형 툴 기초', yUrl2: '', desc: '(1) Pen Tool Path 패널에서 Alt+click으로 제외\n(2) Art Board 사이즈 설정하고 수정하기, 도형 툴 기초\n(3) 눈누 사용방법, 웹디자인 주의사항(폰트 두께 갯수, 라이선스, 웹폰트)', bText1: '(D4) 폰트와 도형툴', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '김' },
+                    { id: 'ps_b_5', badge: '[가이드와 도형툴]', title: '[가이드와 도형툴]', yText1: '(유)도형툴 심화, 펜툴로 도형 레이어 생성', yUrl1: '', yText2: '(유)Layout Grid 기초와 카드뉴스 과제 안내', yUrl2: '', desc: '(1) 도형툴 병합, Pen Tool로 도형툴 작업\n(2) 디자인 기본 Layout Grid 셋팅', bText1: '(D5) 도형툴 심화, 포토샵 레이아웃 가이드(과제)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '김' },
+                    { id: 'ps_b_6', badge: '[레이어 심화, 아트보드]', title: '[레이어 심화, 아트보드]', yText1: '(유)레이어 영역 심화, 아트보드 디자인 작업 셋팅', yUrl1: '', yText2: '(유)레이어 마스크 심화, 레이어 합성 기초', yUrl2: '', desc: '(1) 레이어 영역 추가 작업, 아트보드로 디자인 작업하는 방법\n(2) Layer Mask 심화, 레이어 패널 합성 기초', bText1: '(D6) 레이어 영역 심화, 레이어 마스크 심화, 합성(과제)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '김' },
+                    { id: 'ps_b_7', badge: '[필터, 보정, 레이어 스타일]', title: '[필터, 보정, 레이어 스타일]', yText1: '(유)Convert for Smart Filters, Lens Flare', yUrl1: '', yText2: '(유)Convert for Smart Filters, Layer Style, Adjustments', yUrl2: '', desc: '(1) 수정할 수 있는 필터와 조정 기능\n(2) 레이어 스타일 심화', bText1: '(D7) 필터, 보정, 레이어 스타일', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ps_b_8', badge: '[채널, 반창고, 도장]', title: '[채널, 반창고, 도장]', yText1: '(유)Channel 영역 작업', yUrl1: '', yText2: '(유)반창고 툴, 도장 툴, Contents Aware', yUrl2: '', desc: '(1) 채널로 구름 질감 영역 작업, 곡선 많은 이미지 영역 작업\n(2) 불 질감 추출, 인물 보정에 사용하는 반창고 툴, 복제하는 도장툴', bText1: '(D8) 채널, 반창고, 도장(과제)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '김' }
+                ],
+                advanced: []
+            },
+            illustrator: {
+                basic: [
+                    { id: 'il_b_1', badge: '[레이어와 선택]', title: '', yText1: '(유)(일러스트)일러스트 기초(Layer, Selection)', yUrl1: '', yText2: '(유)(일러스트)Expand, PathFinder, Selection', yUrl2: '', desc: '(1)인터페이스 설정, Layer, Selection(전체, 부분, 그룹)\n(2)효과와 선 확장, 도형 합치기, 패스 자르기', bText1: '(D12) 일러스트 알아보기', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' }
+                ],
+                advanced: [
+                    { id: 'il_a_1', badge: '[라인 일러스트]', title: '[라인 일러스트]', yText1: '(유)UIUXD_일러스트 심화(1일차) | 260423 (1)', yUrl1: 'https://youtu.be/RKWeylzOyMk', yText2: '', yUrl2: '', desc: '', bText1: '(과제용 예제 폴더)', bUrl1: 'https://drive.google.com/drive/folders/1FCGd15Rt8qvjMlPYgRSYpAu1DmqEQ-7L?usp=drive_link', bText2: '(수업 진행용 예제)', bUrl2: 'https://drive.google.com/drive/folders/1S-Up1N7e-TQHGh5-OkXZTV5o2_QeCvcM?usp=drive_link', badgeRight: '' },
+                    { id: 'il_a_2', badge: '[라인 일러스트]', title: '[라인 일러스트]', yText1: '(유)UIUXD_일러스트 심화(2일차) | 260423 (1)', yUrl1: 'https://youtu.be/ZpJOrl5eqnk', yText2: '', yUrl2: '', desc: '', bText1: '(과제용 예제 폴더)', bUrl1: 'https://drive.google.com/drive/folders/1FCGd15Rt8qvjMlPYgRSYpAu1DmqEQ-7L?usp=drive_link', bText2: '(수업 진행용 예제)', bUrl2: 'https://drive.google.com/drive/folders/1S-Up1N7e-TQHGh5-OkXZTV5o2_QeCvcM?usp=drive_link', badgeRight: '' }
+                ]
+            },
+            figma: { basic: [], advanced: [] }
+        };
+
+        let toolData = {};
+        let isToolEditMode = false;
+
+        function initToolData() {
+            const saved = localStorage.getItem('toolCardsData_v1');
+            if (saved) {
+                toolData = JSON.parse(saved);
+            } else {
+                toolData = JSON.parse(JSON.stringify(defaultToolData));
+            }
+        }
+
+        // 커스텀 비밀번호 모달을 통한 수정 모드 토글
+        function toggleToolEditMode() {
+            const isActivating = !isToolEditMode;
+            const title = isActivating ? "수정 모드 켜기" : "수정 모드 끄기";
+            const msg = isActivating ? "수정 모드 활성화를 위해 비밀번호를 입력하세요." : "수정 모드 종료를 위해 비밀번호를 입력하세요.";
+            
+            document.getElementById('pwd-modal-title').textContent = title;
+            document.getElementById('pwd-modal-msg').textContent = msg;
+            document.getElementById('pwd-input').value = '';
+            document.getElementById('pwd-error').classList.add('hidden');
+            
+            const modal = document.getElementById('pwd-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modal.classList.add('opacity-100');
+                document.getElementById('pwd-input').focus();
+            }, 10);
+        }
+
+        function closePwdModal() {
+            const modal = document.getElementById('pwd-modal');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        function submitPwd() {
+            const pwd = document.getElementById('pwd-input').value;
+            if (pwd === "0305") {
+                isToolEditMode = !isToolEditMode;
+                renderAllToolCards();
+                updateEditModeUI();
+                closePwdModal();
+                if(isToolEditMode) showToast("카드 수정 모드가 활성화되었습니다.");
+                else showToast("카드 수정 모드가 종료되었습니다.");
+            } else {
+                document.getElementById('pwd-error').classList.remove('hidden');
+                document.getElementById('pwd-input').focus();
+            }
+        }
+
+        // 비밀번호 입력창 엔터 키 이벤트 지원
+        document.getElementById('pwd-input').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                saveData();
+                submitPwd();
             }
         });
+
+        function updateEditModeUI() {
+            const btn = document.getElementById('btn-tool-edit');
+            if(isToolEditMode) {
+                btn.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 inline-block mr-1"></i> 수정 완료`;
+                btn.className = "px-4 py-1.5 bg-figjam hover:bg-[#7c4ced] text-white rounded-lg text-[13px] font-bold transition-colors mb-2 shadow-sm";
+            } else {
+                btn.innerHTML = `<i data-lucide="settings" class="w-4 h-4 inline-block mr-1"></i> 수정 모드 켜기`;
+                btn.className = "px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[13px] font-bold transition-colors mb-2";
+            }
+            lucide.createIcons();
+        }
+
+        function createCardHTML(card, toolId, levelId) {
+            return `
+                <div id="card_${card.id}" class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full scroll-mt-8 group/card">
+                    ${isToolEditMode ? `<button onclick="openToolCardModal('${toolId}', '${levelId}', '${card.id}')" class="absolute top-4 right-4 text-slate-400 hover:text-figjam z-20 bg-slate-50 hover:bg-slate-100 p-2 rounded-xl transition-all opacity-0 group-hover/card:opacity-100"><i data-lucide="edit" class="w-4 h-4"></i></button>` : ''}
+                    
+                    ${card.badge ? `<div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">${card.badge}</div>` : ''}
+                    
+                    ${card.title ? `<h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3 pr-6 pl-6">${card.title}</h3>` : '<div class="mt-2 mb-4 pb-3"></div>'}
+                    
+                    <div class="flex-1 space-y-3 mt-2">
+                        ${card.yText1 ? `
+                        <${card.yUrl1 ? `a href="${card.yUrl1}" target="_blank"` : 'div'} class="flex items-start gap-2 group">
+                            <i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0 ${card.yUrl1 ? 'group-hover:scale-110 transition-transform' : ''}"></i>
+                            <p class="text-[13px] text-slate-600 font-medium leading-tight ${card.yUrl1 ? 'group-hover:text-figjam transition-colors' : ''}">${card.yText1}</p>
+                        </${card.yUrl1 ? 'a' : 'div'}>` : ''}
+                        
+                        ${card.yText2 ? `
+                        <${card.yUrl2 ? `a href="${card.yUrl2}" target="_blank"` : 'div'} class="flex items-start gap-2 group">
+                            <i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0 ${card.yUrl2 ? 'group-hover:scale-110 transition-transform' : ''}"></i>
+                            <p class="text-[13px] text-slate-600 font-medium leading-tight ${card.yUrl2 ? 'group-hover:text-figjam transition-colors' : ''}">${card.yText2}</p>
+                        </${card.yUrl2 ? 'a' : 'div'}>` : ''}
+                        
+                        ${card.desc ? `
+                        <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100">
+                            ${card.desc.split('\n').map(line => `<p class="text-[11px] text-slate-500 leading-tight">${line}</p>`).join('')}
+                        </div>` : ''}
+                    </div>
+                    
+                    <div class="mt-5 w-full space-y-2">
+                        ${card.bText1 ? `
+                        <${card.bUrl1 ? `a href="${card.bUrl1}" target="_blank"` : 'button'} class="w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px] flex justify-center items-center gap-1.5">
+                            ${card.bUrl1 && card.bUrl1.includes('drive') ? '<i data-lucide="folder-down" class="w-4 h-4"></i>' : ''} ${card.bText1}
+                        </${card.bUrl1 ? 'a' : 'button'}>` : ''}
+                        
+                        ${card.bText2 ? `
+                        <${card.bUrl2 ? `a href="${card.bUrl2}" target="_blank"` : 'button'} class="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-2.5 rounded-xl transition-colors text-[12px] flex justify-center items-center gap-1.5">
+                            ${card.bUrl2 && card.bUrl2.includes('drive') ? '<i data-lucide="folder" class="w-4 h-4"></i>' : ''} ${card.bText2}
+                        </${card.bUrl2 ? 'a' : 'button'}>` : ''}
+                    </div>
+                    
+                    ${card.badgeRight ? `<div class="absolute -bottom-3 -right-3 w-10 h-10 bg-[#10B981] text-white rounded-full flex items-center justify-center text-[13px] font-bold border-[3px] border-white shadow-md z-10">${card.badgeRight}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function renderToolCards(toolId, levelId) {
+            const grid = document.getElementById(`grid-${toolId}-${levelId}`);
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            const cards = toolData[toolId][levelId] || [];
+            
+            cards.forEach(card => {
+                grid.insertAdjacentHTML('beforeend', createCardHTML(card, toolId, levelId));
+            });
+            
+            // 수정 모드일 때 "추가하기" 카드 표시
+            if (isToolEditMode) {
+                const addCardHtml = `
+                    <div onclick="openToolCardModal('${toolId}', '${levelId}', 'new')" class="bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[20px] p-6 flex flex-col items-center justify-center text-slate-400 hover:text-figjam hover:border-figjam hover:bg-figjamLight/50 transition-all cursor-pointer h-full min-h-[300px]">
+                        <i data-lucide="plus-circle" class="w-10 h-10 mb-3"></i>
+                        <span class="font-bold text-[15px]">카드 추가하기</span>
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', addCardHtml);
+            } else if (cards.length === 0) {
+                // 데이터도 없고 수정 모드도 아닐 때
+                grid.innerHTML = `<div class="col-span-full py-12 flex items-center justify-center text-slate-400 font-medium border-2 border-dashed border-slate-200 rounded-[24px]">등록된 콘텐츠가 없습니다.</div>`;
+            }
+        }
+
+        function renderAllToolCards() {
+            renderToolCards('photoshop', 'basic');
+            renderToolCards('photoshop', 'advanced');
+            renderToolCards('illustrator', 'basic');
+            renderToolCards('illustrator', 'advanced');
+            renderToolCards('figma', 'basic');
+            renderToolCards('figma', 'advanced');
+            lucide.createIcons();
+        }
+
+        // 모달창 오픈 로직
+        function openToolCardModal(toolId, levelId, cardId) {
+            document.getElementById('tcm-toolId').value = toolId;
+            document.getElementById('tcm-levelId').value = levelId;
+            document.getElementById('tcm-cardId').value = cardId;
+            
+            const isNew = cardId === 'new';
+            let card = { badge: '', title: '', yText1: '', yUrl1: '', yText2: '', yUrl2: '', desc: '', bText1: '', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' };
+            
+            if (!isNew) {
+                card = toolData[toolId][levelId].find(c => c.id === cardId) || card;
+            }
+            
+            document.getElementById('tcm-badge').value = card.badge || '';
+            document.getElementById('tcm-badgeRight').value = card.badgeRight || '';
+            document.getElementById('tcm-title').value = card.title || '';
+            document.getElementById('tcm-yText1').value = card.yText1 || '';
+            document.getElementById('tcm-yUrl1').value = card.yUrl1 || '';
+            document.getElementById('tcm-yText2').value = card.yText2 || '';
+            document.getElementById('tcm-yUrl2').value = card.yUrl2 || '';
+            document.getElementById('tcm-desc').value = card.desc || '';
+            document.getElementById('tcm-bText1').value = card.bText1 || '';
+            document.getElementById('tcm-bUrl1').value = card.bUrl1 || '';
+            document.getElementById('tcm-bText2').value = card.bText2 || '';
+            document.getElementById('tcm-bUrl2').value = card.bUrl2 || '';
+            
+            const deleteBtn = document.getElementById('btn-tcm-delete');
+            if (isNew) deleteBtn.classList.add('hidden');
+            else deleteBtn.classList.remove('hidden');
+            
+            resetDeleteBtn(); // 삭제 버튼 상태 안전장치 초기화
+            
+            const modal = document.getElementById('tool-card-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => modal.classList.add('opacity-100'), 10);
+        }
+
+        function closeToolCardModal() {
+            const modal = document.getElementById('tool-card-modal');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        // 모달 데이터 저장 (로컬스토리지 반영)
+        function saveToolCard() {
+            const toolId = document.getElementById('tcm-toolId').value;
+            const levelId = document.getElementById('tcm-levelId').value;
+            let cardId = document.getElementById('tcm-cardId').value;
+            
+            const cardData = {
+                badge: document.getElementById('tcm-badge').value,
+                badgeRight: document.getElementById('tcm-badgeRight').value,
+                title: document.getElementById('tcm-title').value,
+                yText1: document.getElementById('tcm-yText1').value,
+                yUrl1: document.getElementById('tcm-yUrl1').value,
+                yText2: document.getElementById('tcm-yText2').value,
+                yUrl2: document.getElementById('tcm-yUrl2').value,
+                desc: document.getElementById('tcm-desc').value,
+                bText1: document.getElementById('tcm-bText1').value,
+                bUrl1: document.getElementById('tcm-bUrl1').value,
+                bText2: document.getElementById('tcm-bText2').value,
+                bUrl2: document.getElementById('tcm-bUrl2').value,
+            };
+            
+            if (cardId === 'new') {
+                cardId = 'card_' + Date.now();
+                cardData.id = cardId;
+                toolData[toolId][levelId].push(cardData);
+            } else {
+                cardData.id = cardId;
+                const idx = toolData[toolId][levelId].findIndex(c => c.id === cardId);
+                if (idx > -1) toolData[toolId][levelId][idx] = cardData;
+            }
+            
+            localStorage.setItem('toolCardsData_v1', JSON.stringify(toolData));
+            renderAllToolCards();
+            closeToolCardModal();
+            showToast('카드 정보가 저장되었습니다.');
+        }
+
+        let deleteConfirmTimer = null;
+
+        // 특정 카드 삭제 (안전장치 추가: 두 번 클릭 유도)
+        function deleteToolCard() {
+            const deleteBtn = document.getElementById('btn-tcm-delete');
+            
+            if (deleteBtn.getAttribute('data-confirm') === 'true') {
+                const toolId = document.getElementById('tcm-toolId').value;
+                const levelId = document.getElementById('tcm-levelId').value;
+                const cardId = document.getElementById('tcm-cardId').value;
+                
+                toolData[toolId][levelId] = toolData[toolId][levelId].filter(c => c.id !== cardId);
+                localStorage.setItem('toolCardsData_v1', JSON.stringify(toolData));
+                
+                renderAllToolCards();
+                closeToolCardModal();
+                showToast('카드가 삭제되었습니다.');
+            } else {
+                deleteBtn.setAttribute('data-confirm', 'true');
+                deleteBtn.innerHTML = '정말 삭제할까요?';
+                deleteBtn.className = 'px-5 py-2.5 text-sm font-bold text-white bg-red-500 border border-red-500 rounded-xl hover:bg-red-600 shadow-sm mr-auto transition-colors' + (deleteBtn.classList.contains('hidden') ? ' hidden' : '');
+                
+                clearTimeout(deleteConfirmTimer);
+                deleteConfirmTimer = setTimeout(() => {
+                    resetDeleteBtn();
+                }, 3000);
+            }
+        }
+
+        function resetDeleteBtn() {
+            const btn = document.getElementById('btn-tcm-delete');
+            if(btn) {
+                btn.setAttribute('data-confirm', 'false');
+                btn.innerHTML = '삭제';
+                btn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
+                clearTimeout(deleteConfirmTimer);
+            }
+        }
 
         function showToast(msg) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-msg').textContent = msg;
-            
             toast.classList.remove('translate-y-full', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-full');
-            }, 2500);
+            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-full'); }, 2500);
         }
 
-        // 로드 시 초기 실행 (수업 일정 업데이트 포함)
+        // 모달 외부 클릭 시 닫기 핸들링 병합
+        window.addEventListener('click', function(e) {
+            const progressModal = document.getElementById('modal');
+            const toolCardModal = document.getElementById('tool-card-modal');
+            const pwdModal = document.getElementById('pwd-modal');
+            if (e.target === progressModal) closeModal();
+            if (e.target === toolCardModal) closeToolCardModal();
+            if (e.target === pwdModal) closePwdModal();
+        });
+
+        // ----------------------------------------
+        // 로드 시 초기 실행
+        // ----------------------------------------
         window.addEventListener('DOMContentLoaded', () => {
             updateCourseProgress();
+            
+            // Tool 수업 데이터 초기화 및 렌더링
+            initToolData();
+            renderAllToolCards();
 
-            // 새로고침 시 이전에 선택했던 탭 유지 (기본값은 'roadmap')
             const savedTab = localStorage.getItem('dashboardActiveTab') || 'roadmap';
             switchTab(savedTab);
         });
