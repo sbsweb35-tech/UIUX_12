@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI/UX 학습 대시보드</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- 웹 폰트 (Pretendard) -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Pretendard', 'sans-serif'] },
+                    colors: {
+                        figjam: '#8B5CF6', 
+                        figjamLight: '#F5F3FF',
+                        figjamTableBg: '#F3EFFF',
+                        figjamBorder: '#DDD6FE'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Pretendard', sans-serif; }
+        
+        /* 탭 전환 애니메이션 */
+        .tab-content, .tool-content { display: none; opacity: 0; }
+        .tab-content.active, .tool-content.active { 
+            display: block; 
+            animation: fadeIn 0.4s ease-out forwards; 
+        }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* 커스텀 스크롤바 */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased h-screen flex bg-[#F8FAFC] overflow-hidden">
+
+    <!-- 💡 좌측 GNB (사이드바) -->
+    <aside class="w-[280px] flex-shrink-0 bg-white border-r border-slate-100 flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10">
+        <!-- 로고 영역 -->
+        <div class="h-24 flex items-center px-8 border-b border-slate-50">
+            <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center mr-3 shadow-md">
+                <i data-lucide="layers" class="w-6 h-6"></i>
+            </div>
+            <span class="text-xl font-extrabold tracking-tight text-slate-900">Class Hub</span>
+        </div>
+
+        <!-- 메뉴 영역 -->
+        <nav class="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
+            <p class="px-4 text-xs font-bold text-slate-400 tracking-wider mb-4">MAIN MENU</p>
+            
+            <button id="btn-roadmap" onclick="switchTab('roadmap')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl bg-figjam/10 text-figjam font-bold transition-all duration-200 text-left">
+                <i data-lucide="map" class="w-5 h-5"></i>
+                <span class="text-[15px]">학습 로드맵</span>
+            </button>
+            
+            <button id="btn-basic" onclick="switchTab('basic')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
+                <i data-lucide="keyboard" class="w-5 h-5"></i>
+                <span class="text-[15px]">컴퓨터 기초</span>
+            </button>
+
+            <button id="btn-tool" onclick="switchTab('tool')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
+                <i data-lucide="image" class="w-5 h-5"></i>
+                <span class="text-[15px]">Tool 수업</span>
+            </button>
+
+            <!-- 작업 공간 탭 추가 -->
+            <button id="btn-workspace" onclick="switchTab('workspace')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
+                <i data-lucide="folder-open" class="w-5 h-5"></i>
+                <span class="text-[15px]">작업 공간</span>
+            </button>
+        </nav>
+
+        <!-- 하단 유저 프로필 -->
+        <div class="p-6 border-t border-slate-50">
+            <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold">
+                    <i data-lucide="user" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-slate-800">학생 모드</p>
+                    <p class="text-[11px] text-slate-500 font-medium">UI/UX 디자인 과정</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 💡 우측 메인 콘텐츠 (스크롤 영역) -->
+    <main class="flex-1 overflow-y-auto scroll-smooth">
+        <div class="p-8 md:p-12 lg:p-16 max-w-[1200px] mx-auto pb-24">
+            
+            <!-- ========================================== -->
+            <!-- 탭 1: 학습 로드맵                          -->
+            <!-- ========================================== -->
+            <div id="tab-roadmap" class="tab-content active">
+                <!-- 타이틀 영역 -->
+                <div class="mb-10">
+                    <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">
+                        이번 주 학습 가이드 🚀
+                    </h1>
+                    <p class="text-slate-500 text-[15px]">현재 진행 중인 프로젝트 단계와 매일 챙겨야 할 루틴을 확인하세요.</p>
+                </div>
+
+                <!-- UI/UX 기획 로드맵 (FigJam) -->
+                <section class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-8 mb-10">
+                    <div class="flex items-center justify-between mb-10">
+                        <h2 class="text-[20px] font-bold text-slate-800 flex items-center gap-2.5">
+                            <i data-lucide="map" class="w-6 h-6 text-figjam"></i>
+                            UI/UX 기획 로드맵 (FigJam)
+                        </h2>
+                        <span class="bg-figjamLight text-figjam text-[13px] font-semibold px-4 py-1.5 rounded-full border border-figjamBorder">
+                            실시간 협업중
+                        </span>
+                    </div>
+                    
+                    <div class="relative mt-4 px-2">
+                        <div class="absolute top-1/2 left-[12.5%] right-[12.5%] h-[2px] bg-slate-100 -translate-y-1/2 z-0"></div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-5 relative z-10">
+                            <!-- Step 1 -->
+                            <div class="bg-white border-[1.5px] border-slate-100 rounded-[20px] p-6 text-center flex flex-col items-center">
+                                <div class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-5 text-slate-300">
+                                    <i data-lucide="check" class="w-5 h-5"></i>
+                                </div>
+                                <h3 class="font-bold text-slate-700 text-[15px] mb-1.5">디자인 이론 & 리서치</h3>
+                                <p class="text-[13px] text-slate-400 font-medium">완료됨</p>
+                            </div>
+                            <!-- Step 2 -->
+                            <div class="bg-white border-[2px] border-figjam rounded-[20px] p-6 text-center shadow-[0_10px_30px_-10px_rgba(139,92,246,0.2)] transform md:-translate-y-1.5 relative flex flex-col items-center">
+                                <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-figjam text-white text-[11px] font-bold px-3.5 py-1 rounded-full tracking-wider">NOW</div>
+                                <div class="w-12 h-12 bg-figjamLight rounded-full flex items-center justify-center mb-5 text-figjam">
+                                    <i data-lucide="search" class="w-5 h-5"></i>
+                                </div>
+                                <h3 class="font-bold text-figjam text-[15px] mb-1.5">트렌드 & 사용자 리서치</h3>
+                                <p class="text-[13px] text-figjam/70 font-medium">자료 수집 진행 중</p>
+                            </div>
+                            <!-- Step 3 -->
+                            <div class="bg-white border-[1.5px] border-slate-100 rounded-[20px] p-6 text-center opacity-80 flex flex-col items-center">
+                                <div class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-5 text-slate-300">
+                                    <i data-lucide="image" class="w-5 h-5"></i>
+                                </div>
+                                <h3 class="font-bold text-slate-400 text-[15px] mb-1.5">패키지 무드보드</h3>
+                                <p class="text-[13px] text-slate-300 font-medium">예정</p>
+                            </div>
+                            <!-- Step 4 -->
+                            <div class="bg-white border-[1.5px] border-slate-100 rounded-[20px] p-6 text-center opacity-80 flex flex-col items-center">
+                                <div class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-5 text-slate-300">
+                                    <i data-lucide="layers" class="w-5 h-5"></i>
+                                </div>
+                                <h3 class="font-bold text-slate-400 text-[15px] mb-1.5">패키지 구성 & 분석</h3>
+                                <p class="text-[13px] text-slate-300 font-medium">예정</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 포트폴리오 목표 -->
+                <section>
+                    <h2 class="text-[18px] font-bold text-slate-800 mb-6 flex items-center gap-2">
+                        <i data-lucide="folder" class="w-5 h-5 text-blue-500"></i>
+                        포트폴리오 목표
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="w-12 h-12 rounded-[14px] bg-blue-50 text-blue-500 flex items-center justify-center">
+                                    <i data-lucide="layout-template" class="w-6 h-6"></i>
+                                </div>
+                                <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">UI/UX 서비스 기획</h3>
+                            <p class="text-[14px] text-slate-500 font-medium">기획서 초안 작성</p>
+                        </div>
+                        <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="w-12 h-12 rounded-[14px] bg-indigo-50 text-indigo-500 flex items-center justify-center">
+                                    <i data-lucide="pen-tool" class="w-6 h-6"></i>
+                                </div>
+                                <span class="text-[12px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-md">대기</span>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">로고 / 와이어프레임</h3>
+                            <p class="text-[14px] text-slate-500 font-medium">스케치 및 구조화</p>
+                        </div>
+                        <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="w-12 h-12 rounded-[14px] bg-pink-50 text-pink-500 flex items-center justify-center">
+                                    <i data-lucide="package" class="w-6 h-6"></i>
+                                </div>
+                                <span class="text-[12px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-md">대기</span>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">패키지 디자인</h3>
+                            <p class="text-[14px] text-slate-500 font-medium">최종 디자인 적용</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+
+            <!-- ========================================== -->
+            <!-- 탭 2: 컴퓨터 기초                          -->
+            <!-- ========================================== -->
+            <div id="tab-basic" class="tab-content">
+                <!-- 타이틀 영역 -->
+                <div class="mb-10">
+                    <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">
+                        컴퓨터 기초 ⌨️
+                    </h1>
+                    <p class="text-slate-500 text-[15px]">작업 속도를 높여주는 필수 단축키 모음입니다.</p>
+                </div>
+
+                <!-- 단축키 테이블 영역 -->
+                <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
+                        <!-- 왼쪽 표 -->
+                        <div class="overflow-hidden rounded-[16px] border border-[#E7E2FE] shadow-sm">
+                            <table class="w-full text-left border-collapse">
+                                <tbody class="divide-y divide-[#E7E2FE]">
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + T</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">새 탭 열기</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + W</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">탭 닫기</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">새 펜 열기</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">codepen.io/pen</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Shift</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">커서 방향으로 텍스트 선택</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">단어</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Home</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">문장 가장 앞으로</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">End</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">문장 가장 뒤로</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + Home</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">문단 최상단</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + End</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">문단 최하단</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + /</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">주석</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + C</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">복사</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + V</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">붙여넣기</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + X</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">잘라내기와 동시에 복사</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- 오른쪽 표 -->
+                        <div class="h-fit overflow-hidden rounded-[16px] border border-[#E7E2FE] shadow-sm">
+                            <table class="w-full text-left border-collapse">
+                                <tbody class="divide-y divide-[#E7E2FE]">
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + S</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">저장</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + Z</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">되돌리기</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + Shift + Z</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">되돌리기를 되돌리기</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + A</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">텍스트 전체 선택</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Win + E</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">파일 탐색기</td>
+                                    </tr>
+                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
+                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Win + S</td>
+                                        <td class="px-5 py-4 text-slate-600 font-medium">돋보기</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 탭 3: Tool 수업                            -->
+            <!-- ========================================== -->
+            <div id="tab-tool" class="tab-content">
+                <!-- 1차 뎁스: 포토샵 / 일러스트 / 피그마 서브 탭 -->
+                <div class="flex items-center gap-6 mb-4 border-b border-slate-200">
+                    <button id="sub-photoshop" onclick="switchTool('photoshop')" class="sub-tab-btn pb-3 text-[16px] font-bold text-figjam border-b-[3px] border-figjam transition-colors">포토샵</button>
+                    <button id="sub-illustrator" onclick="switchTool('illustrator')" class="sub-tab-btn pb-3 text-[16px] font-medium text-slate-400 hover:text-slate-700 transition-colors">일러스트</button>
+                    <button id="sub-figma" onclick="switchTool('figma')" class="sub-tab-btn pb-3 text-[16px] font-medium text-slate-400 hover:text-slate-700 transition-colors">피그마</button>
+                </div>
+
+                <!-- [1] 포토샵 콘텐츠 -->
+                <div id="tool-photoshop" class="tool-content active">
+                    <!-- 2차 뎁스: 기초 / 심화 탭 (칩 스타일) -->
+                    <div class="flex items-center gap-2 mb-8">
+                        <button id="btn-photoshop-basic" onclick="switchLevel('photoshop', 'basic')" class="level-btn px-4 py-1.5 text-[14px] font-bold text-figjam bg-figjamLight border border-figjamBorder rounded-full transition-all">기초</button>
+                        <button id="btn-photoshop-advanced" onclick="switchLevel('photoshop', 'advanced')" class="level-btn px-4 py-1.5 text-[14px] font-medium text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-700 rounded-full transition-all shadow-sm">심화</button>
+                    </div>
+
+                    <div id="photoshop-basic" class="level-content block">
+                        <div class="mb-10">
+                            <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">포토샵(기초 Tool) 🎨</h1>
+                            <p class="text-slate-500 text-[15px]">디자인 실무에 필요한 포토샵 핵심 기능과 툴 사용법을 단계별로 학습합니다.</p>
+                        </div>
+                        <div class="mb-12">
+                            <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                                <button class="bg-figjam hover:bg-[#7c4ced] text-white font-bold py-3.5 px-6 rounded-xl transition-all duration-200 text-[14px] shadow-md transform hover:-translate-y-0.5 flex justify-center items-center gap-2">
+                                    <i data-lucide="folder-down" class="w-4 h-4"></i> 포토샵 예제
+                                </button>
+                                <button class="bg-figjam hover:bg-[#7c4ced] text-white font-bold py-3.5 px-6 rounded-xl transition-all duration-200 text-[14px] shadow-md transform hover:-translate-y-0.5 flex justify-center items-center gap-2">
+                                    <i data-lucide="archive" class="w-4 h-4"></i> (All)수업 사용 예제
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4">
+                            <!-- Step 1 -->
+                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
+                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">[기본 사용방법]</div>
+                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[px개념]</h3>
+                                <div class="flex-1 space-y-3">
+                                    <div class="flex items-start gap-2">
+                                        <i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i>
+                                        <p class="text-[13px] text-slate-600 font-medium leading-tight">(유)포토샵 인터페이스와 px, 레이어 개념</p>
+                                    </div>
+                                </div>
+                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">(D1) 포토샵 알아보기</button>
+                            </div>
+                            <!-- Step 2 -->
+                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
+                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">[레이어와 영역]</div>
+                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[레이어와 영역]</h3>
+                                <div class="flex-1 space-y-3">
+                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)레이어 더 알아보기</p></div>
+                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)포토샵에서 영역이란?</p></div>
+                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl border border-slate-100"><p class="text-[12px] text-slate-500 leading-relaxed font-medium">그라디언트, Magic Wand Tool, Quick Selection Tool, 레이어 마스크</p></div>
+                                </div>
+                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">(D2) 레이어 기초</button>
+                            </div>
+                            <!-- Step 3 -->
+                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
+                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">[영역과 펜툴]</div>
+                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[영역과 펜툴]</h3>
+                                <div class="flex-1 space-y-3">
+                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)포토샵에서 영역을 쉽게 따는 방법</p></div>
+                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)포토샵에서 영역을 깔끔하게 따는 방법</p></div>
+                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100"><p class="text-[11px] text-slate-500 leading-tight">(1) Object Selection Tool, Layer Mask</p><p class="text-[11px] text-slate-500 leading-tight">(2) Pen Tool, Layer Mask</p></div>
+                                </div>
+                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">(D3) 영역과 펜툴(과제)</button>
+                                <div class="absolute -bottom-3 -right-3 w-10 h-10 bg-[#10B981] text-white rounded-full flex items-center justify-center text-[13px] font-bold border-[3px] border-white shadow-md z-10">김</div>
+                            </div>
+                            <!-- Step 4 -->
+                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
+                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">[폰트와 도형툴]</div>
+                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[폰트와 도형툴]</h3>
+                                <div class="flex-1 space-y-3">
+                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)포토샵에서 펜툴로 특정 영역 제외, 아트보드 작업</p></div>
+                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)웹디자인 폰트 주의사항과 라이선스, 도형 툴 기초</p></div>
+                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100"><p class="text-[11px] text-slate-500 leading-tight">(1) Pen Tool Path 패널에서 Alt+click으로 제외</p><p class="text-[11px] text-slate-500 leading-tight">(2) Art Board 사이즈 설정하고 수정하기, 도형 툴 기초</p><p class="text-[11px] text-slate-500 leading-tight">(3) 눈누 사용방법, 웹디자인 주의사항(폰트 두께 갯수, 라이선스, 웹폰트)</p></div>
+                                </div>
+                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">(D4) 폰트와 도형툴</button>
+                                <div class="absolute -bottom-3 -right-3 w-10 h-10 bg-[#10B981] text-white rounded-full flex items-center justify-center text-[13px] font-bold border-[3px] border-white shadow-md z-10">김</div>
+                            </div>
+                            <!-- Step 5 -->
+                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
+                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">[가이드와 도형툴]</div>
+                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[가이드와 도형툴]</h3>
+                                <div class="flex-1 space-y-3">
+                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)도형툴 심화, 펜툴로 도형 레이어 생성</p></div>
+                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)Layout Grid 기초와 카드뉴스 과제 안내</p></div>
+                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100"><p class="text-[11px] text-slate-500 leading-tight">(1) 도형툴 병합, Pen Tool로 도형툴 작업</p><p class="text-[11px] text-slate-500 leading-tight">(2) 디자인 기본 Layout Grid 셋팅</p></div>
+                                </div>
+                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">(D5) 도형툴 심화, 포토샵 레이아웃 가이드(과제)</button>
+                                <div class="absolute -bottom-3 -right-3 w-10 h-10 bg-[#10B981] text-white rounded-full flex items-center justify-center text-[13px] font-bold border-[3px] border-white shadow-md z-10">김</div>
+                            </div>
+                            <!-- Step 6 -->
+                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
+                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">[레이어 심화, 아트보드]</div>
+                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[레이어 심화, 아트보드]</h3>
+                                <div class="flex-1 space-y-3">
+                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)레이어 영역 심화, 아트보드 디자인 작업 셋팅</p></div>
+                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)레이어 마스크 심화, 레이어 합성 기초</p></div>
+                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100"><p class="text-[11px] text-slate-500 leading-tight">(1) 레이어 영역 추가 작업, 아트보드로 디자인 작업하는 방법</p><p class="text-[11px] text-slate-500 leading-tight">(2) Layer Mask 심화, 레이어 패널 합성 기초</p></div>
+                                </div>
+                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">(D6) 레이어 영역 심화, 레이어 마스크 심화, 합성(과제)</button>
+                                <div class="absolute -bottom-3 -right-3 w-10 h-10 bg-[#10B981] text-white rounded-full flex items-center justify-center text-[13px] font-bold border-[3px] border-white shadow-md z-10">김</div>
+                            </div>
+                            <!-- Step 7 -->
+                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
+                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">[필터, 보정, 레이어 스타일]</div>
+                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[필터, 보정, 레이어 스타일]</h3>
+                                <div class="flex-1 space-y-3">
+                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)Convert for Smart Filters, Lens Flare</p></div>
+                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)Convert for Smart Filters, Layer Style, Adjustments</p></div>
+                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100"><p class="text-[11px] text-slate-500 leading-tight">(1) 수정할 수 있는 필터와 조정 기능</p><p class="text-[11px] text-slate-500 leading-tight">(2) 레이어 스타일 심화</p></div>
+                                </div>
+                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">(D7) 필터, 보정, 레이어 스타일</button>
+                            </div>
+                            <!-- Step 8 -->
+                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
+                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">[채널, 반창고, 도장]</div>
+                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[채널, 반창고, 도장]</h3>
+                                <div class="flex-1 space-y-3">
+                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)Channel 영역 작업</p></div>
+                                    <div class="flex items-start gap-2"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i><p class="text-[13px] text-slate-600 font-medium leading-tight">(유)반창고 툴, 도장 툴, Contents Aware</p></div>
+                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100"><p class="text-[11px] text-slate-500 leading-tight">(1) 채널로 구름 질감 영역 작업, 곡선 많은 이미지 영역 작업</p><p class="text-[11px] text-slate-500 leading-tight">(2) 불 질감 추출, 인물 보정에 사용하는 반창고 툴, 복제하는 도장툴</p></div>
+                                </div>
+                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">(D8) 채널, 반창고, 도장(과제)</button>
+                                <div class="absolute -bottom-3 -right-3 w-10 h-10 bg-[#10B981] text-white rounded-full flex items-center justify-center text-[13px] font-bold border-[3px] border-white shadow-md z-10">김</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="photoshop-advanced" class="level-content hidden">
+                        <div class="mb-10">
+                            <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">포토샵(심화 Tool) 🎨</h1>
+                            <p class="text-slate-500 text-[15px]">포토샵 고급 활용 기법과 실전 예제를 다룹니다.</p>
+                        </div>
+                        <div class="w-full min-h-[250px] flex items-center justify-center border-2 border-dashed border-slate-200 rounded-[24px]">
+                            <p class="text-slate-400 font-medium">여기에 포토샵 심화 콘텐츠가 들어갑니다.</p>
+                        </div>
+                    </div>
+                </div> <!-- End of tool-photoshop -->
+
+                <!-- [2] 일러스트 콘텐츠 -->
+                <div id="tool-illustrator" class="tool-content">
+                    <div class="flex items-center gap-2 mb-8">
+                        <button id="btn-illustrator-basic" onclick="switchLevel('illustrator', 'basic')" class="level-btn px-4 py-1.5 text-[14px] font-bold text-figjam bg-figjamLight border border-figjamBorder rounded-full transition-all">기초</button>
+                        <button id="btn-illustrator-advanced" onclick="switchLevel('illustrator', 'advanced')" class="level-btn px-4 py-1.5 text-[14px] font-medium text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-700 rounded-full transition-all shadow-sm">심화</button>
+                    </div>
+
+                    <div id="illustrator-basic" class="level-content block">
+                        <div class="mb-10">
+                            <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">일러스트(기초 Tool) ✒️</h1>
+                            <p class="text-slate-500 text-[15px]">디자인 실무에 필요한 일러스트 핵심 기능과 툴 사용법을 단계별로 학습합니다.</p>
+                        </div>
+                        <div class="mb-12">
+                            <div class="flex flex-col sm:flex-row justify-end gap-3 w-full">
+                                <button class="bg-figjam hover:bg-[#7c4ced] text-white font-bold py-3.5 px-6 rounded-xl transition-all duration-200 text-[14px] shadow-md transform hover:-translate-y-0.5 flex justify-center items-center gap-2">
+                                    <i data-lucide="folder-down" class="w-4 h-4"></i> 일러스트 예제
+                                </button>
+                                <button class="bg-figjam hover:bg-[#7c4ced] text-white font-bold py-3.5 px-6 rounded-xl transition-all duration-200 text-[14px] shadow-md transform hover:-translate-y-0.5 flex justify-center items-center gap-2">
+                                    <i data-lucide="archive" class="w-4 h-4"></i> (All)수업 사용 예제
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4">
+                            <!-- Step 1 (레이어와 선택) -->
+                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
+                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">
+                                    [레이어와 선택]
+                                </div>
+                                <div class="flex-1 space-y-3 mt-6">
+                                    <div class="flex items-start gap-2">
+                                        <i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i>
+                                        <p class="text-[13px] text-slate-600 font-medium leading-tight">(유)(일러스트)일러스트 기초(Layer, Selection)</p>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i>
+                                        <p class="text-[13px] text-slate-600 font-medium leading-tight">(유)(일러스트)Expand, PathFinder, Selection</p>
+                                    </div>
+                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100">
+                                        <p class="text-[11px] text-slate-500 leading-tight">(1)인터페이스 설정, Layer, Selection(전체, 부분, 그룹)</p>
+                                        <p class="text-[11px] text-slate-500 leading-tight">(2)효과와 선 확장, 도형 합치기, 패스 자르기</p>
+                                    </div>
+                                </div>
+                                <button class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px]">
+                                    (D12) 일러스트 알아보기
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="illustrator-advanced" class="level-content hidden">
+                        <div class="mb-10">
+                            <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">일러스트(심화 Tool) ✒️</h1>
+                            <p class="text-slate-500 text-[15px]">디자인 실무에 필요한 일러스트 핵심 기능과 툴 사용법을 단계별로 학습합니다.</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4">
+                            <!-- Step 1 (라인 일러스트) -->
+                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
+                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">
+                                    [라인 일러스트]
+                                </div>
+                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[라인 일러스트]</h3>
+                                <div class="flex-1 space-y-3">
+                                    <a href="https://youtu.be/lxT129km4LE" target="_blank" class="flex items-start gap-2 group">
+                                        <i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
+                                        <p class="text-[13px] text-slate-600 font-medium leading-tight group-hover:text-figjam transition-colors">(유)라인 일러스트 작업(1)</p>
+                                    </a>
+                                    <a href="https://youtu.be/lxT129km4LE" target="_blank" class="flex items-start gap-2 group">
+                                        <i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
+                                        <p class="text-[13px] text-slate-600 font-medium leading-tight group-hover:text-figjam transition-colors">(유)라인 일러스트 작업(2)</p>
+                                    </a>
+                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100">
+                                        <p class="text-[11px] text-slate-500 leading-tight">(1)패스 핸들링</p>
+                                        <p class="text-[11px] text-slate-500 leading-tight">(2)~~~~~</p>
+                                    </div>
+                                </div>
+                                <a href="https://drive.google.com/drive/folders/1ql2tg6gh-t5WtOj27LCcB32Xqbg43r7r" target="_blank" class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px] flex justify-center items-center gap-1.5">
+                                    <i data-lucide="download" class="w-4 h-4"></i> (예제 다운로드)
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- End of tool-illustrator -->
+
+                <!-- [3] 피그마 콘텐츠 -->
+                <div id="tool-figma" class="tool-content">
+                    <div class="flex items-center gap-2 mb-8">
+                        <button id="btn-figma-basic" onclick="switchLevel('figma', 'basic')" class="level-btn px-4 py-1.5 text-[14px] font-bold text-figjam bg-figjamLight border border-figjamBorder rounded-full transition-all">기초</button>
+                        <button id="btn-figma-advanced" onclick="switchLevel('figma', 'advanced')" class="level-btn px-4 py-1.5 text-[14px] font-medium text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-700 rounded-full transition-all shadow-sm">심화</button>
+                    </div>
+
+                    <div id="figma-basic" class="level-content block">
+                        <div class="mb-10">
+                            <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">피그마(기초 Tool) ✨</h1>
+                            <p class="text-slate-500 text-[15px]">UI/UX 디자인 협업에 필수적인 피그마 기초 기능을 학습합니다.</p>
+                        </div>
+                        <div class="w-full min-h-[250px] flex items-center justify-center border-2 border-dashed border-slate-200 rounded-[24px]">
+                            <p class="text-slate-400 font-medium">여기에 피그마 기초 콘텐츠가 들어갑니다.</p>
+                        </div>
+                    </div>
+
+                    <div id="figma-advanced" class="level-content hidden">
+                        <div class="mb-10">
+                            <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">피그마(심화 Tool) ✨</h1>
+                            <p class="text-slate-500 text-[15px]">피그마의 컴포넌트, 오토레이아웃 등 고급 기능을 학습합니다.</p>
+                        </div>
+                        <div class="w-full min-h-[250px] flex items-center justify-center border-2 border-dashed border-slate-200 rounded-[24px]">
+                            <p class="text-slate-400 font-medium">여기에 피그마 심화 콘텐츠가 들어갑니다.</p>
+                        </div>
+                    </div>
+                </div> <!-- End of tool-figma -->
+
+            </div> <!-- End of tab-tool -->
+
+            <!-- ========================================== -->
+            <!-- 탭 4: 작업 공간 (새로 추가됨)              -->
+            <!-- ========================================== -->
+            <div id="tab-workspace" class="tab-content">
+                <!-- 타이틀 영역 -->
+                <div class="mb-10">
+                    <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">
+                        개인 작업 공간 🗂️
+                    </h1>
+                    <p class="text-slate-500 text-[15px]">팀원들의 프로젝트 보드와 개인 과제 링크를 한 곳에서 관리합니다.</p>
+                </div>
+
+                <!-- 학생 카드 Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    
+                    <!-- 카드 생성 자바스크립트를 대체하는 HTML 하드코딩 (11명) -->
+                    
+                    <!-- 1. 강은수 -->
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
+                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
+                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">강</div>
+                            <h3 class="font-bold text-slate-800 text-[17px]">강은수</h3>
+                        </div>
+                        <div class="space-y-2">
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group">
+                                <div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div>
+                                <span class="font-medium text-[14px]">브랜딩 피그잼</span>
+                            </a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group">
+                                <div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div>
+                                <span class="font-medium text-[14px]">웹디자인 피그마</span>
+                            </a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group">
+                                <div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div>
+                                <span class="font-medium text-[14px]">연습장</span>
+                            </a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group">
+                                <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div>
+                                <span class="font-medium text-[14px]">웹사이트</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 2. 길솔아 -->
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
+                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
+                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">길</div>
+                            <h3 class="font-bold text-slate-800 text-[17px]">길솔아</h3>
+                        </div>
+                        <div class="space-y-2">
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
+                        </div>
+                    </div>
+
+                    <!-- 3. 김예지 -->
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
+                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
+                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">김</div>
+                            <h3 class="font-bold text-slate-800 text-[17px]">김예지</h3>
+                        </div>
+                        <div class="space-y-2">
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
+                        </div>
+                    </div>
+
+                    <!-- 4. 김윤겸 -->
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
+                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
+                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">김</div>
+                            <h3 class="font-bold text-slate-800 text-[17px]">김윤겸</h3>
+                        </div>
+                        <div class="space-y-2">
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
+                        </div>
+                    </div>
+
+                    <!-- 5. 김지원 -->
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
+                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
+                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">김</div>
+                            <h3 class="font-bold text-slate-800 text-[17px]">김지원</h3>
+                        </div>
+                        <div class="space-y-2">
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
+                        </div>
+                    </div>
+
+                    <!-- 6. 김한솜 -->
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
+                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
+                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">김</div>
+                            <h3 class="font-bold text-slate-800 text-[17px]">김한솜</h3>
+                        </div>
+                        <div class="space-y-2">
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
+                        </div>
+                    </div>
+
+                    <!-- 7. 김희은 -->
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
+                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
+                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">김</div>
+                            <h3 class="font-bold text-slate-800 text-[17px]">김희은</h3>
+                        </div>
+                        <div class="space-y-2">
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
+                        </div>
+                    </div>
+
+                    <!-- 8. 박진희 -->
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
+                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
+                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">박</div>
+                            <h3 class="font-bold text-slate-800 text-[17px]">박진희</h3>
+                        </div>
+                        <div class="space-y-2">
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
+                        </div>
+                    </div>
+
+                    <!-- 9. 원채련 -->
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
+                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
+                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">원</div>
+                            <h3 class="font-bold text-slate-800 text-[17px]">원채련</h3>
+                        </div>
+                        <div class="space-y-2">
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
+                        </div>
+                    </div>
+
+                    <!-- 10. 이주환 -->
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
+                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
+                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">이</div>
+                            <h3 class="font-bold text-slate-800 text-[17px]">이주환</h3>
+                        </div>
+                        <div class="space-y-2">
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
+                        </div>
+                    </div>
+
+                    <!-- 11. 임도희 -->
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
+                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
+                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">임</div>
+                            <h3 class="font-bold text-slate-800 text-[17px]">임도희</h3>
+                        </div>
+                        <div class="space-y-2">
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
+                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
+                        </div>
+                    </div>
+
+                </div>
+            </div> <!-- End of tab-workspace -->
+
+        </div>
+    </main>
+
+    <script>
+        // 아이콘 렌더링 초기화
+        lucide.createIcons();
+
+        // 툴 서브 탭(포토샵, 일러스트, 피그마) 전환 기능
+        function switchTool(toolId) {
+            document.querySelectorAll('.tool-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById('tool-' + toolId).classList.add('active');
+
+            document.querySelectorAll('.sub-tab-btn').forEach(el => {
+                el.classList.remove('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
+                el.classList.add('font-medium', 'text-slate-400', 'hover:text-slate-700');
+            });
+
+            const activeBtn = document.getElementById('sub-' + toolId);
+            activeBtn.classList.remove('font-medium', 'text-slate-400', 'hover:text-slate-700');
+            activeBtn.classList.add('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
+        }
+
+        // 기초 / 심화 레벨 전환 기능
+        function switchLevel(toolId, level) {
+            // 해당 툴의 모든 레벨 콘텐츠 숨김
+            document.querySelectorAll('#tool-' + toolId + ' .level-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            // 선택한 레벨 콘텐츠 표시
+            document.getElementById(toolId + '-' + level).classList.remove('hidden');
+            document.getElementById(toolId + '-' + level).classList.add('block');
+
+            // 해당 툴의 모든 기초/심화 버튼 스타일 초기화
+            document.querySelectorAll('#tool-' + toolId + ' .level-btn').forEach(btn => {
+                btn.className = 'level-btn px-4 py-1.5 text-[14px] font-medium text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-700 rounded-full transition-all shadow-sm';
+            });
+
+            // 선택한 기초/심화 버튼 스타일 활성화
+            const activeBtn = document.getElementById('btn-' + toolId + '-' + level);
+            activeBtn.className = 'level-btn px-4 py-1.5 text-[14px] font-bold text-figjam bg-figjamLight border border-figjamBorder rounded-full transition-all';
+        }
+
+        // GNB 탭 전환 기능
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById('tab-' + tabId).classList.add('active');
+
+            document.querySelectorAll('.gnb-item').forEach(el => {
+                el.classList.remove('bg-figjam/10', 'text-figjam', 'font-bold');
+                el.classList.add('text-slate-500', 'font-medium', 'hover:bg-slate-50', 'hover:text-slate-800');
+            });
+
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.remove('text-slate-500', 'font-medium', 'hover:bg-slate-50', 'hover:text-slate-800');
+            activeBtn.classList.add('bg-figjam/10', 'text-figjam', 'font-bold');
+        }
+    </script>
+</body>
+</html>
