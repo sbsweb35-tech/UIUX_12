@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- 웹 폰트 (Pretendard) -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     
@@ -50,11 +52,18 @@
         /* 사이드바 애니메이션 */
         #sidebar { transition: width 0.3s ease, border-color 0.3s ease; }
         #sidebar-content { transition: opacity 0.2s ease; width: 280px; }
-        #sidebar-toggle-btn { transition: left 0.3s ease; }
         
         body.sidebar-closed #sidebar { width: 0; border-right-color: transparent; }
         body.sidebar-closed #sidebar-content { opacity: 0; pointer-events: none; }
-        body.sidebar-closed #sidebar-toggle-btn { left: 24px; }
+
+        /* 숫자 인풋 스피너 숨김 (진척도 탭 용) */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        /* 부드러운 그림자 유틸리티 (진척도 탭 용) */
+        .shadow-soft { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); }
+        .shadow-hover { box-shadow: 0 10px 30px rgba(139, 92, 246, 0.08); }
     </style>
 </head>
 <body class="text-slate-800 antialiased h-screen flex bg-[#F8FAFC] overflow-hidden">
@@ -63,14 +72,14 @@
     <aside id="sidebar" class="w-[280px] flex-shrink-0 bg-white border-r border-slate-100 flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20 relative">
         
         <!-- 사이드바 토글 버튼 -->
-        <button id="sidebar-toggle-btn" onclick="toggleSidebar()" class="absolute top-8 w-10 h-10 bg-white border border-slate-100 rounded-full flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.08)] text-slate-500 hover:text-figjam transition-all z-50" style="left: 260px;">
+        <button id="sidebar-toggle-btn" onclick="toggleSidebar()" class="absolute top-7 left-6 w-10 h-10 bg-white border border-slate-100 rounded-full flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.08)] text-slate-500 hover:text-figjam transition-all z-50">
             <i data-lucide="menu" class="w-5 h-5"></i>
         </button>
 
         <!-- 사이드바 콘텐츠 컨테이너 (너비 고정) -->
         <div id="sidebar-content" class="w-[280px] h-full flex flex-col overflow-hidden">
             <!-- 로고 영역 -->
-            <div class="h-24 flex items-center px-8 border-b border-slate-50 cursor-pointer hover:bg-slate-50 transition-colors" onclick="switchTab('roadmap')">
+            <div class="h-24 flex items-center pl-[76px] pr-6 border-b border-slate-50 cursor-pointer hover:bg-slate-50 transition-colors" onclick="switchTab('roadmap')">
                 <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center mr-3 shadow-md shrink-0">
                     <i data-lucide="layers" class="w-6 h-6"></i>
                 </div>
@@ -96,10 +105,16 @@
                     <span class="text-[15px]">Tool 수업</span>
                 </button>
 
-                <!-- 작업 공간 탭 추가 -->
+                <!-- 작업 공간 탭 -->
                 <button id="btn-workspace" onclick="switchTab('workspace')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
                     <i data-lucide="folder-open" class="w-5 h-5"></i>
                     <span class="text-[15px]">작업 공간</span>
+                </button>
+
+                <!-- 진척도 탭 추가 -->
+                <button id="btn-progress" onclick="switchTab('progress')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
+                    <i data-lucide="pie-chart" class="w-5 h-5"></i>
+                    <span class="text-[15px]">진척도</span>
                 </button>
             </nav>
 
@@ -126,15 +141,46 @@
             <!-- 탭 1: 학습 로드맵                          -->
             <!-- ========================================== -->
             <div id="tab-roadmap" class="tab-content active">
-                <!-- 타이틀 영역 -->
-                <div class="mb-10">
-                    <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">
-                        학습 현황 🚀
-                    </h1>
-                    <p class="text-slate-500 text-[15px]">현재 진행 중인 프로젝트 단계와 매일 챙겨야 할 루틴을 확인하세요.</p>
-                </div>
+                
+                <!-- 1. 오늘 툴 과제 -->
+                <section class="mb-10">
+                    <h2 class="text-[18px] font-bold text-slate-800 mb-6 flex items-center gap-2">
+                        <i data-lucide="edit-3" class="w-5 h-5 text-figjam"></i>
+                        오늘 툴 과제
+                    </h2>
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-8 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-figjam"></div>
+                        <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                            <div class="flex-1 space-y-4">
+                                <div>
+                                    <h3 class="text-[20px] font-bold text-slate-800">디테일일러스트(일러스트 심화과제)</h3>
+                                    <p class="text-[14px] text-slate-500 font-medium flex items-center gap-1.5 mt-1.5">
+                                        <i data-lucide="clock" class="w-4 h-4"></i> 기한: ~2026.04.23(목)
+                                    </p>
+                                </div>
+                                <div class="bg-slate-50 rounded-xl p-5 border border-slate-100">
+                                    <h4 class="text-[13px] font-bold text-slate-700 mb-2">과제 내용:</h4>
+                                    <ul class="text-[14px] text-slate-600 space-y-1.5 list-disc list-inside marker:text-slate-400">
+                                        <li>모서리가 계단모양인 프레임 작업</li>
+                                        <li>계단 모양 제작 사각형 수치 : 3.3mm * 3.3mm</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="flex-shrink-0 mt-2 md:mt-0 flex flex-col gap-2.5">
+                                <button onclick="goToIllustratorAdvancedTask()" class="flex items-center justify-center w-full md:w-auto min-w-[160px] gap-2 px-5 py-3.5 bg-white border-2 border-figjam text-figjam hover:bg-figjam hover:text-white rounded-xl font-bold transition-all duration-200 shadow-sm text-[14px]">
+                                    <i data-lucide="arrow-right-circle" class="w-5 h-5"></i>
+                                    학습 자료 (이동)
+                                </button>
+                                <a href="https://classroom.google.com/c/ODIyMzY3MjEwNjMy/a/ODYxMTcxMTMzMzQy/details" target="_blank" class="flex items-center justify-center w-full md:w-auto min-w-[160px] gap-2 px-5 py-3.5 bg-figjam text-white hover:bg-[#7c4ced] rounded-xl font-bold transition-all duration-200 shadow-md text-[14px]">
+                                    <i data-lucide="check-square" class="w-5 h-5"></i>
+                                    과제 제출하기
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-                <!-- 일일과제 -->
+                <!-- 2. 일일과제 -->
                 <section class="mb-10">
                     <h2 class="text-[18px] font-bold text-slate-800 mb-6 flex items-center gap-2">
                         <i data-lucide="calendar-check" class="w-5 h-5 text-emerald-500"></i>
@@ -210,175 +256,237 @@
                     </div>
                 </section>
 
-                <!-- 오늘 툴 과제 -->
-                <section class="mb-10">
-                    <h2 class="text-[18px] font-bold text-slate-800 mb-6 flex items-center gap-2">
-                        <i data-lucide="edit-3" class="w-5 h-5 text-figjam"></i>
-                        오늘 툴 과제
-                    </h2>
-                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-8 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1.5 h-full bg-figjam"></div>
-                        <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
-                            <div class="flex-1 space-y-4">
-                                <div>
-                                    <h3 class="text-[20px] font-bold text-slate-800">디테일일러스트(일러스트 심화과제)</h3>
-                                    <p class="text-[14px] text-slate-500 font-medium flex items-center gap-1.5 mt-1.5">
-                                        <i data-lucide="clock" class="w-4 h-4"></i> 기한: ~2026.04.23(목)
-                                    </p>
-                                </div>
-                                <div class="bg-slate-50 rounded-xl p-5 border border-slate-100">
-                                    <h4 class="text-[13px] font-bold text-slate-700 mb-2">과제 내용:</h4>
-                                    <ul class="text-[14px] text-slate-600 space-y-1.5 list-disc list-inside marker:text-slate-400">
-                                        <li>모서리가 계단모양인 프레임 작업</li>
-                                        <li>계단 모양 제작 사각형 수치 : 3.3mm * 3.3mm</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="flex-shrink-0 mt-2 md:mt-0 flex flex-col gap-2.5">
-                                <button onclick="goToIllustratorAdvancedTask()" class="flex items-center justify-center w-full md:w-auto min-w-[160px] gap-2 px-5 py-3.5 bg-white border-2 border-figjam text-figjam hover:bg-figjam hover:text-white rounded-xl font-bold transition-all duration-200 shadow-sm text-[14px]">
-                                    <i data-lucide="arrow-right-circle" class="w-5 h-5"></i>
-                                    학습 자료 (이동)
-                                </button>
-                                <a href="https://classroom.google.com/c/ODIyMzY3MjEwNjMy/a/ODYxMTcxMTMzMzQy/details" target="_blank" class="flex items-center justify-center w-full md:w-auto min-w-[160px] gap-2 px-5 py-3.5 bg-figjam text-white hover:bg-[#7c4ced] rounded-xl font-bold transition-all duration-200 shadow-md text-[14px]">
-                                    <i data-lucide="check-square" class="w-5 h-5"></i>
-                                    과제 제출하기
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- UI/UX 기획 로드맵 (FigJam) -->
-                <section class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-8 mb-10">
-                    <div class="flex items-center justify-between mb-10">
-                        <h2 class="text-[20px] font-bold text-slate-800 flex items-center gap-2.5">
-                            <i data-lucide="map" class="w-6 h-6 text-figjam"></i>
-                            UIUX 워크 플로우
-                        </h2>
-                        <span class="bg-figjamLight text-figjam text-[13px] font-semibold px-4 py-1.5 rounded-full border border-figjamBorder">
-                            실시간 협업중
-                        </span>
-                    </div>
-                    
-                    <div class="relative mt-4 px-2">
-                        <div class="absolute top-1/2 left-[10%] right-[10%] h-[2px] bg-slate-100 -translate-y-1/2 z-0"></div>
-                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 relative z-10">
-                            <!-- Step 1 -->
-                            <div class="bg-white border-[1.5px] border-slate-100 rounded-[20px] p-5 text-center flex flex-col items-center">
-                                <div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center mb-4 text-slate-300">
-                                    <i data-lucide="check" class="w-5 h-5"></i>
-                                </div>
-                                <h3 class="font-bold text-slate-700 text-[14px] mb-1">UIUX 이론 & 리서치</h3>
-                                <p class="text-[12px] text-slate-400 font-medium">완료됨</p>
-                            </div>
-                            <!-- Step 2 -->
-                            <div class="bg-white border-[1.5px] border-slate-100 rounded-[20px] p-5 text-center flex flex-col items-center">
-                                <div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center mb-4 text-slate-300">
-                                    <i data-lucide="check" class="w-5 h-5"></i>
-                                </div>
-                                <h3 class="font-bold text-slate-700 text-[14px] mb-1">UIUX 기획</h3>
-                                <p class="text-[12px] text-slate-400 font-medium">완료됨</p>
-                            </div>
-                            <!-- Step 3 -->
-                            <div class="bg-white border-[2px] border-figjam rounded-[20px] p-5 text-center shadow-[0_10px_30px_-10px_rgba(139,92,246,0.2)] transform md:-translate-y-1.5 relative flex flex-col items-center">
-                                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-figjam text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider">NOW</div>
-                                <div class="w-10 h-10 bg-figjamLight rounded-full flex items-center justify-center mb-4 text-figjam">
-                                    <i data-lucide="search" class="w-5 h-5"></i>
-                                </div>
-                                <h3 class="font-bold text-figjam text-[14px] mb-1">UIUX 사용자 데이터 수집</h3>
-                                <p class="text-[12px] text-figjam/70 font-medium">진행 중</p>
-                            </div>
-                            <!-- Step 4 -->
-                            <div class="bg-white border-[1.5px] border-slate-100 rounded-[20px] p-5 text-center opacity-80 flex flex-col items-center">
-                                <div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center mb-4 text-slate-300">
-                                    <i data-lucide="git-branch" class="w-5 h-5"></i>
-                                </div>
-                                <h3 class="font-bold text-slate-400 text-[14px] mb-1">UIUX 설계</h3>
-                                <p class="text-[12px] text-slate-300 font-medium">예정</p>
-                            </div>
-                            <!-- Step 5 -->
-                            <div class="bg-white border-[1.5px] border-slate-100 rounded-[20px] p-5 text-center opacity-80 flex flex-col items-center">
-                                <div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center mb-4 text-slate-300">
-                                    <i data-lucide="figma" class="w-5 h-5"></i>
-                                </div>
-                                <h3 class="font-bold text-slate-400 text-[14px] mb-1">UIUX 디자인</h3>
-                                <p class="text-[12px] text-slate-300 font-medium">예정</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 포트폴리오 목표 -->
+                <!-- 3. 내부 탭 UI (수업 일정 / UIUX 워크 플로우 / 포트폴리오 목표) -->
                 <section>
-                    <h2 class="text-[18px] font-bold text-slate-800 mb-6 flex items-center gap-2">
-                        <i data-lucide="folder" class="w-5 h-5 text-blue-500"></i>
-                        포트폴리오 목표
-                    </h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                        <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
-                            <div class="flex justify-between items-start mb-6">
-                                <div class="w-12 h-12 rounded-[14px] bg-indigo-50 text-indigo-500 flex items-center justify-center">
-                                    <i data-lucide="pen-tool" class="w-6 h-6"></i>
-                                </div>
-                                <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
-                            </div>
-                            <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">로고</h3>
-                            <p class="text-[14px] text-slate-500 font-medium">브랜드 아이덴티티</p>
-                        </div>
-                        
-                        <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
-                            <div class="flex justify-between items-start mb-6">
-                                <div class="w-12 h-12 rounded-[14px] bg-pink-50 text-pink-500 flex items-center justify-center">
-                                    <i data-lucide="package" class="w-6 h-6"></i>
-                                </div>
-                                <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
-                            </div>
-                            <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">패키지</h3>
-                            <p class="text-[14px] text-slate-500 font-medium">최종 디자인 적용</p>
-                        </div>
+                    <div class="flex items-center gap-6 mb-6 border-b border-slate-200">
+                        <button id="sub-roadmap-schedule" onclick="switchRoadmapTab('schedule')" class="roadmap-tab-btn pb-3 text-[16px] font-bold text-figjam border-b-[3px] border-figjam transition-colors">수업 일정</button>
+                        <button id="sub-roadmap-workflow" onclick="switchRoadmapTab('workflow')" class="roadmap-tab-btn pb-3 text-[16px] font-medium text-slate-400 hover:text-slate-700 transition-colors">UIUX 워크 플로우</button>
+                        <button id="sub-roadmap-portfolio" onclick="switchRoadmapTab('portfolio')" class="roadmap-tab-btn pb-3 text-[16px] font-medium text-slate-400 hover:text-slate-700 transition-colors">포트폴리오 목표</button>
+                    </div>
 
-                        <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
-                            <div class="flex justify-between items-start mb-6">
-                                <div class="w-12 h-12 rounded-[14px] bg-emerald-50 text-emerald-500 flex items-center justify-center">
-                                    <i data-lucide="monitor" class="w-6 h-6"></i>
+                    <!-- 내부 탭 콘텐츠: 수업 일정 -->
+                    <div id="roadmap-schedule" class="roadmap-sub-content block">
+                        <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-8">
+                            <!-- 전체 진행률 (스펙트럼 바) -->
+                            <div class="mb-10">
+                                <div class="flex justify-between items-end mb-3">
+                                    <div>
+                                        <h3 class="text-[17px] font-bold text-slate-800">전체 교육 과정</h3>
+                                        <p class="text-[14px] text-slate-500 font-medium mt-1 tracking-wide">2025.12.08 ~ 2026.06.25</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-[32px] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-figjam to-blue-500 tracking-tighter">68%</span>
+                                    </div>
                                 </div>
-                                <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                                <div class="relative w-full h-3.5 bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                                    <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-figjam via-purple-500 to-blue-500 rounded-full" style="width: 68%;"></div>
+                                </div>
+                                <div class="flex justify-between text-[13px] font-bold mt-2.5">
+                                    <span class="text-slate-400">개강 (25.12.08)</span>
+                                    <span class="text-figjam relative">
+                                        오늘 (26.04.23)
+                                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-figjam rounded-full"></div>
+                                    </span>
+                                    <span class="text-slate-400">종강 (26.06.25)</span>
+                                </div>
                             </div>
-                            <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">브랜딩 웹사이트</h3>
-                            <p class="text-[14px] text-slate-500 font-medium">웹 퍼블리싱</p>
-                        </div>
 
-                        <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
-                            <div class="flex justify-between items-start mb-6">
-                                <div class="w-12 h-12 rounded-[14px] bg-blue-50 text-blue-500 flex items-center justify-center">
-                                    <i data-lucide="layout-template" class="w-6 h-6"></i>
-                                </div>
-                                <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
-                            </div>
-                            <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">UIUX 기획</h3>
-                            <p class="text-[14px] text-slate-500 font-medium">기획서 초안 작성</p>
-                        </div>
+                            <!-- 능력단위 세부 일정 리스트 -->
+                            <div>
+                                <h4 class="text-[15px] font-bold text-slate-700 mb-4 pb-3 border-b border-slate-50">능력단위 세부 일정</h4>
+                                <div class="space-y-2.5">
+                                    
+                                    <!-- Item 1 (진행중) -->
+                                    <div class="flex flex-col lg:flex-row lg:items-center justify-between p-4.5 px-5 rounded-2xl bg-indigo-50/60 border border-indigo-100 shadow-sm transition-all">
+                                        <div class="flex items-center gap-3.5 mb-3 lg:mb-0">
+                                            <span class="relative flex h-3 w-3 shrink-0">
+                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                                                <span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
+                                            </span>
+                                            <span class="font-bold text-[15px] text-indigo-900">스마트문화앱 UX 설계</span>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-[12px] font-bold text-indigo-600 bg-white border border-indigo-200 px-3 py-1.5 rounded-lg shadow-sm">진행중</span>
+                                            <span class="text-[14px] text-indigo-600/80 font-semibold tracking-wide">2026.04.03 ~ 2026.05.22</span>
+                                        </div>
+                                    </div>
 
-                        <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
-                            <div class="flex justify-between items-start mb-6">
-                                <div class="w-12 h-12 rounded-[14px] bg-orange-50 text-orange-500 flex items-center justify-center">
-                                    <i data-lucide="git-branch" class="w-6 h-6"></i>
-                                </div>
-                                <span class="text-[12px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-md">대기</span>
-                            </div>
-                            <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">UIUX 설계</h3>
-                            <p class="text-[14px] text-slate-500 font-medium">와이어프레임 & IA</p>
-                        </div>
+                                    <!-- Item 2 (진행중) -->
+                                    <div class="flex flex-col lg:flex-row lg:items-center justify-between p-4.5 px-5 rounded-2xl bg-indigo-50/60 border border-indigo-100 shadow-sm transition-all">
+                                        <div class="flex items-start lg:items-center gap-3.5 mb-3 lg:mb-0">
+                                            <span class="relative flex h-3 w-3 shrink-0 mt-1.5 lg:mt-0">
+                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                                                <span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
+                                            </span>
+                                            <span class="font-bold text-[15px] text-indigo-900 leading-snug">프로토타입 기초데이터 수집 및 스케치, 프로토타입 제작 및 사용성 테스트</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 shrink-0">
+                                            <span class="text-[12px] font-bold text-indigo-600 bg-white border border-indigo-200 px-3 py-1.5 rounded-lg shadow-sm">진행중</span>
+                                            <span class="text-[14px] text-indigo-600/80 font-semibold tracking-wide min-w-[155px] text-right">2026.04.03 ~ 2026.05.12</span>
+                                        </div>
+                                    </div>
 
-                        <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
-                            <div class="flex justify-between items-start mb-6">
-                                <div class="w-12 h-12 rounded-[14px] bg-purple-50 text-purple-500 flex items-center justify-center">
-                                    <i data-lucide="figma" class="w-6 h-6"></i>
+                                    <!-- Item 3 -->
+                                    <div class="flex flex-col lg:flex-row lg:items-center justify-between p-4.5 px-5 rounded-2xl hover:bg-slate-50 border border-transparent transition-all group">
+                                        <div class="flex items-center gap-3.5 mb-3 lg:mb-0">
+                                            <span class="flex-shrink-0 w-2.5 h-2.5 rounded-full bg-slate-300 group-hover:bg-slate-400 transition-colors"></span>
+                                            <span class="font-bold text-[15px] text-slate-700">스마트문화앱 UI 디자인</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 shrink-0">
+                                            <span class="text-[12px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg">예정</span>
+                                            <span class="text-[14px] text-slate-500 font-semibold tracking-wide min-w-[155px] text-right">2026.05.22 ~ 2026.06.24</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Item 4 -->
+                                    <div class="flex flex-col lg:flex-row lg:items-center justify-between p-4.5 px-5 rounded-2xl hover:bg-slate-50 border border-transparent transition-all group">
+                                        <div class="flex items-center gap-3.5 mb-3 lg:mb-0">
+                                            <span class="flex-shrink-0 w-2.5 h-2.5 rounded-full bg-slate-300 group-hover:bg-slate-400 transition-colors"></span>
+                                            <span class="font-bold text-[15px] text-slate-700">(비NCS 실기)취업 포트폴리오 제작</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 shrink-0">
+                                            <span class="text-[12px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg">예정</span>
+                                            <span class="text-[14px] text-slate-500 font-semibold tracking-wide min-w-[155px] text-right">2026.05.13 ~ 2026.06.24</span>
+                                        </div>
+                                    </div>
+
                                 </div>
-                                <span class="text-[12px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-md">대기</span>
                             </div>
-                            <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">UIUX 디자인</h3>
-                            <p class="text-[14px] text-slate-500 font-medium">프로토타입 제작</p>
+                        </div>
+                    </div>
+
+                    <!-- 내부 탭 콘텐츠: UIUX 워크 플로우 -->
+                    <div id="roadmap-workflow" class="roadmap-sub-content hidden">
+                        <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-8">
+                            <div class="flex items-center justify-between mb-10">
+                                <h2 class="text-[20px] font-bold text-slate-800 flex items-center gap-2.5">
+                                    <i data-lucide="map" class="w-6 h-6 text-figjam"></i>
+                                    UIUX 워크 플로우
+                                </h2>
+                                <span class="bg-figjamLight text-figjam text-[13px] font-semibold px-4 py-1.5 rounded-full border border-figjamBorder">
+                                    실시간 협업중
+                                </span>
+                            </div>
+                            
+                            <div class="relative mt-4 px-2">
+                                <div class="absolute top-1/2 left-[10%] right-[10%] h-[2px] bg-slate-100 -translate-y-1/2 z-0"></div>
+                                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 relative z-10">
+                                    <!-- Step 1 -->
+                                    <div class="bg-white border-[1.5px] border-slate-100 rounded-[20px] p-5 text-center flex flex-col items-center">
+                                        <div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center mb-4 text-slate-300">
+                                            <i data-lucide="check" class="w-5 h-5"></i>
+                                        </div>
+                                        <h3 class="font-bold text-slate-700 text-[14px] mb-1">UIUX 이론 & 리서치</h3>
+                                        <p class="text-[12px] text-slate-400 font-medium">완료됨</p>
+                                    </div>
+                                    <!-- Step 2 -->
+                                    <div class="bg-white border-[1.5px] border-slate-100 rounded-[20px] p-5 text-center flex flex-col items-center">
+                                        <div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center mb-4 text-slate-300">
+                                            <i data-lucide="check" class="w-5 h-5"></i>
+                                        </div>
+                                        <h3 class="font-bold text-slate-700 text-[14px] mb-1">UIUX 기획</h3>
+                                        <p class="text-[12px] text-slate-400 font-medium">완료됨</p>
+                                    </div>
+                                    <!-- Step 3 -->
+                                    <div class="bg-white border-[2px] border-figjam rounded-[20px] p-5 text-center shadow-[0_10px_30px_-10px_rgba(139,92,246,0.2)] transform md:-translate-y-1.5 relative flex flex-col items-center">
+                                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-figjam text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider">NOW</div>
+                                        <div class="w-10 h-10 bg-figjamLight rounded-full flex items-center justify-center mb-4 text-figjam">
+                                            <i data-lucide="search" class="w-5 h-5"></i>
+                                        </div>
+                                        <h3 class="font-bold text-figjam text-[14px] mb-1">UIUX 사용자 데이터 수집</h3>
+                                        <p class="text-[12px] text-figjam/70 font-medium">진행 중</p>
+                                    </div>
+                                    <!-- Step 4 -->
+                                    <div class="bg-white border-[1.5px] border-slate-100 rounded-[20px] p-5 text-center opacity-80 flex flex-col items-center">
+                                        <div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center mb-4 text-slate-300">
+                                            <i data-lucide="git-branch" class="w-5 h-5"></i>
+                                        </div>
+                                        <h3 class="font-bold text-slate-400 text-[14px] mb-1">UIUX 설계</h3>
+                                        <p class="text-[12px] text-slate-300 font-medium">예정</p>
+                                    </div>
+                                    <!-- Step 5 -->
+                                    <div class="bg-white border-[1.5px] border-slate-100 rounded-[20px] p-5 text-center opacity-80 flex flex-col items-center">
+                                        <div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center mb-4 text-slate-300">
+                                            <i data-lucide="figma" class="w-5 h-5"></i>
+                                        </div>
+                                        <h3 class="font-bold text-slate-400 text-[14px] mb-1">UIUX 디자인</h3>
+                                        <p class="text-[12px] text-slate-300 font-medium">예정</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 내부 탭 콘텐츠: 포트폴리오 목표 -->
+                    <div id="roadmap-portfolio" class="roadmap-sub-content hidden">
+                        <div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                                <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div class="w-12 h-12 rounded-[14px] bg-indigo-50 text-indigo-500 flex items-center justify-center">
+                                            <i data-lucide="pen-tool" class="w-6 h-6"></i>
+                                        </div>
+                                        <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                                    </div>
+                                    <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">로고</h3>
+                                    <p class="text-[14px] text-slate-500 font-medium">브랜드 아이덴티티</p>
+                                </div>
+                                
+                                <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div class="w-12 h-12 rounded-[14px] bg-pink-50 text-pink-500 flex items-center justify-center">
+                                            <i data-lucide="package" class="w-6 h-6"></i>
+                                        </div>
+                                        <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                                    </div>
+                                    <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">패키지</h3>
+                                    <p class="text-[14px] text-slate-500 font-medium">최종 디자인 적용</p>
+                                </div>
+
+                                <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div class="w-12 h-12 rounded-[14px] bg-emerald-50 text-emerald-500 flex items-center justify-center">
+                                            <i data-lucide="monitor" class="w-6 h-6"></i>
+                                        </div>
+                                        <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                                    </div>
+                                    <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">브랜딩 웹사이트</h3>
+                                    <p class="text-[14px] text-slate-500 font-medium">웹 퍼블리싱</p>
+                                </div>
+
+                                <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div class="w-12 h-12 rounded-[14px] bg-blue-50 text-blue-500 flex items-center justify-center">
+                                            <i data-lucide="layout-template" class="w-6 h-6"></i>
+                                        </div>
+                                        <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                                    </div>
+                                    <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">UIUX 기획</h3>
+                                    <p class="text-[14px] text-slate-500 font-medium">기획서 초안 작성</p>
+                                </div>
+
+                                <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div class="w-12 h-12 rounded-[14px] bg-orange-50 text-orange-500 flex items-center justify-center">
+                                            <i data-lucide="git-branch" class="w-6 h-6"></i>
+                                        </div>
+                                        <span class="text-[12px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-md">대기</span>
+                                    </div>
+                                    <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">UIUX 설계</h3>
+                                    <p class="text-[14px] text-slate-500 font-medium">와이어프레임 & IA</p>
+                                </div>
+
+                                <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div class="w-12 h-12 rounded-[14px] bg-purple-50 text-purple-500 flex items-center justify-center">
+                                            <i data-lucide="figma" class="w-6 h-6"></i>
+                                        </div>
+                                        <span class="text-[12px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-md">대기</span>
+                                    </div>
+                                    <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">UIUX 디자인</h3>
+                                    <p class="text-[14px] text-slate-500 font-medium">프로토타입 제작</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -754,7 +862,7 @@
             </div> <!-- End of tab-tool -->
 
             <!-- ========================================== -->
-            <!-- 탭 4: 작업 공간 (새로 추가됨)              -->
+            <!-- 탭 4: 작업 공간                            -->
             <!-- ========================================== -->
             <div id="tab-workspace" class="tab-content">
                 <!-- 타이틀 영역 -->
@@ -767,9 +875,6 @@
 
                 <!-- 학생 카드 Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    
-                    <!-- 카드 생성 자바스크립트를 대체하는 HTML 하드코딩 (11명) -->
-                    
                     <!-- 1. 강은수 -->
                     <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
                         <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
@@ -939,18 +1044,108 @@
                 </div>
             </div> <!-- End of tab-workspace -->
 
+            <!-- ========================================== -->
+            <!-- 탭 5: 진척도 (새로 추가됨)                 -->
+            <!-- ========================================== -->
+            <div id="tab-progress" class="tab-content">
+                
+                <!-- 타이틀 및 요약 영역 -->
+                <div class="mb-6 flex flex-row items-end justify-between gap-4">
+                    <div>
+                        <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">
+                            학습 진척도 📊
+                        </h1>
+                        <p class="text-slate-500 text-[15px]">개인별 과제 달성률 및 전체 학습 진행 상황을 확인합니다.</p>
+                    </div>
+                    <!-- 요약 통계 -->
+                    <div class="flex items-center bg-white px-6 py-3 rounded-2xl border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+                        <span class="text-slate-500 font-bold text-[13px] mr-4 uppercase tracking-wider">전체 평균 진척도</span>
+                        <span id="summary-avg" class="text-2xl font-extrabold text-figjam">0%</span>
+                    </div>
+                </div>
+
+                <!-- 진척도 메인 영역 (범례 + 차트) - 100vh 안에 맞춘 Row 레이아웃 -->
+                <div class="flex flex-row gap-6 w-full items-stretch" style="height: calc(100vh - 260px); min-height: 450px;"> 
+                    
+                    <!-- 좌측: 커스텀 범례 (학생 목록) -->
+                    <div class="w-[280px] bg-white rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-4 flex flex-col shrink-0 z-10 border border-slate-100 overflow-y-auto">
+                        <div id="custom-legend" class="flex flex-col gap-1 w-full">
+                            <!-- JS에서 학생 범례 동적 생성 -->
+                        </div>
+                    </div>
+
+                    <!-- 우측: Chart.js 그래프 영역 -->
+                    <div class="flex-1 bg-white rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-6 relative flex flex-col border border-slate-100 min-w-0">
+                        <div class="relative flex-1 w-full h-full min-h-0">
+                            <canvas id="progressChart"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div> <!-- End of tab-progress -->
+
         </div>
     </main>
+
+    <!-- 개별 학생 진척도 수정 모달 팝업 (전역 레이어) -->
+    <div id="modal" class="fixed inset-0 bg-slate-900/20 hidden items-center justify-center z-[100] p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <div class="bg-white rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] w-full max-w-2xl overflow-hidden transform transition-all border border-white">
+            <!-- 모달 헤더 -->
+            <div class="px-8 py-6 flex justify-between items-center bg-figjamLight/50 border-b border-figjamBorder/50">
+                <h2 class="text-2xl font-extrabold text-slate-800 flex items-center gap-3">
+                    <span class="w-10 h-10 rounded-2xl bg-white text-figjam flex items-center justify-center shadow-sm">
+                        <i data-lucide="edit-2" class="w-5 h-5"></i>
+                    </span>
+                    <span id="modal-title">학생 진척도 수정</span>
+                </h2>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100 hover:bg-slate-50">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <!-- 모달 폼 콘텐츠 -->
+            <div class="p-8 max-h-[60vh] overflow-y-auto">
+                <p class="text-sm text-slate-500 mb-6 pb-4 border-b border-slate-100 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-figjam"></span>
+                    해당 학생의 과목별 달성률(%)을 입력하세요. (0 ~ 100)
+                </p>
+                <div id="modal-form-grid" class="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-6">
+                    <!-- JS로 Input 필드 생성 -->
+                </div>
+            </div>
+            
+            <!-- 모달 푸터 -->
+            <div class="px-8 py-5 bg-slate-50/50 flex items-center justify-between border-t border-slate-100">
+                <p class="text-xs font-medium text-slate-400">⌨️ 폼에서 Enter 키를 누르면 바로 저장됩니다.</p>
+                <div class="flex gap-3">
+                    <button onclick="closeModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:text-slate-700 transition-colors shadow-sm">취소</button>
+                    <button onclick="saveData()" class="px-6 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] shadow-md transition-all active:scale-95 flex items-center gap-2">
+                        <i data-lucide="check" class="w-4 h-4"></i> 수정 완료
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 토스트 알림 (전역 레이어) -->
+    <div id="toast" class="fixed bottom-8 right-8 bg-slate-800 text-white px-6 py-4 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] transform transition-all duration-300 translate-y-full opacity-0 flex items-center gap-3 z-[100] font-medium">
+        <div class="w-6 h-6 rounded-full bg-emerald-400/20 flex items-center justify-center text-emerald-400">
+            <i data-lucide="check" class="w-4 h-4"></i>
+        </div>
+        <span id="toast-msg">저장되었습니다.</span>
+    </div>
 
     <script>
         // 아이콘 렌더링 초기화
         lucide.createIcons();
 
-        // 툴 서브 탭(포토샵, 일러스트, 피그마) 전환 기능
+        // ----------------------------------------
+        // 기존 탭 및 기능 로직
+        // ----------------------------------------
+
         function switchTool(toolId) {
-            document.querySelectorAll('.tool-content').forEach(el => {
-                el.classList.remove('active');
-            });
+            document.querySelectorAll('.tool-content').forEach(el => el.classList.remove('active'));
             document.getElementById('tool-' + toolId).classList.add('active');
 
             document.querySelectorAll('.sub-tab-btn').forEach(el => {
@@ -963,32 +1158,66 @@
             activeBtn.classList.add('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
         }
 
-        // 기초 / 심화 레벨 전환 기능
         function switchLevel(toolId, level) {
-            // 해당 툴의 모든 레벨 콘텐츠 숨김
             document.querySelectorAll('#tool-' + toolId + ' .level-content').forEach(el => {
                 el.classList.add('hidden');
                 el.classList.remove('block');
             });
-            // 선택한 레벨 콘텐츠 표시
             document.getElementById(toolId + '-' + level).classList.remove('hidden');
             document.getElementById(toolId + '-' + level).classList.add('block');
 
-            // 해당 툴의 모든 기초/심화 버튼 스타일 초기화
             document.querySelectorAll('#tool-' + toolId + ' .level-btn').forEach(btn => {
                 btn.className = 'level-btn px-4 py-1.5 text-[14px] font-medium text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-700 rounded-full transition-all shadow-sm';
             });
 
-            // 선택한 기초/심화 버튼 스타일 활성화
             const activeBtn = document.getElementById('btn-' + toolId + '-' + level);
             activeBtn.className = 'level-btn px-4 py-1.5 text-[14px] font-bold text-figjam bg-figjamLight border border-figjamBorder rounded-full transition-all';
         }
 
-        // GNB 탭 전환 기능
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => {
-                el.classList.remove('active');
+        function switchRoadmapTab(tabId) {
+            document.querySelectorAll('.roadmap-sub-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
             });
+            document.getElementById('roadmap-' + tabId).classList.remove('hidden');
+            document.getElementById('roadmap-' + tabId).classList.add('block');
+
+            document.querySelectorAll('.roadmap-tab-btn').forEach(el => {
+                el.classList.remove('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
+                el.classList.add('font-medium', 'text-slate-400', 'hover:text-slate-700');
+            });
+
+            const activeBtn = document.getElementById('sub-roadmap-' + tabId);
+            activeBtn.classList.remove('font-medium', 'text-slate-400', 'hover:text-slate-700');
+            activeBtn.classList.add('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
+        }
+
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-closed');
+        }
+
+        function goToIllustratorAdvancedTask() {
+            switchTab('tool');
+            switchTool('illustrator');
+            switchLevel('illustrator', 'advanced');
+            
+            setTimeout(() => {
+                const targetCard = document.getElementById('card-line-illust');
+                if(targetCard) {
+                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetCard.classList.add('ring-4', 'ring-figjam/50');
+                    setTimeout(() => {
+                        targetCard.classList.remove('ring-4', 'ring-figjam/50');
+                    }, 1500);
+                }
+            }, 150);
+        }
+
+        // 메인 GNB 탭 전환 기능 (진척도 차트 로드 타이밍 제어 포함)
+        let isProgressInitialized = false;
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
 
             document.querySelectorAll('.gnb-item').forEach(el => {
@@ -997,37 +1226,306 @@
             });
 
             const activeBtn = document.getElementById('btn-' + tabId);
-            activeBtn.classList.remove('text-slate-500', 'font-medium', 'hover:bg-slate-50', 'hover:text-slate-800');
-            activeBtn.classList.add('bg-figjam/10', 'text-figjam', 'font-bold');
-        }
+            if(activeBtn) {
+                activeBtn.classList.remove('text-slate-500', 'font-medium', 'hover:bg-slate-50', 'hover:text-slate-800');
+                activeBtn.classList.add('bg-figjam/10', 'text-figjam', 'font-bold');
+            }
 
-        // 사이드바 토글 기능
-        function toggleSidebar() {
-            document.body.classList.toggle('sidebar-closed');
-        }
-
-        // 오늘 툴 과제 -> 일러스트 심화(라인 일러스트) 카드로 이동
-        function goToIllustratorAdvancedTask() {
-            // 1. 탭 전환
-            switchTab('tool');
-            switchTool('illustrator');
-            switchLevel('illustrator', 'advanced');
-            
-            // 2. UI가 렌더링될 수 있도록 약간의 지연 후 스크롤 이동
-            setTimeout(() => {
-                const targetCard = document.getElementById('card-line-illust');
-                if(targetCard) {
-                    // 해당 카드로 부드럽게 스크롤
-                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    
-                    // 시각적 피드백 (하이라이트 깜빡임)
-                    targetCard.classList.add('ring-4', 'ring-figjam/50');
+            // 진척도 탭 최초 진입 시 렌더링 (display가 켜진 상태여야 차트 크기가 안 깨짐)
+            if (tabId === 'progress') {
+                if (!isProgressInitialized) {
                     setTimeout(() => {
-                        targetCard.classList.remove('ring-4', 'ring-figjam/50');
-                    }, 1500);
+                        initProgress();
+                        isProgressInitialized = true;
+                    }, 50); // DOM paint delay
+                } else if (myChart) {
+                    myChart.resize(); // 탭 전환 후 리사이징 보정
                 }
-            }, 150);
+            }
         }
+
+
+        // ----------------------------------------
+        // 진척도 (Progress) 로직 연동
+        // ----------------------------------------
+
+        const students = ['강은수', '길솔아', '김예지', '김윤겸', '김지원', '김한솜', '김희은', '박진희', '원채련', '이주환', '임도희'];
+        const tasks = ['로고', '패키지 기획', '패키지 무드보드', '패키지 그리드', '패키지 와이어프레임', '패키지 초안', '패키지 수정안', '패키지 최종안', 'Web Wire', 'Web Wire Develop', 'Web Design', 'Web Design Develop'];
+        
+        const studentColors = ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#22c55e', '#10b981', '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6'];
+        
+        let progressData = {};
+        let myChart = null;
+        let currentEditingStudent = '';
+
+        function initProgress() {
+            const savedData = localStorage.getItem('assignmentData_v2');
+            if (savedData) {
+                progressData = JSON.parse(savedData);
+            } else {
+                students.forEach(std => {
+                    progressData[std] = {};
+                    tasks.forEach(task => progressData[std][task] = 0);
+                });
+            }
+            renderStudentLegend();
+            renderChart();
+            updateSummary();
+        }
+
+        function updateSummary() {
+            let totalScore = 0;
+            let totalCount = students.length * tasks.length;
+            
+            students.forEach(std => {
+                tasks.forEach(task => {
+                    totalScore += progressData[std][task] || 0;
+                });
+            });
+            
+            const avg = Math.round(totalScore / totalCount);
+            document.getElementById('summary-avg').textContent = `${avg}%`;
+        }
+
+        // 좌측 학생 목록 범례 (이미지 디자인 적용)
+        function renderStudentLegend() {
+            const legendContainer = document.getElementById('custom-legend');
+            legendContainer.innerHTML = '';
+            
+            students.forEach((std, index) => {
+                let studentTotal = 0;
+                tasks.forEach(task => { studentTotal += progressData[std][task] || 0; });
+                const studentAvg = Math.round(studentTotal / tasks.length);
+
+                const item = document.createElement('div');
+                item.className = 'legend-item-wrapper w-full';
+                
+                const color = studentColors[index % studentColors.length];
+                
+                item.innerHTML = `
+                    <div class="flex items-center w-full bg-white hover:bg-slate-50 border border-transparent py-2.5 px-3 rounded-[16px] transition-all duration-200 cursor-pointer group" onclick="toggleDataset(${index}, this.querySelector('.std-name'))">
+                        
+                        <button onclick="event.stopPropagation(); openModal('${std}')" class="bg-white border border-slate-200 text-slate-500 hover:text-figjam text-[11px] font-semibold py-1.5 px-3.5 rounded-full transition-colors flex items-center gap-1.5 shrink-0 shadow-sm mr-4">
+                            <i data-lucide="edit-2" class="w-3 h-3"></i> 수정
+                        </button>
+                        
+                        <div class="flex items-center gap-2.5 flex-1 overflow-hidden">
+                            <span class="w-2 h-2 rounded-full shrink-0" style="background-color: ${color}"></span>
+                            <span class="std-name font-bold text-slate-800 text-[14px] select-none truncate transition-colors" title="${std}">${std}</span>
+                        </div>
+                        
+                        <span class="text-[12px] font-bold text-figjam bg-figjamLight/80 px-2.5 py-1 rounded-md shrink-0 ml-2">${studentAvg}%</span>
+                    </div>
+                `;
+                legendContainer.appendChild(item);
+            });
+            // 새로 생성된 DOM의 아이콘 렌더링
+            lucide.createIcons();
+        }
+
+        function toggleDataset(index, labelElement) {
+            if (!myChart) return;
+            const isVisible = myChart.isDatasetVisible(index);
+            
+            myChart.setDatasetVisibility(index, !isVisible);
+            myChart.update();
+            
+            if (isVisible) {
+                labelElement.classList.add('line-through', 'opacity-40');
+            } else {
+                labelElement.classList.remove('line-through', 'opacity-40');
+            }
+        }
+
+        // 창 크기 변경 시 차트 업데이트
+        window.addEventListener('resize', () => {
+            if(myChart) myChart.update();
+        });
+
+        function renderChart() {
+            const ctx = document.getElementById('progressChart').getContext('2d');
+            
+            const datasets = students.map((std, i) => {
+                const dataPoints = tasks.map(task => progressData[std][task] || 0);
+                const color = studentColors[i % studentColors.length];
+                
+                return {
+                    label: std,
+                    data: dataPoints,
+                    borderColor: '#f1f5f9', // 배경선 연하게
+                    backgroundColor: color, 
+                    borderWidth: 2.5,
+                    tension: 0.45, 
+                    fill: false,
+                    pointBackgroundColor: color,
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: color,
+                    pointHoverBorderColor: '#ffffff'
+                };
+            });
+
+            if (myChart) {
+                myChart.data.labels = tasks;
+                myChart.data.datasets = datasets;
+                myChart.update();
+            } else {
+                Chart.defaults.font.family = "'Pretendard', sans-serif";
+                Chart.defaults.color = '#94a3b8';
+                
+                myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: { labels: tasks, datasets: datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        layout: { padding: { top: 10, bottom: 20, right: 10 } },
+                        interaction: { mode: 'index', intersect: false },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: 'rgba(255, 255, 255, 0.98)',
+                                titleColor: '#1e293b',
+                                bodyColor: '#475569',
+                                borderColor: '#e2e8f0',
+                                borderWidth: 1,
+                                padding: 14,
+                                boxPadding: 8,
+                                usePointStyle: true,
+                                titleFont: { size: 14, weight: 'bold' },
+                                bodyFont: { size: 13, weight: 'bold' },
+                                cornerRadius: 12,
+                                boxShadow: '0 10px 25px rgba(0,0,0,0.05)'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                position: 'right',
+                                min: 0, 
+                                max: 100,
+                                border: { display: false },
+                                grid: { 
+                                    color: '#f1f5f9',
+                                    drawTicks: false,
+                                    lineWidth: 1
+                                },
+                                ticks: { 
+                                    stepSize: 10,
+                                    callback: val => val + '%', 
+                                    padding: 15,
+                                    font: { size: 12, weight: '600' },
+                                    color: '#cbd5e1'
+                                }
+                            },
+                            x: {
+                                border: { display: false },
+                                grid: { display: false },
+                                ticks: { 
+                                    padding: 15, 
+                                    font: { weight: '800', size: 13 },
+                                    color: '#94a3b8' 
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function openModal(std) {
+            currentEditingStudent = std;
+            document.getElementById('modal-title').textContent = `${std} 학생 진척도 수정`;
+            
+            const formGrid = document.getElementById('modal-form-grid');
+            formGrid.innerHTML = '';
+            
+            tasks.forEach((task, idx) => {
+                const val = progressData[std][task] || 0;
+                
+                formGrid.innerHTML += `
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[13px] font-bold text-slate-700 pl-1 flex items-center gap-2 truncate" title="${task}">
+                            <span class="w-1.5 h-1.5 rounded-full bg-figjam"></span>
+                            ${task}
+                        </label>
+                        <div class="relative group">
+                            <input type="number" id="input-${task}" value="${val}" min="0" max="100" 
+                                class="w-full border-2 border-slate-100 rounded-xl px-4 py-2.5 pr-8 focus:ring-4 focus:ring-figjam/20 focus:border-figjam outline-none transition-all text-right font-bold text-slate-800 bg-slate-50 hover:bg-white focus:bg-white text-base">
+                            <span class="absolute right-3 top-3 text-slate-400 font-bold group-focus-within:text-figjam transition-colors">%</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            const modal = document.getElementById('modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // 애니메이션 부드럽게 (display block 적용 후 opacity 변경)
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.classList.add('opacity-100');
+                document.getElementById(`input-${tasks[0]}`).focus();
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300); // transition 지속시간과 맞춤
+        }
+
+        function saveData() {
+            tasks.forEach(task => {
+                const input = document.getElementById(`input-${task}`);
+                let val = parseInt(input.value);
+                
+                if (isNaN(val)) val = 0;
+                if (val < 0) val = 0;
+                if (val > 100) val = 100;
+                
+                progressData[currentEditingStudent][task] = val;
+            });
+            
+            localStorage.setItem('assignmentData_v2', JSON.stringify(progressData));
+            
+            renderStudentLegend();
+            renderChart();
+            updateSummary();
+            closeModal();
+            showToast(`'${currentEditingStudent}' 학생의 데이터가 갱신되었습니다.`);
+        }
+
+        // 모달 외부 영역 클릭 시 닫기
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // 엔터키 저장 지원
+        document.getElementById('modal-form-grid').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                saveData();
+            }
+        });
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            
+            toast.classList.remove('translate-y-full', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-full');
+            }, 2500);
+        }
+
     </script>
 </body>
 </html>
