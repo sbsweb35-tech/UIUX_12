@@ -94,12 +94,13 @@
                     <i data-lucide="map" class="w-5 h-5"></i>
                     <span class="text-[15px]">학습 로드맵</span>
                 </button>
-                
-                <button id="btn-basic" onclick="switchTab('basic')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
-                    <i data-lucide="keyboard" class="w-5 h-5"></i>
-                    <span class="text-[15px]">컴퓨터 기초</span>
-                </button>
 
+                <!-- 진척도 탭 이동 -->
+                <button id="btn-progress" onclick="switchTab('progress')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
+                    <i data-lucide="pie-chart" class="w-5 h-5"></i>
+                    <span class="text-[15px]">진척도</span>
+                </button>
+                
                 <button id="btn-tool" onclick="switchTab('tool')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
                     <i data-lucide="image" class="w-5 h-5"></i>
                     <span class="text-[15px]">Tool 수업</span>
@@ -109,12 +110,6 @@
                 <button id="btn-workspace" onclick="switchTab('workspace')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
                     <i data-lucide="folder-open" class="w-5 h-5"></i>
                     <span class="text-[15px]">작업 공간</span>
-                </button>
-
-                <!-- 진척도 탭 추가 -->
-                <button id="btn-progress" onclick="switchTab('progress')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
-                    <i data-lucide="pie-chart" class="w-5 h-5"></i>
-                    <span class="text-[15px]">진척도</span>
                 </button>
             </nav>
 
@@ -155,14 +150,15 @@
                                 <div>
                                     <h3 class="text-[20px] font-bold text-slate-800">디테일일러스트(일러스트 심화과제)</h3>
                                     <p class="text-[14px] text-slate-500 font-medium flex items-center gap-1.5 mt-1.5">
-                                        <i data-lucide="clock" class="w-4 h-4"></i> 기한: ~2026.04.23(목)
+                                        <i data-lucide="clock" class="w-4 h-4"></i> 기한: ~2026.04.24(금)
                                     </p>
                                 </div>
                                 <div class="bg-slate-50 rounded-xl p-5 border border-slate-100">
                                     <h4 class="text-[13px] font-bold text-slate-700 mb-2">과제 내용:</h4>
-                                    <ul class="text-[14px] text-slate-600 space-y-1.5 list-disc list-inside marker:text-slate-400">
-                                        <li>모서리가 계단모양인 프레임 작업</li>
-                                        <li>계단 모양 제작 사각형 수치 : 3.3mm * 3.3mm</li>
+                                    <ul class="text-[14px] text-slate-600 space-y-1.5 list-none marker:text-slate-400">
+                                        <li>1. 대지 사이즈 : 210*297mm</li>
+                                        <li>2. 외부 테두리 두 종류 / 상단 간판모양 제작</li>
+                                        <li class="pl-4 text-[13px] text-slate-500 font-medium">ㄴ 그 외의 요소들 제작하지 않아도 괜찮습니다</li>
                                     </ul>
                                 </div>
                             </div>
@@ -267,24 +263,28 @@
                     <!-- 내부 탭 콘텐츠: 수업 일정 -->
                     <div id="roadmap-schedule" class="roadmap-sub-content block">
                         <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-8">
-                            <!-- 전체 진행률 (스펙트럼 바) -->
+                            <!-- 전체 진행률 (스펙트럼 바 자동 갱신 적용) -->
                             <div class="mb-10">
                                 <div class="flex justify-between items-end mb-3">
                                     <div>
-                                        <h3 class="text-[17px] font-bold text-slate-800">전체 교육 과정</h3>
+                                        <h3 class="text-[17px] font-bold text-slate-800 flex items-center gap-2.5">
+                                            전체 교육 과정 
+                                            <!-- D-day 뱃지 -->
+                                            <span id="course-dday" class="text-[12px] font-extrabold bg-red-50 text-red-500 px-2 py-0.5 rounded-md shadow-sm border border-red-100/50">D-?</span>
+                                        </h3>
                                         <p class="text-[14px] text-slate-500 font-medium mt-1 tracking-wide">2025.12.08 ~ 2026.06.25</p>
                                     </div>
                                     <div class="text-right">
-                                        <span class="text-[32px] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-figjam to-blue-500 tracking-tighter">68%</span>
+                                        <span id="course-progress-percent" class="text-[32px] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-figjam to-blue-500 tracking-tighter">0%</span>
                                     </div>
                                 </div>
                                 <div class="relative w-full h-3.5 bg-slate-100 rounded-full overflow-hidden shadow-inner">
-                                    <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-figjam via-purple-500 to-blue-500 rounded-full" style="width: 68%;"></div>
+                                    <div id="course-progress-bar" class="absolute top-0 left-0 h-full bg-gradient-to-r from-figjam via-purple-500 to-blue-500 rounded-full transition-all duration-1000" style="width: 0%;"></div>
                                 </div>
                                 <div class="flex justify-between text-[13px] font-bold mt-2.5">
                                     <span class="text-slate-400">개강 (25.12.08)</span>
-                                    <span class="text-figjam relative">
-                                        오늘 (26.04.23)
+                                    <span id="course-today-label" class="text-figjam relative">
+                                        오늘 (--)
                                         <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-figjam rounded-full"></div>
                                     </span>
                                     <span class="text-slate-400">종강 (26.06.25)</span>
@@ -311,14 +311,17 @@
                                         </div>
                                     </div>
 
-                                    <!-- Item 2 (진행중) -->
+                                    <!-- Item 2 (진행중 - 두 줄 작성 적용) -->
                                     <div class="flex flex-col lg:flex-row lg:items-center justify-between p-4.5 px-5 rounded-2xl bg-indigo-50/60 border border-indigo-100 shadow-sm transition-all">
                                         <div class="flex items-start lg:items-center gap-3.5 mb-3 lg:mb-0">
                                             <span class="relative flex h-3 w-3 shrink-0 mt-1.5 lg:mt-0">
                                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
                                                 <span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
                                             </span>
-                                            <span class="font-bold text-[15px] text-indigo-900 leading-snug">프로토타입 기초데이터 수집 및 스케치, 프로토타입 제작 및 사용성 테스트</span>
+                                            <!-- 두 줄 바꿈 적용 -->
+                                            <span class="font-bold text-[15px] text-indigo-900 leading-snug">
+                                                프로토타입 기초데이터 수집 및 스케치,<br>프로토타입 제작 및 사용성 테스트
+                                            </span>
                                         </div>
                                         <div class="flex items-center gap-3 shrink-0">
                                             <span class="text-[12px] font-bold text-indigo-600 bg-white border border-indigo-200 px-3 py-1.5 rounded-lg shadow-sm">진행중</span>
@@ -492,119 +495,8 @@
                 </section>
             </div>
 
-
             <!-- ========================================== -->
-            <!-- 탭 2: 컴퓨터 기초                          -->
-            <!-- ========================================== -->
-            <div id="tab-basic" class="tab-content">
-                <!-- 타이틀 영역 -->
-                <div class="mb-10">
-                    <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">
-                        컴퓨터 기초 ⌨️
-                    </h1>
-                    <p class="text-slate-500 text-[15px]">작업 속도를 높여주는 필수 단축키 모음입니다.</p>
-                </div>
-
-                <!-- 단축키 테이블 영역 -->
-                <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-10">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
-                        <!-- 왼쪽 표 -->
-                        <div class="overflow-hidden rounded-[16px] border border-[#E7E2FE] shadow-sm">
-                            <table class="w-full text-left border-collapse">
-                                <tbody class="divide-y divide-[#E7E2FE]">
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + T</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">새 탭 열기</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + W</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">탭 닫기</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">새 펜 열기</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">codepen.io/pen</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Shift</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">커서 방향으로 텍스트 선택</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">단어</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Home</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">문장 가장 앞으로</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">End</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">문장 가장 뒤로</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + Home</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">문단 최상단</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + End</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">문단 최하단</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + /</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">주석</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + C</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">복사</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + V</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">붙여넣기</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + X</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">잘라내기와 동시에 복사</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- 오른쪽 표 -->
-                        <div class="h-fit overflow-hidden rounded-[16px] border border-[#E7E2FE] shadow-sm">
-                            <table class="w-full text-left border-collapse">
-                                <tbody class="divide-y divide-[#E7E2FE]">
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + S</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">저장</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + Z</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">되돌리기</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + Shift + Z</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">되돌리기를 되돌리기</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Ctrl + A</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">텍스트 전체 선택</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Win + E</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">파일 탐색기</td>
-                                    </tr>
-                                    <tr class="bg-figjamTableBg hover:bg-figjamLight transition-colors">
-                                        <td class="px-5 py-4 w-1/3 font-semibold text-slate-700 border-r border-[#E7E2FE]">Win + S</td>
-                                        <td class="px-5 py-4 text-slate-600 font-medium">돋보기</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========================================== -->
-            <!-- 탭 3: Tool 수업                            -->
+            <!-- 탭 2: Tool 수업                            -->
             <!-- ========================================== -->
             <div id="tab-tool" class="tab-content">
                 <!-- 1차 뎁스: 포토샵 / 일러스트 / 피그마 서브 탭 -->
@@ -803,7 +695,7 @@
                             <p class="text-slate-500 text-[15px]">디자인 실무에 필요한 일러스트 핵심 기능과 툴 사용법을 단계별로 학습합니다.</p>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4">
-                            <!-- Step 1 (라인 일러스트) -->
+                            <!-- Step 1 (라인 일러스트 1일차) -->
                             <div id="card-line-illust" class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full scroll-mt-8">
                                 <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">
                                     [라인 일러스트]
@@ -812,11 +704,30 @@
                                 <div class="flex-1 space-y-3">
                                     <a href="https://youtu.be/RKWeylzOyMk" target="_blank" class="flex items-start gap-2 group">
                                         <i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
-                                        <p class="text-[13px] text-slate-600 font-medium leading-tight group-hover:text-figjam transition-colors">(유)라인 일러스트 작업</p>
+                                        <p class="text-[13px] text-slate-600 font-medium leading-tight group-hover:text-figjam transition-colors">(유)UIUXD_일러스트 심화(1일차) | 260423 (1)</p>
                                     </a>
-                                    <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100">
-                                        <p class="text-[11px] text-slate-500 leading-tight">(1)패스 핸들링</p>
-                                    </div>
+                                </div>
+                                <div class="mt-5 w-full space-y-2">
+                                    <a href="https://drive.google.com/drive/folders/1FCGd15Rt8qvjMlPYgRSYpAu1DmqEQ-7L?usp=drive_link" target="_blank" class="w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[12px] flex justify-center items-center gap-1.5">
+                                        <i data-lucide="folder-down" class="w-4 h-4"></i> (과제용 예제 폴더)
+                                    </a>
+                                    <a href="https://drive.google.com/drive/folders/1S-Up1N7e-TQHGh5-OkXZTV5o2_QeCvcM?usp=drive_link" target="_blank" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-2.5 rounded-xl transition-colors text-[12px] flex justify-center items-center gap-1.5">
+                                        <i data-lucide="folder" class="w-4 h-4"></i> (수업 진행용 예제)
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Step 2 (라인 일러스트 2일차) -->
+                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
+                                <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">
+                                    [라인 일러스트]
+                                </div>
+                                <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[라인 일러스트]</h3>
+                                <div class="flex-1 space-y-3">
+                                    <a href="https://youtu.be/ZpJOrl5eqnk" target="_blank" class="flex items-start gap-2 group">
+                                        <i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
+                                        <p class="text-[13px] text-slate-600 font-medium leading-tight group-hover:text-figjam transition-colors">(유)UIUXD_일러스트 심화(2일차) | 260423 (1)</p>
+                                    </a>
                                 </div>
                                 <div class="mt-5 w-full space-y-2">
                                     <a href="https://drive.google.com/drive/folders/1FCGd15Rt8qvjMlPYgRSYpAu1DmqEQ-7L?usp=drive_link" target="_blank" class="w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[12px] flex justify-center items-center gap-1.5">
@@ -862,7 +773,7 @@
             </div> <!-- End of tab-tool -->
 
             <!-- ========================================== -->
-            <!-- 탭 4: 작업 공간                            -->
+            <!-- 탭 3: 작업 공간                            -->
             <!-- ========================================== -->
             <div id="tab-workspace" class="tab-content">
                 <!-- 타이틀 영역 -->
@@ -1045,7 +956,7 @@
             </div> <!-- End of tab-workspace -->
 
             <!-- ========================================== -->
-            <!-- 탭 5: 진척도 (새로 추가됨)                 -->
+            <!-- 탭 4: 진척도                               -->
             <!-- ========================================== -->
             <div id="tab-progress" class="tab-content">
                 
@@ -1057,10 +968,16 @@
                         </h1>
                         <p class="text-slate-500 text-[15px]">개인별 과제 달성률 및 전체 학습 진행 상황을 확인합니다.</p>
                     </div>
-                    <!-- 요약 통계 -->
-                    <div class="flex items-center bg-white px-6 py-3 rounded-2xl border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
-                        <span class="text-slate-500 font-bold text-[13px] mr-4 uppercase tracking-wider">전체 평균 진척도</span>
-                        <span id="summary-avg" class="text-2xl font-extrabold text-figjam">0%</span>
+                    <!-- 요약 통계 & 데이터 복사 버튼 -->
+                    <div class="flex items-center gap-3">
+                        <button onclick="copyProgressData()" class="flex items-center gap-2 px-4 py-3 bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 text-slate-600 font-bold text-[13px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all active:scale-95">
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                            데이터 복사
+                        </button>
+                        <div class="flex items-center bg-white px-6 py-3 rounded-2xl border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+                            <span class="text-slate-500 font-bold text-[13px] mr-4 uppercase tracking-wider">전체 평균 진척도</span>
+                            <span id="summary-avg" class="text-2xl font-extrabold text-figjam">0%</span>
+                        </div>
                     </div>
                 </div>
 
@@ -1137,6 +1054,61 @@
     </div>
 
     <script>
+        // ----------------------------------------
+        // 진척도 전체 교육과정 (로드맵) 자동 갱신
+        // ----------------------------------------
+        function updateCourseProgress() {
+            const startDate = new Date('2025-12-08T00:00:00');
+            const endDate = new Date('2026-06-25T23:59:59');
+            const today = new Date(); // 시스템 기준 오늘 날짜
+
+            const totalDuration = endDate.getTime() - startDate.getTime();
+            let elapsedDuration = today.getTime() - startDate.getTime();
+
+            if (elapsedDuration < 0) elapsedDuration = 0;
+            if (elapsedDuration > totalDuration) elapsedDuration = totalDuration;
+
+            const progressPercent = Math.floor((elapsedDuration / totalDuration) * 100);
+
+            // 프로그레스 바 및 % 업데이트
+            const percentEl = document.getElementById('course-progress-percent');
+            const barEl = document.getElementById('course-progress-bar');
+            if(percentEl) percentEl.textContent = `${progressPercent}%`;
+            if(barEl) barEl.style.width = `${progressPercent}%`;
+
+            // D-Day 계산
+            const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const endDateOnly = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+            
+            const diffTime = endDateOnly - todayDateOnly;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            let dDayText = '';
+            if (diffDays > 0) {
+                dDayText = `D-${diffDays}`;
+            } else if (diffDays === 0) {
+                dDayText = `D-Day`;
+            } else {
+                dDayText = `과정 종료`;
+            }
+            
+            const ddayEl = document.getElementById('course-dday');
+            if(ddayEl) ddayEl.textContent = dDayText;
+
+            // 오늘 날짜 라벨 갱신 (YY.MM.DD 포맷)
+            const yy = String(today.getFullYear()).slice(-2);
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            
+            const todayLabelEl = document.getElementById('course-today-label');
+            if(todayLabelEl) {
+                todayLabelEl.innerHTML = `
+                    오늘 (${yy}.${mm}.${dd})
+                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-figjam rounded-full"></div>
+                `;
+            }
+        }
+
         // 아이콘 렌더링 초기화
         lucide.createIcons();
 
@@ -1190,6 +1162,11 @@
             const activeBtn = document.getElementById('sub-roadmap-' + tabId);
             activeBtn.classList.remove('font-medium', 'text-slate-400', 'hover:text-slate-700');
             activeBtn.classList.add('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
+            
+            // 만약 수업 일정 탭을 열었다면 진행률 UI 다시 한 번 트리거
+            if(tabId === 'schedule') {
+                setTimeout(updateCourseProgress, 50);
+            }
         }
 
         function toggleSidebar() {
@@ -1242,6 +1219,14 @@
                     myChart.resize(); // 탭 전환 후 리사이징 보정
                 }
             }
+            
+            // 학습 로드맵 탭 진입 시 수업일정 갱신 확인
+            if (tabId === 'roadmap') {
+                setTimeout(updateCourseProgress, 50);
+            }
+
+            // 현재 탭 상태를 로컬 스토리지에 저장하여 새로고침 시 유지
+            localStorage.setItem('dashboardActiveTab', tabId);
         }
 
 
@@ -1503,6 +1488,28 @@
             showToast(`'${currentEditingStudent}' 학생의 데이터가 갱신되었습니다.`);
         }
 
+        // 진척도 데이터 복사 함수
+        function copyProgressData() {
+            const dataStr = JSON.stringify(progressData, null, 2);
+            
+            // 호환성을 위한 텍스트 에어리어 생성 및 복사
+            const textArea = document.createElement("textarea");
+            textArea.value = dataStr;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast('진척도 데이터가 클립보드에 복사되었습니다.');
+            } catch (err) {
+                showToast('데이터 복사에 실패했습니다.');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
         // 모달 외부 영역 클릭 시 닫기
         document.getElementById('modal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
@@ -1525,6 +1532,15 @@
                 toast.classList.add('opacity-0', 'translate-y-full');
             }, 2500);
         }
+
+        // 로드 시 초기 실행 (수업 일정 업데이트 포함)
+        window.addEventListener('DOMContentLoaded', () => {
+            updateCourseProgress();
+
+            // 새로고침 시 이전에 선택했던 탭 유지 (기본값은 'roadmap')
+            const savedTab = localStorage.getItem('dashboardActiveTab') || 'roadmap';
+            switchTab(savedTab);
+        });
 
     </script>
 </body>
