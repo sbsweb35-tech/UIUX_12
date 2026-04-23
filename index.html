@@ -116,6 +116,108 @@
                     <p class="text-slate-500 text-[15px]">현재 진행 중인 프로젝트 단계와 매일 챙겨야 할 루틴을 확인하세요.</p>
                 </div>
 
+                <!-- 일일과제 -->
+                <section class="mb-10">
+                    <h2 class="text-[18px] font-bold text-slate-800 mb-6 flex items-center gap-2">
+                        <i data-lucide="calendar-check" class="w-5 h-5 text-emerald-500"></i>
+                        일일과제
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
+                        <!-- Task 1: 완료 -->
+                        <div class="bg-white p-6 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                            <div class="flex justify-between items-start mb-5">
+                                <div class="w-11 h-11 rounded-[14px] bg-emerald-50 text-emerald-500 flex items-center justify-center">
+                                    <i data-lucide="check-circle" class="w-5 h-5"></i>
+                                </div>
+                                <span class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-md">완료</span>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-[15px] leading-tight">Design Copy</h3>
+                        </div>
+
+                        <!-- Task 2: 진행중 -->
+                        <div class="bg-white p-6 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                            <div class="flex justify-between items-start mb-5">
+                                <div class="w-11 h-11 rounded-[14px] bg-blue-50 text-blue-500 flex items-center justify-center">
+                                    <i data-lucide="pen-tool" class="w-5 h-5"></i>
+                                </div>
+                                <span class="text-[11px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-[15px] leading-tight">일러스트 심화 과제</h3>
+                        </div>
+
+                        <!-- Task 3: 진행중 -->
+                        <div class="bg-white p-6 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                            <div class="flex justify-between items-start mb-5">
+                                <div class="w-11 h-11 rounded-[14px] bg-blue-50 text-blue-500 flex items-center justify-center">
+                                    <i data-lucide="book-open" class="w-5 h-5"></i>
+                                </div>
+                                <span class="text-[11px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-[15px] leading-tight">나의 오늘 학습</h3>
+                        </div>
+
+                        <!-- Task 4: 진행중 -->
+                        <div class="bg-white p-6 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                            <div class="flex justify-between items-start mb-5">
+                                <div class="w-11 h-11 rounded-[14px] bg-blue-50 text-blue-500 flex items-center justify-center">
+                                    <i data-lucide="users" class="w-5 h-5"></i>
+                                </div>
+                                <span class="text-[11px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-[15px] leading-tight">팀 오늘 학습</h3>
+                        </div>
+
+                        <!-- Task 5: 진행중 -->
+                        <div class="bg-white p-6 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                            <div class="flex justify-between items-start mb-5">
+                                <div class="w-11 h-11 rounded-[14px] bg-blue-50 text-blue-500 flex items-center justify-center">
+                                    <i data-lucide="code" class="w-5 h-5"></i>
+                                </div>
+                                <span class="text-[11px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-[15px] leading-tight">코딩 과제</h3>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 오늘 툴 과제 -->
+                <section class="mb-10">
+                    <h2 class="text-[18px] font-bold text-slate-800 mb-6 flex items-center gap-2">
+                        <i data-lucide="edit-3" class="w-5 h-5 text-figjam"></i>
+                        오늘 툴 과제
+                    </h2>
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-8 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-figjam"></div>
+                        <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                            <div class="flex-1 space-y-4">
+                                <div>
+                                    <h3 class="text-[20px] font-bold text-slate-800">디테일일러스트(일러스트 심화과제)</h3>
+                                    <p class="text-[14px] text-slate-500 font-medium flex items-center gap-1.5 mt-1.5">
+                                        <i data-lucide="clock" class="w-4 h-4"></i> 기한: ~2026.04.23(목)
+                                    </p>
+                                </div>
+                                <div class="bg-slate-50 rounded-xl p-5 border border-slate-100">
+                                    <h4 class="text-[13px] font-bold text-slate-700 mb-2">과제 내용:</h4>
+                                    <ul class="text-[14px] text-slate-600 space-y-1.5 list-disc list-inside marker:text-slate-400">
+                                        <li>모서리가 계단모양인 프레임 작업</li>
+                                        <li>계단 모양 제작 사각형 수치 : 3.3mm * 3.3mm</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="flex-shrink-0 mt-2 md:mt-0 flex flex-col gap-2.5">
+                                <button onclick="goToIllustratorAdvancedTask()" class="flex items-center justify-center w-full md:w-auto min-w-[160px] gap-2 px-5 py-3.5 bg-white border-2 border-figjam text-figjam hover:bg-figjam hover:text-white rounded-xl font-bold transition-all duration-200 shadow-sm text-[14px]">
+                                    <i data-lucide="arrow-right-circle" class="w-5 h-5"></i>
+                                    학습 자료 (이동)
+                                </button>
+                                <a href="https://classroom.google.com/c/ODIyMzY3MjEwNjMy/a/ODYxMTcxMTMzMzQy/details" target="_blank" class="flex items-center justify-center w-full md:w-auto min-w-[160px] gap-2 px-5 py-3.5 bg-figjam text-white hover:bg-[#7c4ced] rounded-xl font-bold transition-all duration-200 shadow-md text-[14px]">
+                                    <i data-lucide="check-square" class="w-5 h-5"></i>
+                                    과제 제출하기
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- UI/UX 기획 로드맵 (FigJam) -->
                 <section class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-8 mb-10">
                     <div class="flex items-center justify-between mb-10">
@@ -564,7 +666,7 @@
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4">
                             <!-- Step 1 (라인 일러스트) -->
-                            <div class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full">
+                            <div id="card-line-illust" class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full scroll-mt-8">
                                 <div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">
                                     [라인 일러스트]
                                 </div>
@@ -867,6 +969,29 @@
             const activeBtn = document.getElementById('btn-' + tabId);
             activeBtn.classList.remove('text-slate-500', 'font-medium', 'hover:bg-slate-50', 'hover:text-slate-800');
             activeBtn.classList.add('bg-figjam/10', 'text-figjam', 'font-bold');
+        }
+
+        // 오늘 툴 과제 -> 일러스트 심화(라인 일러스트) 카드로 이동
+        function goToIllustratorAdvancedTask() {
+            // 1. 탭 전환
+            switchTab('tool');
+            switchTool('illustrator');
+            switchLevel('illustrator', 'advanced');
+            
+            // 2. UI가 렌더링될 수 있도록 약간의 지연 후 스크롤 이동
+            setTimeout(() => {
+                const targetCard = document.getElementById('card-line-illust');
+                if(targetCard) {
+                    // 해당 카드로 부드럽게 스크롤
+                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // 시각적 피드백 (하이라이트 깜빡임)
+                    targetCard.classList.add('ring-4', 'ring-figjam/50');
+                    setTimeout(() => {
+                        targetCard.classList.remove('ring-4', 'ring-figjam/50');
+                    }, 1500);
+                }
+            }, 150);
         }
     </script>
 </body>
