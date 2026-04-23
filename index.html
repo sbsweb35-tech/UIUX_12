@@ -46,58 +46,76 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* 사이드바 애니메이션 */
+        #sidebar { transition: width 0.3s ease, border-color 0.3s ease; }
+        #sidebar-content { transition: opacity 0.2s ease; width: 280px; }
+        #sidebar-toggle-btn { transition: left 0.3s ease; }
+        
+        body.sidebar-closed #sidebar { width: 0; border-right-color: transparent; }
+        body.sidebar-closed #sidebar-content { opacity: 0; pointer-events: none; }
+        body.sidebar-closed #sidebar-toggle-btn { left: 24px; }
     </style>
 </head>
 <body class="text-slate-800 antialiased h-screen flex bg-[#F8FAFC] overflow-hidden">
 
     <!-- 💡 좌측 GNB (사이드바) -->
-    <aside class="w-[280px] flex-shrink-0 bg-white border-r border-slate-100 flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10">
-        <!-- 로고 영역 -->
-        <div class="h-24 flex items-center px-8 border-b border-slate-50">
-            <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center mr-3 shadow-md">
-                <i data-lucide="layers" class="w-6 h-6"></i>
-            </div>
-            <span class="text-xl font-extrabold tracking-tight text-slate-900">Class Hub</span>
-        </div>
+    <aside id="sidebar" class="w-[280px] flex-shrink-0 bg-white border-r border-slate-100 flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20 relative">
+        
+        <!-- 사이드바 토글 버튼 -->
+        <button id="sidebar-toggle-btn" onclick="toggleSidebar()" class="absolute top-8 w-10 h-10 bg-white border border-slate-100 rounded-full flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.08)] text-slate-500 hover:text-figjam transition-all z-50" style="left: 260px;">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
 
-        <!-- 메뉴 영역 -->
-        <nav class="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
-            <p class="px-4 text-xs font-bold text-slate-400 tracking-wider mb-4">MAIN MENU</p>
-            
-            <button id="btn-roadmap" onclick="switchTab('roadmap')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl bg-figjam/10 text-figjam font-bold transition-all duration-200 text-left">
-                <i data-lucide="map" class="w-5 h-5"></i>
-                <span class="text-[15px]">학습 로드맵</span>
-            </button>
-            
-            <button id="btn-basic" onclick="switchTab('basic')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
-                <i data-lucide="keyboard" class="w-5 h-5"></i>
-                <span class="text-[15px]">컴퓨터 기초</span>
-            </button>
-
-            <button id="btn-tool" onclick="switchTab('tool')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
-                <i data-lucide="image" class="w-5 h-5"></i>
-                <span class="text-[15px]">Tool 수업</span>
-            </button>
-
-            <!-- 작업 공간 탭 추가 -->
-            <button id="btn-workspace" onclick="switchTab('workspace')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
-                <i data-lucide="folder-open" class="w-5 h-5"></i>
-                <span class="text-[15px]">작업 공간</span>
-            </button>
-        </nav>
-
-        <!-- 하단 유저 프로필 -->
-        <div class="p-6 border-t border-slate-50">
-            <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold">
-                    <i data-lucide="user" class="w-5 h-5"></i>
+        <!-- 사이드바 콘텐츠 컨테이너 (너비 고정) -->
+        <div id="sidebar-content" class="w-[280px] h-full flex flex-col overflow-hidden">
+            <!-- 로고 영역 -->
+            <div class="h-24 flex items-center px-8 border-b border-slate-50 cursor-pointer hover:bg-slate-50 transition-colors" onclick="switchTab('roadmap')">
+                <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center mr-3 shadow-md shrink-0">
+                    <i data-lucide="layers" class="w-6 h-6"></i>
                 </div>
-                <div>
-                    <p class="text-sm font-bold text-slate-800">학생 모드</p>
-                    <p class="text-[11px] text-slate-500 font-medium">UI/UX 디자인 과정</p>
+                <span class="text-xl font-extrabold tracking-tight text-slate-900 truncate">UIUX D</span>
+            </div>
+
+            <!-- 메뉴 영역 -->
+            <nav class="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
+                <p class="px-4 text-xs font-bold text-slate-400 tracking-wider mb-4">MAIN MENU</p>
+                
+                <button id="btn-roadmap" onclick="switchTab('roadmap')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl bg-figjam/10 text-figjam font-bold transition-all duration-200 text-left">
+                    <i data-lucide="map" class="w-5 h-5"></i>
+                    <span class="text-[15px]">학습 로드맵</span>
+                </button>
+                
+                <button id="btn-basic" onclick="switchTab('basic')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
+                    <i data-lucide="keyboard" class="w-5 h-5"></i>
+                    <span class="text-[15px]">컴퓨터 기초</span>
+                </button>
+
+                <button id="btn-tool" onclick="switchTab('tool')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
+                    <i data-lucide="image" class="w-5 h-5"></i>
+                    <span class="text-[15px]">Tool 수업</span>
+                </button>
+
+                <!-- 작업 공간 탭 추가 -->
+                <button id="btn-workspace" onclick="switchTab('workspace')" class="gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
+                    <i data-lucide="folder-open" class="w-5 h-5"></i>
+                    <span class="text-[15px]">작업 공간</span>
+                </button>
+            </nav>
+
+            <!-- 하단 유저 프로필 -->
+            <div class="p-6 border-t border-slate-50">
+                <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                    <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-800">학생 모드</p>
+                        <p class="text-[11px] text-slate-500 font-medium">UI/UX 디자인 과정</p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </div> <!-- // 사이드바 콘텐츠 컨테이너 종료 -->
     </aside>
 
     <!-- 💡 우측 메인 콘텐츠 (스크롤 영역) -->
@@ -684,22 +702,22 @@
                                 </div>
                                 <h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3">[라인 일러스트]</h3>
                                 <div class="flex-1 space-y-3">
-                                    <a href="https://youtu.be/lxT129km4LE" target="_blank" class="flex items-start gap-2 group">
+                                    <a href="https://youtu.be/RKWeylzOyMk" target="_blank" class="flex items-start gap-2 group">
                                         <i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
-                                        <p class="text-[13px] text-slate-600 font-medium leading-tight group-hover:text-figjam transition-colors">(유)라인 일러스트 작업(1)</p>
-                                    </a>
-                                    <a href="https://youtu.be/lxT129km4LE" target="_blank" class="flex items-start gap-2 group">
-                                        <i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
-                                        <p class="text-[13px] text-slate-600 font-medium leading-tight group-hover:text-figjam transition-colors">(유)라인 일러스트 작업(2)</p>
+                                        <p class="text-[13px] text-slate-600 font-medium leading-tight group-hover:text-figjam transition-colors">(유)라인 일러스트 작업</p>
                                     </a>
                                     <div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100">
                                         <p class="text-[11px] text-slate-500 leading-tight">(1)패스 핸들링</p>
-                                        <p class="text-[11px] text-slate-500 leading-tight">(2)~~~~~</p>
                                     </div>
                                 </div>
-                                <a href="https://drive.google.com/drive/folders/1ql2tg6gh-t5WtOj27LCcB32Xqbg43r7r" target="_blank" class="mt-5 w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px] flex justify-center items-center gap-1.5">
-                                    <i data-lucide="download" class="w-4 h-4"></i> (예제 다운로드)
-                                </a>
+                                <div class="mt-5 w-full space-y-2">
+                                    <a href="https://drive.google.com/drive/folders/1FCGd15Rt8qvjMlPYgRSYpAu1DmqEQ-7L?usp=drive_link" target="_blank" class="w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[12px] flex justify-center items-center gap-1.5">
+                                        <i data-lucide="folder-down" class="w-4 h-4"></i> (과제용 예제 폴더)
+                                    </a>
+                                    <a href="https://drive.google.com/drive/folders/1S-Up1N7e-TQHGh5-OkXZTV5o2_QeCvcM?usp=drive_link" target="_blank" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-2.5 rounded-xl transition-colors text-[12px] flex justify-center items-center gap-1.5">
+                                        <i data-lucide="folder" class="w-4 h-4"></i> (수업 진행용 예제)
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -981,6 +999,11 @@
             const activeBtn = document.getElementById('btn-' + tabId);
             activeBtn.classList.remove('text-slate-500', 'font-medium', 'hover:bg-slate-50', 'hover:text-slate-800');
             activeBtn.classList.add('bg-figjam/10', 'text-figjam', 'font-bold');
+        }
+
+        // 사이드바 토글 기능
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-closed');
         }
 
         // 오늘 툴 과제 -> 일러스트 심화(라인 일러스트) 카드로 이동
