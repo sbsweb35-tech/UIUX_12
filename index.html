@@ -139,40 +139,18 @@
                 
                 <!-- 1. 오늘 툴 과제 -->
                 <section class="mb-10">
-                    <h2 class="text-[18px] font-bold text-slate-800 mb-6 flex items-center gap-2">
-                        <i data-lucide="edit-3" class="w-5 h-5 text-figjam"></i>
-                        오늘 툴 과제
-                    </h2>
-                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-8 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1.5 h-full bg-figjam"></div>
-                        <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
-                            <div class="flex-1 space-y-4">
-                                <div>
-                                    <h3 class="text-[20px] font-bold text-slate-800">디테일일러스트(일러스트 심화과제)</h3>
-                                    <p class="text-[14px] text-slate-500 font-medium flex items-center gap-1.5 mt-1.5">
-                                        <i data-lucide="clock" class="w-4 h-4"></i> 기한: ~2026.04.24(금)
-                                    </p>
-                                </div>
-                                <div class="bg-slate-50 rounded-xl p-5 border border-slate-100">
-                                    <h4 class="text-[13px] font-bold text-slate-700 mb-2">과제 내용:</h4>
-                                    <ul class="text-[14px] text-slate-600 space-y-1.5 list-none marker:text-slate-400">
-                                        <li>1. 대지 사이즈 : 210*297mm</li>
-                                        <li>2. 외부 테두리 두 종류 / 상단 간판모양 제작</li>
-                                        <li class="pl-4 text-[13px] text-slate-500 font-medium">ㄴ 그 외의 요소들 제작하지 않아도 괜찮습니다</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="flex-shrink-0 mt-2 md:mt-0 flex flex-col gap-2.5">
-                                <button onclick="goToIllustratorAdvancedTask()" class="flex items-center justify-center w-full md:w-auto min-w-[160px] gap-2 px-5 py-3.5 bg-white border-2 border-figjam text-figjam hover:bg-figjam hover:text-white rounded-xl font-bold transition-all duration-200 shadow-sm text-[14px]">
-                                    <i data-lucide="arrow-right-circle" class="w-5 h-5"></i>
-                                    학습 자료 (이동)
-                                </button>
-                                <a href="https://classroom.google.com/c/ODIyMzY3MjEwNjMy/a/ODYxMTcxMTMzMzQy/details" target="_blank" class="flex items-center justify-center w-full md:w-auto min-w-[160px] gap-2 px-5 py-3.5 bg-figjam text-white hover:bg-[#7c4ced] rounded-xl font-bold transition-all duration-200 shadow-md text-[14px]">
-                                    <i data-lucide="check-square" class="w-5 h-5"></i>
-                                    과제 제출하기
-                                </a>
-                            </div>
-                        </div>
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-[18px] font-bold text-slate-800 flex items-center gap-2">
+                            <i data-lucide="edit-3" class="w-5 h-5 text-figjam"></i>
+                            오늘 툴 과제
+                        </h2>
+                        <!-- 수정 모드 토글 버튼 -->
+                        <button id="btn-roadmap-edit" onclick="toggleEditMode()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[13px] font-bold transition-colors mb-2">
+                            <i data-lucide="settings" class="w-4 h-4 inline-block mr-1"></i> 수정 모드 켜기
+                        </button>
+                    </div>
+                    <div id="render-today-task">
+                        <!-- 동적 렌더링 영역 -->
                     </div>
                 </section>
 
@@ -182,73 +160,8 @@
                         <i data-lucide="calendar-check" class="w-5 h-5 text-emerald-500"></i>
                         일일과제
                     </h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
-                        <!-- Task 1: 완료 -->
-                        <div class="bg-white p-6 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 flex flex-col">
-                            <div class="flex justify-between items-start mb-5">
-                                <div class="w-11 h-11 rounded-[14px] bg-emerald-50 text-emerald-500 flex items-center justify-center">
-                                    <i data-lucide="check-circle" class="w-5 h-5"></i>
-                                </div>
-                                <span class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-md">완료</span>
-                            </div>
-                            <h3 class="font-bold text-slate-800 text-[15px] leading-tight flex-1">Design Copy</h3>
-                        </div>
-
-                        <!-- Task 2: 진행중 -->
-                        <div class="bg-white p-6 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 flex flex-col">
-                            <div class="flex justify-between items-start mb-5">
-                                <div class="w-11 h-11 rounded-[14px] bg-blue-50 text-blue-500 flex items-center justify-center">
-                                    <i data-lucide="pen-tool" class="w-5 h-5"></i>
-                                </div>
-                                <span class="text-[11px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
-                            </div>
-                            <h3 class="font-bold text-slate-800 text-[15px] leading-tight mb-4 flex-1">일러스트 심화 과제</h3>
-                            <a href="https://classroom.google.com/c/ODIyMzY3MjEwNjMy/a/ODYxMTcxMTMzMzQy/details" target="_blank" class="inline-flex items-center justify-center gap-1.5 w-full py-2.5 bg-figjam hover:bg-[#7c4ced] text-white rounded-xl text-[13px] font-bold transition-all shadow-md">
-                                <i data-lucide="check-square" class="w-4 h-4"></i> 과제 제출하기
-                            </a>
-                        </div>
-
-                        <!-- Task 3: 진행중 -->
-                        <div class="bg-white p-6 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 flex flex-col">
-                            <div class="flex justify-between items-start mb-5">
-                                <div class="w-11 h-11 rounded-[14px] bg-blue-50 text-blue-500 flex items-center justify-center">
-                                    <i data-lucide="book-open" class="w-5 h-5"></i>
-                                </div>
-                                <span class="text-[11px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
-                            </div>
-                            <h3 class="font-bold text-slate-800 text-[15px] leading-tight mb-4 flex-1">나의 오늘 학습</h3>
-                            <a href="https://classroom.google.com/c/ODIyMzY3MjEwNjMy/a/ODU5MzY1MDcwNzUy/details" target="_blank" class="inline-flex items-center justify-center gap-1.5 w-full py-2.5 bg-figjam hover:bg-[#7c4ced] text-white rounded-xl text-[13px] font-bold transition-all shadow-md">
-                                <i data-lucide="check-square" class="w-4 h-4"></i> 과제 제출하기
-                            </a>
-                        </div>
-
-                        <!-- Task 4: 진행중 -->
-                        <div class="bg-white p-6 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 flex flex-col">
-                            <div class="flex justify-between items-start mb-5">
-                                <div class="w-11 h-11 rounded-[14px] bg-blue-50 text-blue-500 flex items-center justify-center">
-                                    <i data-lucide="users" class="w-5 h-5"></i>
-                                </div>
-                                <span class="text-[11px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
-                            </div>
-                            <h3 class="font-bold text-slate-800 text-[15px] leading-tight mb-4 flex-1">팀 오늘 학습</h3>
-                            <a href="https://classroom.google.com/c/ODIyMzY3MjEwNjMy/a/ODU5NjIyMjgxMTkw/details" target="_blank" class="inline-flex items-center justify-center gap-1.5 w-full py-2.5 bg-figjam hover:bg-[#7c4ced] text-white rounded-xl text-[13px] font-bold transition-all shadow-md">
-                                <i data-lucide="check-square" class="w-4 h-4"></i> 과제 제출하기
-                            </a>
-                        </div>
-
-                        <!-- Task 5: 진행중 -->
-                        <div class="bg-white p-6 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 flex flex-col">
-                            <div class="flex justify-between items-start mb-5">
-                                <div class="w-11 h-11 rounded-[14px] bg-blue-50 text-blue-500 flex items-center justify-center">
-                                    <i data-lucide="code" class="w-5 h-5"></i>
-                                </div>
-                                <span class="text-[11px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
-                            </div>
-                            <h3 class="font-bold text-slate-800 text-[15px] leading-tight mb-4 flex-1">코딩 과제</h3>
-                            <a href="https://classroom.google.com/c/ODIyMzY3MjEwNjMy/a/ODU5MzYyMzUzMzA1/details" target="_blank" class="inline-flex items-center justify-center gap-1.5 w-full py-2.5 bg-figjam hover:bg-[#7c4ced] text-white rounded-xl text-[13px] font-bold transition-all shadow-md">
-                                <i data-lucide="check-square" class="w-4 h-4"></i> 과제 제출하기
-                            </a>
-                        </div>
+                    <div id="render-daily-tasks" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
+                        <!-- 동적 렌더링 영역 -->
                     </div>
                 </section>
 
@@ -507,7 +420,7 @@
                         <button id="sub-figma" onclick="switchTool('figma')" class="sub-tab-btn pb-3 text-[16px] font-medium text-slate-400 hover:text-slate-700 transition-colors">피그마</button>
                     </div>
                     <!-- 카드 수정 모드 토글 버튼 -->
-                    <button id="btn-tool-edit" onclick="toggleToolEditMode()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[13px] font-bold transition-colors mb-2">
+                    <button id="btn-tool-edit" onclick="toggleEditMode()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[13px] font-bold transition-colors mb-2">
                         <i data-lucide="settings" class="w-4 h-4 inline-block mr-1"></i> 수정 모드 켜기
                     </button>
                 </div>
@@ -623,182 +536,22 @@
             <!-- 탭 3: 작업 공간                            -->
             <!-- ========================================== -->
             <div id="tab-workspace" class="tab-content">
-                <!-- 타이틀 영역 -->
-                <div class="mb-10">
-                    <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">
-                        개인 작업 공간 🗂️
-                    </h1>
-                    <p class="text-slate-500 text-[15px]">팀원들의 프로젝트 보드와 개인 과제 링크를 한 곳에서 관리합니다.</p>
+                <!-- 타이틀 영역 & 수정 모드 버튼 -->
+                <div class="flex items-center justify-between mb-10">
+                    <div>
+                        <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">
+                            개인 작업 공간 🗂️
+                        </h1>
+                        <p class="text-slate-500 text-[15px]">팀원들의 프로젝트 보드와 개인 과제 링크를 한 곳에서 관리합니다.</p>
+                    </div>
+                    <!-- 수정 모드 토글 버튼 -->
+                    <button id="btn-workspace-edit" onclick="toggleEditMode()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[13px] font-bold transition-colors mb-2">
+                        <i data-lucide="settings" class="w-4 h-4 inline-block mr-1"></i> 수정 모드 켜기
+                    </button>
                 </div>
 
-                <!-- 학생 카드 Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <!-- 1. 강은수 -->
-                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
-                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
-                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">강</div>
-                            <h3 class="font-bold text-slate-800 text-[17px]">강은수</h3>
-                        </div>
-                        <div class="space-y-2">
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group">
-                                <div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div>
-                                <span class="font-medium text-[14px]">브랜딩 피그잼</span>
-                            </a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group">
-                                <div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div>
-                                <span class="font-medium text-[14px]">웹디자인 피그마</span>
-                            </a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group">
-                                <div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div>
-                                <span class="font-medium text-[14px]">연습장</span>
-                            </a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group">
-                                <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div>
-                                <span class="font-medium text-[14px]">웹사이트</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- 2. 길솔아 -->
-                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
-                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
-                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">길</div>
-                            <h3 class="font-bold text-slate-800 text-[17px]">길솔아</h3>
-                        </div>
-                        <div class="space-y-2">
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
-                        </div>
-                    </div>
-
-                    <!-- 3. 김예지 -->
-                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
-                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
-                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">김</div>
-                            <h3 class="font-bold text-slate-800 text-[17px]">김예지</h3>
-                        </div>
-                        <div class="space-y-2">
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
-                        </div>
-                    </div>
-
-                    <!-- 4. 김윤겸 -->
-                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
-                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
-                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">김</div>
-                            <h3 class="font-bold text-slate-800 text-[17px]">김윤겸</h3>
-                        </div>
-                        <div class="space-y-2">
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
-                        </div>
-                    </div>
-
-                    <!-- 5. 김지원 -->
-                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
-                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
-                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">김</div>
-                            <h3 class="font-bold text-slate-800 text-[17px]">김지원</h3>
-                        </div>
-                        <div class="space-y-2">
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
-                        </div>
-                    </div>
-
-                    <!-- 6. 김한솜 -->
-                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
-                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
-                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">김</div>
-                            <h3 class="font-bold text-slate-800 text-[17px]">김한솜</h3>
-                        </div>
-                        <div class="space-y-2">
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
-                        </div>
-                    </div>
-
-                    <!-- 7. 김희은 -->
-                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
-                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
-                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">김</div>
-                            <h3 class="font-bold text-slate-800 text-[17px]">김희은</h3>
-                        </div>
-                        <div class="space-y-2">
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
-                        </div>
-                    </div>
-
-                    <!-- 8. 박진희 -->
-                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
-                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
-                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">박</div>
-                            <h3 class="font-bold text-slate-800 text-[17px]">박진희</h3>
-                        </div>
-                        <div class="space-y-2">
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
-                        </div>
-                    </div>
-
-                    <!-- 9. 원채련 -->
-                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
-                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
-                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">원</div>
-                            <h3 class="font-bold text-slate-800 text-[17px]">원채련</h3>
-                        </div>
-                        <div class="space-y-2">
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
-                        </div>
-                    </div>
-
-                    <!-- 10. 이주환 -->
-                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
-                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
-                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">이</div>
-                            <h3 class="font-bold text-slate-800 text-[17px]">이주환</h3>
-                        </div>
-                        <div class="space-y-2">
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
-                        </div>
-                    </div>
-
-                    <!-- 11. 임도희 -->
-                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6">
-                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
-                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">임</div>
-                            <h3 class="font-bold text-slate-800 text-[17px]">임도희</h3>
-                        </div>
-                        <div class="space-y-2">
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-figjam transition-colors group"><div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-500 flex items-center justify-center group-hover:bg-purple-100 transition-colors"><i data-lucide="layout" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">브랜딩 피그잼</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-pink-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-500 flex items-center justify-center group-hover:bg-pink-100 transition-colors"><i data-lucide="figma" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹디자인 피그마</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-orange-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center group-hover:bg-orange-100 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">연습장</span></a>
-                            <a href="#" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-blue-500 transition-colors group"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i data-lucide="monitor" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">웹사이트</span></a>
-                        </div>
-                    </div>
-
+                <!-- 학생 카드 Grid 동적 렌더링 영역 -->
+                <div id="render-workspace-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 </div>
             </div> <!-- End of tab-workspace -->
 
@@ -981,6 +734,152 @@
         </div>
     </div>
 
+    <!-- 로드맵 오늘 툴 과제 편집 모달 -->
+    <div id="today-task-modal" class="fixed inset-0 bg-slate-900/20 hidden items-center justify-center z-[110] p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <div class="bg-white rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] w-full max-w-2xl overflow-hidden transform transition-all border border-white">
+            <div class="px-8 py-6 flex justify-between items-center bg-figjamLight/50 border-b border-figjamBorder/50">
+                <h2 class="text-xl font-extrabold text-slate-800">오늘 툴 과제 편집</h2>
+                <button onclick="closeTodayModal()" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100 hover:bg-slate-50">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-8 max-h-[65vh] overflow-y-auto space-y-5">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">과제 제목</label>
+                        <input type="text" id="ttm-title" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-bold text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">기한 텍스트</label>
+                        <input type="text" id="ttm-deadline" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-bold text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1.5">과제 상세 내용 (줄바꿈 시 새 목록 적용)</label>
+                    <textarea id="ttm-desc" rows="4" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-medium text-slate-700 bg-slate-50 hover:bg-white focus:bg-white"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">우측 버튼 1 텍스트</label>
+                        <input type="text" id="ttm-bText1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-bold text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">우측 버튼 1 URL</label>
+                        <input type="text" id="ttm-bUrl1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-medium text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">우측 버튼 2 텍스트</label>
+                        <input type="text" id="ttm-bText2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-bold text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">우측 버튼 2 URL</label>
+                        <input type="text" id="ttm-bUrl2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-medium text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                </div>
+            </div>
+            <div class="px-8 py-5 bg-slate-50/50 flex items-center justify-end gap-3 border-t border-slate-100">
+                <button onclick="closeTodayModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shadow-sm transition-colors">취소</button>
+                <button onclick="saveTodayModal()" class="px-6 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] shadow-md transition-all active:scale-95 flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4"></i> 저장
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 로드맵 일일과제 편집 모달 -->
+    <div id="daily-task-modal" class="fixed inset-0 bg-slate-900/20 hidden items-center justify-center z-[110] p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <div class="bg-white rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] w-full max-w-lg overflow-hidden transform transition-all border border-white">
+            <div class="px-8 py-6 flex justify-between items-center bg-figjamLight/50 border-b border-figjamBorder/50">
+                <h2 class="text-xl font-extrabold text-slate-800">일일과제 편집</h2>
+                <button onclick="closeDailyModal()" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100 hover:bg-slate-50">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-8 max-h-[65vh] overflow-y-auto space-y-5">
+                <input type="hidden" id="dtm-id">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">상태</label>
+                        <select id="dtm-status" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none transition-all text-sm font-bold text-slate-700 bg-slate-50">
+                            <option value="완료">완료</option>
+                            <option value="진행중">진행중</option>
+                            <option value="대기">대기</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">아이콘</label>
+                        <select id="dtm-icon" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none transition-all text-sm font-bold text-slate-700 bg-slate-50">
+                            <option value="check-circle">check-circle</option>
+                            <option value="pen-tool">pen-tool</option>
+                            <option value="book-open">book-open</option>
+                            <option value="users">users</option>
+                            <option value="code">code</option>
+                            <option value="layout">layout</option>
+                            <option value="monitor">monitor</option>
+                            <option value="star">star</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1.5">과제 제목</label>
+                    <input type="text" id="dtm-title" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-bold text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1.5">제출 URL (버튼 연결)</label>
+                    <input type="text" id="dtm-link" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-medium text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                </div>
+            </div>
+            <div class="px-8 py-5 bg-slate-50/50 flex items-center justify-end gap-3 border-t border-slate-100">
+                <button onclick="deleteDailyTask()" id="btn-dtm-delete" class="px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto hidden transition-colors">삭제</button>
+                <button onclick="closeDailyModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shadow-sm transition-colors">취소</button>
+                <button onclick="saveDailyModal()" class="px-6 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] shadow-md transition-all active:scale-95 flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4"></i> 저장
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 작업 공간 카드 편집 모달 -->
+    <div id="workspace-modal" class="fixed inset-0 bg-slate-900/20 hidden items-center justify-center z-[110] p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <div class="bg-white rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] w-full max-w-2xl overflow-hidden transform transition-all border border-white">
+            <div class="px-8 py-6 flex justify-between items-center bg-figjamLight/50 border-b border-figjamBorder/50">
+                <h2 class="text-xl font-extrabold text-slate-800">작업 공간 카드 편집</h2>
+                <button onclick="closeWorkspaceModal()" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100 hover:bg-slate-50">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-8 max-h-[65vh] overflow-y-auto space-y-6">
+                <input type="hidden" id="wsm-id">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">이름</label>
+                        <input type="text" id="wsm-name" placeholder="예: 강은수" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-bold text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5">프로필 텍스트 (1글자)</label>
+                        <input type="text" id="wsm-avatar" placeholder="예: 강" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam focus:ring-4 focus:ring-figjam/20 outline-none transition-all text-sm font-bold text-slate-700 bg-slate-50 hover:bg-white focus:bg-white">
+                    </div>
+                </div>
+                <div id="wsm-links-container" class="space-y-4 border-t border-slate-100 pt-4">
+                    <!-- JS로 링크 폼 동적 렌더링 -->
+                </div>
+                <!-- 링크 추가 버튼 -->
+                <button type="button" onclick="addNewLinkToWorkspace()" class="w-full py-3 border-2 border-dashed border-slate-200 text-slate-500 font-bold rounded-xl hover:bg-slate-50 hover:text-figjam hover:border-figjam/30 transition-all flex justify-center items-center gap-2 text-sm mt-2">
+                    <i data-lucide="plus" class="w-4 h-4"></i> 링크 추가하기
+                </button>
+            </div>
+            <div class="px-8 py-5 bg-slate-50/50 flex items-center justify-end gap-3 border-t border-slate-100">
+                <button onclick="deleteWorkspaceCard()" id="btn-wsm-delete" class="px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto hidden transition-colors">삭제</button>
+                <button onclick="closeWorkspaceModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shadow-sm transition-colors">취소</button>
+                <button onclick="saveWorkspaceModal()" class="px-6 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] shadow-md transition-all active:scale-95 flex items-center gap-2">
+                    <i data-lucide="check" class="w-4 h-4"></i> 저장
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- 비밀번호 입력 모달 (전역 레이어) -->
     <div id="pwd-modal" class="fixed inset-0 bg-slate-900/20 hidden items-center justify-center z-[120] p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
         <div class="bg-white rounded-[24px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] w-full max-w-sm overflow-hidden transform transition-all border border-white">
@@ -1012,12 +911,26 @@
 
     <script>
         // ----------------------------------------
+        // 시스템 전역 설정
+        // ----------------------------------------
+        let isEditMode = false;
+
+        lucide.createIcons();
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.remove('translate-y-full', 'opacity-0');
+            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-full'); }, 2500);
+        }
+
+        // ----------------------------------------
         // 진척도 전체 교육과정 (로드맵) 자동 갱신
         // ----------------------------------------
         function updateCourseProgress() {
             const startDate = new Date('2025-12-08T00:00:00');
             const endDate = new Date('2026-06-25T23:59:59');
-            const today = new Date(); // 시스템 기준 오늘 날짜
+            const today = new Date(); 
 
             const totalDuration = endDate.getTime() - startDate.getTime();
             let elapsedDuration = today.getTime() - startDate.getTime();
@@ -1055,7 +968,76 @@
             }
         }
 
-        lucide.createIcons();
+        // ----------------------------------------
+        // 비밀번호 기반 전역 수정 모드 토글
+        // ----------------------------------------
+        function toggleEditMode() {
+            const isActivating = !isEditMode;
+            const title = isActivating ? "수정 모드 켜기" : "수정 모드 끄기";
+            const msg = isActivating ? "수정 모드 활성화를 위해 비밀번호를 입력하세요." : "수정 모드 종료를 위해 비밀번호를 입력하세요.";
+            
+            document.getElementById('pwd-modal-title').textContent = title;
+            document.getElementById('pwd-modal-msg').textContent = msg;
+            document.getElementById('pwd-input').value = '';
+            document.getElementById('pwd-error').classList.add('hidden');
+            
+            const modal = document.getElementById('pwd-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modal.classList.add('opacity-100');
+                document.getElementById('pwd-input').focus();
+            }, 10);
+        }
+
+        function closePwdModal() {
+            const modal = document.getElementById('pwd-modal');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        function submitPwd() {
+            const pwd = document.getElementById('pwd-input').value;
+            if (pwd === "0305") {
+                isEditMode = !isEditMode;
+                renderAllToolCards();
+                renderRoadmap();
+                renderWorkspace(); // 작업 공간도 새로 렌더링
+                updateEditModeUI();
+                closePwdModal();
+                if(isEditMode) showToast("수정 모드가 활성화되었습니다.");
+                else showToast("수정 모드가 종료되었습니다.");
+            } else {
+                document.getElementById('pwd-error').classList.remove('hidden');
+                document.getElementById('pwd-input').focus();
+            }
+        }
+
+        document.getElementById('pwd-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); submitPwd(); }
+        });
+
+        function updateEditModeUI() {
+            const buttons = [
+                document.getElementById('btn-tool-edit'), 
+                document.getElementById('btn-roadmap-edit'),
+                document.getElementById('btn-workspace-edit') // 작업 공간 버튼 추가
+            ];
+            buttons.forEach(btn => {
+                if(!btn) return;
+                if(isEditMode) {
+                    btn.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 inline-block mr-1"></i> 수정 완료`;
+                    btn.className = "px-4 py-1.5 bg-figjam hover:bg-[#7c4ced] text-white rounded-lg text-[13px] font-bold transition-colors mb-2 shadow-sm";
+                } else {
+                    btn.innerHTML = `<i data-lucide="settings" class="w-4 h-4 inline-block mr-1"></i> 수정 모드 켜기`;
+                    btn.className = "px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[13px] font-bold transition-colors mb-2";
+                }
+            });
+            lucide.createIcons();
+        }
 
         // ----------------------------------------
         // 기존 탭 및 기능 로직
@@ -1110,9 +1092,7 @@
             if(tabId === 'schedule') setTimeout(updateCourseProgress, 50);
         }
 
-        function toggleSidebar() {
-            document.body.classList.toggle('sidebar-closed');
-        }
+        function toggleSidebar() { document.body.classList.toggle('sidebar-closed'); }
 
         function goToIllustratorAdvancedTask() {
             switchTab('tool');
@@ -1120,7 +1100,6 @@
             switchLevel('illustrator', 'advanced');
             
             setTimeout(() => {
-                // 동적 렌더링 카드 ID 사용
                 const targetCard = document.getElementById('card_il_a_1'); 
                 if(targetCard) {
                     targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1159,6 +1138,272 @@
             }
             if (tabId === 'roadmap') setTimeout(updateCourseProgress, 50);
             localStorage.setItem('dashboardActiveTab', tabId);
+        }
+
+        // ----------------------------------------
+        // 학습 로드맵 (Roadmap) 동적 렌더링 로직
+        // ----------------------------------------
+        const defaultRoadmapData = {
+            todayTask: {
+                title: "디테일일러스트(일러스트 심화과제)",
+                deadline: "~2026.04.24(금)",
+                desc: "1. 대지 사이즈 : 210*297mm\n2. 외부 테두리 두 종류 / 상단 간판모양 제작\nㄴ 그 외의 요소들 제작하지 않아도 괜찮습니다",
+                bText1: "학습 자료 (이동)",
+                bUrl1: "javascript:goToIllustratorAdvancedTask()",
+                bText2: "과제 제출하기",
+                bUrl2: "https://classroom.google.com/c/ODIyMzY3MjEwNjMy/a/ODYxMTcxMTMzMzQy/details"
+            },
+            dailyTasks: [
+                { id: 'dt_1', status: '완료', icon: 'check-circle', title: 'Design Copy', link: '' },
+                { id: 'dt_2', status: '진행중', icon: 'pen-tool', title: '일러스트 심화 과제', link: 'https://classroom.google.com/c/ODIyMzY3MjEwNjMy/a/ODYxMTcxMTMzMzQy/details' },
+                { id: 'dt_3', status: '진행중', icon: 'book-open', title: '나의 오늘 학습', link: 'https://classroom.google.com/c/ODIyMzY3MjEwNjMy/a/ODU5MzY1MDcwNzUy/details' },
+                { id: 'dt_4', status: '진행중', icon: 'users', title: '팀 오늘 학습', link: 'https://classroom.google.com/c/ODIyMzY3MjEwNjMy/a/ODU5NjIyMjgxMTkw/details' },
+                { id: 'dt_5', status: '진행중', icon: 'code', title: '코딩 과제', link: 'https://classroom.google.com/c/ODIyMzY3MjEwNjMy/a/ODU5MzYyMzUzMzA1/details' }
+            ]
+        };
+
+        let roadmapData = {};
+
+        function initRoadmapData() {
+            const saved = localStorage.getItem('roadmapData_v1');
+            if (saved) roadmapData = JSON.parse(saved);
+            else roadmapData = JSON.parse(JSON.stringify(defaultRoadmapData));
+        }
+
+        function renderRoadmap() {
+            renderTodayTask();
+            renderDailyTasks();
+            lucide.createIcons();
+        }
+
+        function renderTodayTask() {
+            const container = document.getElementById('render-today-task');
+            if(!container) return;
+            const data = roadmapData.todayTask;
+            
+            const editBtn = isEditMode ? `<button onclick="openTodayModal()" class="absolute top-4 right-4 text-slate-400 hover:text-figjam z-20 bg-slate-50 hover:bg-slate-100 p-2 rounded-xl transition-all opacity-0 group-hover/today:opacity-100"><i data-lucide="edit" class="w-4 h-4"></i></button>` : '';
+            
+            const descHtml = data.desc ? data.desc.split('\n').map(line => `<li>${line}</li>`).join('') : '';
+
+            let btn1Html = '';
+            if(data.bText1) {
+                const target1 = data.bUrl1 && !data.bUrl1.startsWith('javascript:') ? 'target="_blank"' : '';
+                btn1Html = `
+                    <a href="${data.bUrl1 || '#'}" ${target1} class="flex items-center justify-center w-full md:w-auto min-w-[160px] gap-2 px-5 py-3.5 bg-white border-2 border-figjam text-figjam hover:bg-figjam hover:text-white rounded-xl font-bold transition-all duration-200 shadow-sm text-[14px]">
+                        <i data-lucide="arrow-right-circle" class="w-5 h-5"></i> ${data.bText1}
+                    </a>
+                `;
+            }
+
+            let btn2Html = '';
+            if(data.bText2) {
+                const target2 = data.bUrl2 && !data.bUrl2.startsWith('javascript:') ? 'target="_blank"' : '';
+                btn2Html = `
+                    <a href="${data.bUrl2 || '#'}" ${target2} class="flex items-center justify-center w-full md:w-auto min-w-[160px] gap-2 px-5 py-3.5 bg-figjam text-white hover:bg-[#7c4ced] rounded-xl font-bold transition-all duration-200 shadow-md text-[14px]">
+                        <i data-lucide="check-square" class="w-5 h-5"></i> ${data.bText2}
+                    </a>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-8 relative overflow-hidden group/today">
+                    ${editBtn}
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-figjam"></div>
+                    <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                        <div class="flex-1 space-y-4">
+                            <div>
+                                <h3 class="text-[20px] font-bold text-slate-800">${data.title}</h3>
+                                <p class="text-[14px] text-slate-500 font-medium flex items-center gap-1.5 mt-1.5">
+                                    <i data-lucide="clock" class="w-4 h-4"></i> 기한: ${data.deadline}
+                                </p>
+                            </div>
+                            <div class="bg-slate-50 rounded-xl p-5 border border-slate-100">
+                                <h4 class="text-[13px] font-bold text-slate-700 mb-2">과제 내용:</h4>
+                                <ul class="text-[14px] text-slate-600 space-y-1.5 list-none marker:text-slate-400">
+                                    ${descHtml}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0 mt-2 md:mt-0 flex flex-col gap-2.5">
+                            ${btn1Html}
+                            ${btn2Html}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDailyTasks() {
+            const container = document.getElementById('render-daily-tasks');
+            if(!container) return;
+            container.innerHTML = '';
+            
+            const colorMap = {
+                '완료': { bg: 'bg-emerald-50', text: 'text-emerald-500', labelText: 'text-emerald-600', labelBg: 'bg-emerald-50' },
+                '진행중': { bg: 'bg-blue-50', text: 'text-blue-500', labelText: 'text-blue-600', labelBg: 'bg-blue-50' },
+                '대기': { bg: 'bg-slate-100', text: 'text-slate-500', labelText: 'text-slate-500', labelBg: 'bg-slate-100' }
+            };
+
+            roadmapData.dailyTasks.forEach(task => {
+                let colorObj = colorMap[task.status] || colorMap['대기'];
+                let editBtn = isEditMode ? `<button onclick="openDailyModal('${task.id}')" class="absolute top-4 right-4 text-slate-400 hover:text-figjam z-20 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-xl transition-all opacity-0 group-hover/daily:opacity-100"><i data-lucide="edit" class="w-4 h-4"></i></button>` : '';
+                let btnHtml = task.link ? `
+                    <a href="${task.link}" target="_blank" class="inline-flex items-center justify-center gap-1.5 w-full py-2.5 bg-figjam hover:bg-[#7c4ced] text-white rounded-xl text-[13px] font-bold transition-all shadow-md">
+                        <i data-lucide="check-square" class="w-4 h-4"></i> 과제 제출하기
+                    </a>` : '';
+
+                container.innerHTML += `
+                    <div class="bg-white p-6 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 flex flex-col relative group/daily">
+                        ${editBtn}
+                        <div class="flex justify-between items-start mb-5">
+                            <div class="w-11 h-11 rounded-[14px] ${colorObj.bg} ${colorObj.text} flex items-center justify-center">
+                                <i data-lucide="${task.icon || 'circle'}" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-[11px] font-bold ${colorObj.labelText} ${colorObj.labelBg} px-3 py-1.5 rounded-md">${task.status}</span>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-[15px] leading-tight ${task.link ? 'mb-4' : ''} flex-1">${task.title}</h3>
+                        ${btnHtml}
+                    </div>
+                `;
+            });
+
+            if (isEditMode) {
+                container.innerHTML += `
+                    <div onclick="openDailyModal('new')" class="bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[24px] p-6 flex flex-col items-center justify-center text-slate-400 hover:text-figjam hover:border-figjam hover:bg-figjamLight/50 transition-all cursor-pointer h-full min-h-[180px]">
+                        <i data-lucide="plus-circle" class="w-8 h-8 mb-2"></i>
+                        <span class="font-bold text-[14px]">추가하기</span>
+                    </div>
+                `;
+            }
+        }
+
+        // 오늘 툴 과제 모달 핸들링
+        function openTodayModal() {
+            const data = roadmapData.todayTask;
+            document.getElementById('ttm-title').value = data.title || '';
+            document.getElementById('ttm-deadline').value = data.deadline || '';
+            document.getElementById('ttm-desc').value = data.desc || '';
+            document.getElementById('ttm-bText1').value = data.bText1 || '';
+            document.getElementById('ttm-bUrl1').value = data.bUrl1 || '';
+            document.getElementById('ttm-bText2').value = data.bText2 || '';
+            document.getElementById('ttm-bUrl2').value = data.bUrl2 || '';
+
+            const modal = document.getElementById('today-task-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => modal.classList.add('opacity-100'), 10);
+        }
+
+        function closeTodayModal() {
+            const modal = document.getElementById('today-task-modal');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        function saveTodayModal() {
+            roadmapData.todayTask = {
+                title: document.getElementById('ttm-title').value,
+                deadline: document.getElementById('ttm-deadline').value,
+                desc: document.getElementById('ttm-desc').value,
+                bText1: document.getElementById('ttm-bText1').value,
+                bUrl1: document.getElementById('ttm-bUrl1').value,
+                bText2: document.getElementById('ttm-bText2').value,
+                bUrl2: document.getElementById('ttm-bUrl2').value
+            };
+            localStorage.setItem('roadmapData_v1', JSON.stringify(roadmapData));
+            renderRoadmap();
+            closeTodayModal();
+            showToast('오늘 툴 과제가 저장되었습니다.');
+        }
+
+        // 일일과제 모달 핸들링
+        function openDailyModal(id) {
+            document.getElementById('dtm-id').value = id;
+            let task = { status: '진행중', icon: 'check-circle', title: '', link: '' };
+            if(id !== 'new') {
+                task = roadmapData.dailyTasks.find(t => t.id === id) || task;
+            }
+
+            document.getElementById('dtm-status').value = task.status;
+            document.getElementById('dtm-icon').value = task.icon;
+            document.getElementById('dtm-title').value = task.title;
+            document.getElementById('dtm-link').value = task.link;
+
+            const deleteBtn = document.getElementById('btn-dtm-delete');
+            if(id === 'new') deleteBtn.classList.add('hidden');
+            else deleteBtn.classList.remove('hidden');
+            resetDailyDeleteBtn();
+
+            const modal = document.getElementById('daily-task-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => modal.classList.add('opacity-100'), 10);
+        }
+
+        function closeDailyModal() {
+            const modal = document.getElementById('daily-task-modal');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        function saveDailyModal() {
+            let id = document.getElementById('dtm-id').value;
+            const taskData = {
+                status: document.getElementById('dtm-status').value,
+                icon: document.getElementById('dtm-icon').value,
+                title: document.getElementById('dtm-title').value,
+                link: document.getElementById('dtm-link').value
+            };
+
+            if (id === 'new') {
+                taskData.id = 'dt_' + Date.now();
+                roadmapData.dailyTasks.push(taskData);
+            } else {
+                taskData.id = id;
+                const idx = roadmapData.dailyTasks.findIndex(t => t.id === id);
+                if(idx > -1) roadmapData.dailyTasks[idx] = taskData;
+            }
+
+            localStorage.setItem('roadmapData_v1', JSON.stringify(roadmapData));
+            renderRoadmap();
+            closeDailyModal();
+            showToast('일일과제가 저장되었습니다.');
+        }
+
+        let dailyDeleteTimer = null;
+        function deleteDailyTask() {
+            const btn = document.getElementById('btn-dtm-delete');
+            if (btn.getAttribute('data-confirm') === 'true') {
+                const id = document.getElementById('dtm-id').value;
+                roadmapData.dailyTasks = roadmapData.dailyTasks.filter(t => t.id !== id);
+                localStorage.setItem('roadmapData_v1', JSON.stringify(roadmapData));
+                renderRoadmap();
+                closeDailyModal();
+                showToast('일일과제가 삭제되었습니다.');
+            } else {
+                btn.setAttribute('data-confirm', 'true');
+                btn.innerHTML = '정말 삭제할까요?';
+                btn.className = 'px-5 py-2.5 text-sm font-bold text-white bg-red-500 border border-red-500 rounded-xl hover:bg-red-600 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
+                
+                clearTimeout(dailyDeleteTimer);
+                dailyDeleteTimer = setTimeout(() => { resetDailyDeleteBtn(); }, 3000);
+            }
+        }
+
+        function resetDailyDeleteBtn() {
+            const btn = document.getElementById('btn-dtm-delete');
+            if(btn) {
+                btn.setAttribute('data-confirm', 'false');
+                btn.innerHTML = '삭제';
+                btn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
+                clearTimeout(dailyDeleteTimer);
+            }
         }
 
         // ----------------------------------------
@@ -1368,8 +1613,6 @@
         // ----------------------------------------
         // Tool 수업 탭 카드 동적 렌더링 및 편집 로직
         // ----------------------------------------
-        
-        // 초기 기본 데이터 셋
         const defaultToolData = {
             photoshop: {
                 basic: [
@@ -1397,7 +1640,6 @@
         };
 
         let toolData = {};
-        let isToolEditMode = false;
 
         function initToolData() {
             const saved = localStorage.getItem('toolCardsData_v1');
@@ -1408,74 +1650,10 @@
             }
         }
 
-        // 커스텀 비밀번호 모달을 통한 수정 모드 토글
-        function toggleToolEditMode() {
-            const isActivating = !isToolEditMode;
-            const title = isActivating ? "수정 모드 켜기" : "수정 모드 끄기";
-            const msg = isActivating ? "수정 모드 활성화를 위해 비밀번호를 입력하세요." : "수정 모드 종료를 위해 비밀번호를 입력하세요.";
-            
-            document.getElementById('pwd-modal-title').textContent = title;
-            document.getElementById('pwd-modal-msg').textContent = msg;
-            document.getElementById('pwd-input').value = '';
-            document.getElementById('pwd-error').classList.add('hidden');
-            
-            const modal = document.getElementById('pwd-modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            setTimeout(() => {
-                modal.classList.add('opacity-100');
-                document.getElementById('pwd-input').focus();
-            }, 10);
-        }
-
-        function closePwdModal() {
-            const modal = document.getElementById('pwd-modal');
-            modal.classList.remove('opacity-100');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }, 300);
-        }
-
-        function submitPwd() {
-            const pwd = document.getElementById('pwd-input').value;
-            if (pwd === "0305") {
-                isToolEditMode = !isToolEditMode;
-                renderAllToolCards();
-                updateEditModeUI();
-                closePwdModal();
-                if(isToolEditMode) showToast("카드 수정 모드가 활성화되었습니다.");
-                else showToast("카드 수정 모드가 종료되었습니다.");
-            } else {
-                document.getElementById('pwd-error').classList.remove('hidden');
-                document.getElementById('pwd-input').focus();
-            }
-        }
-
-        // 비밀번호 입력창 엔터 키 이벤트 지원
-        document.getElementById('pwd-input').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                submitPwd();
-            }
-        });
-
-        function updateEditModeUI() {
-            const btn = document.getElementById('btn-tool-edit');
-            if(isToolEditMode) {
-                btn.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 inline-block mr-1"></i> 수정 완료`;
-                btn.className = "px-4 py-1.5 bg-figjam hover:bg-[#7c4ced] text-white rounded-lg text-[13px] font-bold transition-colors mb-2 shadow-sm";
-            } else {
-                btn.innerHTML = `<i data-lucide="settings" class="w-4 h-4 inline-block mr-1"></i> 수정 모드 켜기`;
-                btn.className = "px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[13px] font-bold transition-colors mb-2";
-            }
-            lucide.createIcons();
-        }
-
         function createCardHTML(card, toolId, levelId) {
             return `
                 <div id="card_${card.id}" class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full scroll-mt-8 group/card">
-                    ${isToolEditMode ? `<button onclick="openToolCardModal('${toolId}', '${levelId}', '${card.id}')" class="absolute top-4 right-4 text-slate-400 hover:text-figjam z-20 bg-slate-50 hover:bg-slate-100 p-2 rounded-xl transition-all opacity-0 group-hover/card:opacity-100"><i data-lucide="edit" class="w-4 h-4"></i></button>` : ''}
+                    ${isEditMode ? `<button onclick="openToolCardModal('${toolId}', '${levelId}', '${card.id}')" class="absolute top-4 right-4 text-slate-400 hover:text-figjam z-20 bg-slate-50 hover:bg-slate-100 p-2 rounded-xl transition-all opacity-0 group-hover/card:opacity-100"><i data-lucide="edit" class="w-4 h-4"></i></button>` : ''}
                     
                     ${card.badge ? `<div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">${card.badge}</div>` : ''}
                     
@@ -1528,8 +1706,7 @@
                 grid.insertAdjacentHTML('beforeend', createCardHTML(card, toolId, levelId));
             });
             
-            // 수정 모드일 때 "추가하기" 카드 표시
-            if (isToolEditMode) {
+            if (isEditMode) {
                 const addCardHtml = `
                     <div onclick="openToolCardModal('${toolId}', '${levelId}', 'new')" class="bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[20px] p-6 flex flex-col items-center justify-center text-slate-400 hover:text-figjam hover:border-figjam hover:bg-figjamLight/50 transition-all cursor-pointer h-full min-h-[300px]">
                         <i data-lucide="plus-circle" class="w-10 h-10 mb-3"></i>
@@ -1538,7 +1715,6 @@
                 `;
                 grid.insertAdjacentHTML('beforeend', addCardHtml);
             } else if (cards.length === 0) {
-                // 데이터도 없고 수정 모드도 아닐 때
                 grid.innerHTML = `<div class="col-span-full py-12 flex items-center justify-center text-slate-400 font-medium border-2 border-dashed border-slate-200 rounded-[24px]">등록된 콘텐츠가 없습니다.</div>`;
             }
         }
@@ -1553,7 +1729,6 @@
             lucide.createIcons();
         }
 
-        // 모달창 오픈 로직
         function openToolCardModal(toolId, levelId, cardId) {
             document.getElementById('tcm-toolId').value = toolId;
             document.getElementById('tcm-levelId').value = levelId;
@@ -1583,7 +1758,7 @@
             if (isNew) deleteBtn.classList.add('hidden');
             else deleteBtn.classList.remove('hidden');
             
-            resetDeleteBtn(); // 삭제 버튼 상태 안전장치 초기화
+            resetDeleteBtn(); 
             
             const modal = document.getElementById('tool-card-modal');
             modal.classList.remove('hidden');
@@ -1600,7 +1775,6 @@
             }, 300);
         }
 
-        // 모달 데이터 저장 (로컬스토리지 반영)
         function saveToolCard() {
             const toolId = document.getElementById('tcm-toolId').value;
             const levelId = document.getElementById('tcm-levelId').value;
@@ -1639,7 +1813,6 @@
 
         let deleteConfirmTimer = null;
 
-        // 특정 카드 삭제 (안전장치 추가: 두 번 클릭 유도)
         function deleteToolCard() {
             const deleteBtn = document.getElementById('btn-tcm-delete');
             
@@ -1676,21 +1849,252 @@
             }
         }
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-msg').textContent = msg;
-            toast.classList.remove('translate-y-full', 'opacity-0');
-            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-full'); }, 2500);
+        // ----------------------------------------
+        // 작업 공간 (Workspace) 동적 렌더링 및 편집 로직
+        // ----------------------------------------
+        let workspaceData = [];
+
+        function initWorkspaceData() {
+            const saved = localStorage.getItem('workspaceData_v1');
+            if (saved) {
+                workspaceData = JSON.parse(saved);
+            } else {
+                const studentsList = ['강은수', '길솔아', '김예지', '김윤겸', '김지원', '김한솜', '김희은', '박진희', '원채련', '이주환', '임도희'];
+                workspaceData = studentsList.map((name, idx) => ({
+                    id: 'ws_' + idx,
+                    name: name,
+                    avatar: name.charAt(0),
+                    links: [
+                        { name: '브랜딩 피그잼', url: '', icon: 'layout', color: 'purple' },
+                        { name: '웹디자인 피그마', url: '', icon: 'figma', color: 'pink' },
+                        { name: '연습장', url: '', icon: 'edit-3', color: 'orange' },
+                        { name: '웹사이트', url: '', icon: 'monitor', color: 'blue' }
+                    ]
+                }));
+            }
         }
 
-        // 모달 외부 클릭 시 닫기 핸들링 병합
+        const wsColorMap = {
+            purple: { bg: 'bg-purple-50 text-purple-500 group-hover:bg-purple-100', hover: 'hover:text-figjam' },
+            pink: { bg: 'bg-pink-50 text-pink-500 group-hover:bg-pink-100', hover: 'hover:text-pink-500' },
+            orange: { bg: 'bg-orange-50 text-orange-500 group-hover:bg-orange-100', hover: 'hover:text-orange-500' },
+            blue: { bg: 'bg-blue-50 text-blue-500 group-hover:bg-blue-100', hover: 'hover:text-blue-500' },
+            emerald: { bg: 'bg-emerald-50 text-emerald-500 group-hover:bg-emerald-100', hover: 'hover:text-emerald-500' },
+            red: { bg: 'bg-red-50 text-red-500 group-hover:bg-red-100', hover: 'hover:text-red-500' },
+            slate: { bg: 'bg-slate-50 text-slate-500 group-hover:bg-slate-100', hover: 'hover:text-slate-700' }
+        };
+
+        function renderWorkspace() {
+            const container = document.getElementById('render-workspace-cards');
+            if(!container) return;
+            container.innerHTML = '';
+            
+            workspaceData.forEach(card => {
+                const editBtn = isEditMode ? `<button onclick="openWorkspaceModal('${card.id}')" class="absolute top-4 right-4 text-slate-400 hover:text-figjam z-20 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-xl transition-all opacity-0 group-hover/ws:opacity-100"><i data-lucide="edit" class="w-4 h-4"></i></button>` : '';
+                
+                let linksHtml = '';
+                card.links.forEach(link => {
+                    if(!link.name) return; // 이름이 없으면 렌더링 스킵
+                    const cMap = wsColorMap[link.color] || wsColorMap['slate'];
+                    
+                    linksHtml += `
+                        <a href="${link.url || '#'}" target="${link.url ? '_blank' : '_self'}" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 ${cMap.hover} transition-colors group">
+                            <div class="w-8 h-8 rounded-lg ${cMap.bg} flex items-center justify-center transition-colors"><i data-lucide="${link.icon || 'link'}" class="w-4 h-4"></i></div>
+                            <span class="font-medium text-[14px]">${link.name}</span>
+                        </a>
+                    `;
+                });
+
+                container.innerHTML += `
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6 relative group/ws">
+                        ${editBtn}
+                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
+                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">${card.avatar}</div>
+                            <h3 class="font-bold text-slate-800 text-[17px]">${card.name}</h3>
+                        </div>
+                        <div class="space-y-2">
+                            ${linksHtml}
+                        </div>
+                    </div>
+                `;
+            });
+
+            if (isEditMode) {
+                container.innerHTML += `
+                    <div onclick="openWorkspaceModal('new')" class="bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[24px] p-6 flex flex-col items-center justify-center text-slate-400 hover:text-figjam hover:border-figjam hover:bg-figjamLight/50 transition-all cursor-pointer h-full min-h-[250px]">
+                        <i data-lucide="plus-circle" class="w-10 h-10 mb-3"></i>
+                        <span class="font-bold text-[15px]">카드 추가하기</span>
+                    </div>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        const wsIconOptions = ['layout', 'figma', 'edit-3', 'monitor', 'github', 'link', 'folder', 'star', 'image'];
+        const wsColorOptions = ['purple', 'pink', 'orange', 'blue', 'emerald', 'red', 'slate'];
+
+        function addLinkBlock(link) {
+            const container = document.getElementById('wsm-links-container');
+            const html = `
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 space-y-3 wsm-link-item relative group/link">
+                    <div class="flex justify-between items-center">
+                        <p class="text-xs font-bold text-figjam">링크 <span class="link-number"></span></p>
+                        <button type="button" onclick="this.closest('.wsm-link-item').remove(); updateLinkNumbers();" class="text-slate-400 hover:text-red-500 opacity-0 group-hover/link:opacity-100 transition-opacity p-1 rounded-md hover:bg-white border border-transparent hover:border-slate-200" title="링크 삭제">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div class="md:col-span-2">
+                            <label class="block text-[11px] font-bold text-slate-500 mb-1">라벨명</label>
+                            <input type="text" value="${link.name || ''}" placeholder="예: 브랜딩 피그잼" class="link-name w-full border-2 border-slate-200 rounded-lg p-2 focus:border-figjam outline-none text-sm">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-[11px] font-bold text-slate-500 mb-1">URL</label>
+                            <input type="text" value="${link.url || ''}" placeholder="https://" class="link-url w-full border-2 border-slate-200 rounded-lg p-2 focus:border-figjam outline-none text-sm">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-[11px] font-bold text-slate-500 mb-1">아이콘</label>
+                            <select class="link-icon w-full border-2 border-slate-200 rounded-lg p-2 focus:border-figjam outline-none text-sm">
+                                ${wsIconOptions.map(opt => `<option value="${opt}" ${link.icon === opt ? 'selected' : ''}>${opt}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-[11px] font-bold text-slate-500 mb-1">색상</label>
+                            <select class="link-color w-full border-2 border-slate-200 rounded-lg p-2 focus:border-figjam outline-none text-sm">
+                                ${wsColorOptions.map(opt => `<option value="${opt}" ${link.color === opt ? 'selected' : ''}>${opt}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+            updateLinkNumbers();
+            lucide.createIcons();
+        }
+
+        function addNewLinkToWorkspace() {
+            addLinkBlock({name: '', url: '', icon: 'link', color: 'slate'});
+        }
+
+        function updateLinkNumbers() {
+            const items = document.querySelectorAll('.wsm-link-item .link-number');
+            items.forEach((el, idx) => el.textContent = idx + 1);
+        }
+
+        function openWorkspaceModal(id) {
+            document.getElementById('wsm-id').value = id;
+            let card = { name: '', avatar: '', links: [] };
+            
+            if (id !== 'new') {
+                const found = workspaceData.find(c => c.id === id);
+                if(found) card = JSON.parse(JSON.stringify(found));
+            }
+            
+            // 링크가 없는 경우 기본으로 1개 추가
+            if (card.links.length === 0) {
+                card.links.push({name: '', url: '', icon: 'link', color: 'slate'});
+            }
+
+            document.getElementById('wsm-name').value = card.name || '';
+            document.getElementById('wsm-avatar').value = card.avatar || '';
+
+            const linksContainer = document.getElementById('wsm-links-container');
+            linksContainer.innerHTML = '';
+            
+            card.links.forEach(link => addLinkBlock(link));
+            
+            const deleteBtn = document.getElementById('btn-wsm-delete');
+            if (id === 'new') deleteBtn.classList.add('hidden');
+            else deleteBtn.classList.remove('hidden');
+            resetWorkspaceDeleteBtn();
+
+            const modal = document.getElementById('workspace-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => modal.classList.add('opacity-100'), 10);
+        }
+
+        function closeWorkspaceModal() {
+            const modal = document.getElementById('workspace-modal');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        function saveWorkspaceModal() {
+            let id = document.getElementById('wsm-id').value;
+            const newLinks = [];
+            
+            document.querySelectorAll('.wsm-link-item').forEach(item => {
+                newLinks.push({
+                    name: item.querySelector('.link-name').value,
+                    url: item.querySelector('.link-url').value,
+                    icon: item.querySelector('.link-icon').value,
+                    color: item.querySelector('.link-color').value,
+                });
+            });
+
+            const cardData = {
+                name: document.getElementById('wsm-name').value,
+                avatar: document.getElementById('wsm-avatar').value,
+                links: newLinks
+            };
+
+            if (id === 'new') {
+                cardData.id = 'ws_' + Date.now();
+                workspaceData.push(cardData);
+            } else {
+                cardData.id = id;
+                const idx = workspaceData.findIndex(c => c.id === id);
+                if (idx > -1) workspaceData[idx] = cardData;
+            }
+
+            localStorage.setItem('workspaceData_v1', JSON.stringify(workspaceData));
+            renderWorkspace();
+            closeWorkspaceModal();
+            showToast('작업 공간 카드가 저장되었습니다.');
+        }
+
+        let wsDeleteTimer = null;
+        function deleteWorkspaceCard() {
+            const btn = document.getElementById('btn-wsm-delete');
+            if (btn.getAttribute('data-confirm') === 'true') {
+                const id = document.getElementById('wsm-id').value;
+                workspaceData = workspaceData.filter(c => c.id !== id);
+                localStorage.setItem('workspaceData_v1', JSON.stringify(workspaceData));
+                renderWorkspace();
+                closeWorkspaceModal();
+                showToast('카드가 삭제되었습니다.');
+            } else {
+                btn.setAttribute('data-confirm', 'true');
+                btn.innerHTML = '정말 삭제할까요?';
+                btn.className = 'px-5 py-2.5 text-sm font-bold text-white bg-red-500 border border-red-500 rounded-xl hover:bg-red-600 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
+                
+                clearTimeout(wsDeleteTimer);
+                wsDeleteTimer = setTimeout(() => { resetWorkspaceDeleteBtn(); }, 3000);
+            }
+        }
+
+        function resetWorkspaceDeleteBtn() {
+            const btn = document.getElementById('btn-wsm-delete');
+            if(btn) {
+                btn.setAttribute('data-confirm', 'false');
+                btn.innerHTML = '삭제';
+                btn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
+                clearTimeout(wsDeleteTimer);
+            }
+        }
+
+        // 모달 외부 클릭 시 일괄 닫기 핸들링
         window.addEventListener('click', function(e) {
-            const progressModal = document.getElementById('modal');
-            const toolCardModal = document.getElementById('tool-card-modal');
-            const pwdModal = document.getElementById('pwd-modal');
-            if (e.target === progressModal) closeModal();
-            if (e.target === toolCardModal) closeToolCardModal();
-            if (e.target === pwdModal) closePwdModal();
+            if (e.target === document.getElementById('modal')) closeModal();
+            if (e.target === document.getElementById('tool-card-modal')) closeToolCardModal();
+            if (e.target === document.getElementById('pwd-modal')) closePwdModal();
+            if (e.target === document.getElementById('today-task-modal')) closeTodayModal();
+            if (e.target === document.getElementById('daily-task-modal')) closeDailyModal();
+            if (e.target === document.getElementById('workspace-modal')) closeWorkspaceModal(); // 작업 공간 모달 추가
         });
 
         // ----------------------------------------
@@ -1699,9 +2103,14 @@
         window.addEventListener('DOMContentLoaded', () => {
             updateCourseProgress();
             
-            // Tool 수업 데이터 초기화 및 렌더링
+            initRoadmapData();
+            renderRoadmap();
+
             initToolData();
             renderAllToolCards();
+            
+            initWorkspaceData(); // 작업 공간 초기화
+            renderWorkspace();   // 작업 공간 렌더링
 
             const savedTab = localStorage.getItem('dashboardActiveTab') || 'roadmap';
             switchTab(savedTab);
