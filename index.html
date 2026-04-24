@@ -76,7 +76,9 @@
             <i data-lucide="menu" class="w-5 h-5"></i>
         </button>
 
+        <!-- 사이드바 콘텐츠 컨테이너 (너비 고정) -->
         <div id="sidebar-content" class="w-[280px] h-full flex flex-col overflow-hidden">
+            <!-- 로고 영역 -->
             <div class="h-24 flex items-center pl-[76px] pr-6 border-b border-slate-50 cursor-pointer hover:bg-slate-50 transition-colors" onclick="switchTab('roadmap')">
                 <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center mr-3 shadow-md shrink-0">
                     <i data-lucide="layers" class="w-6 h-6"></i>
@@ -84,6 +86,7 @@
                 <span class="text-xl font-extrabold tracking-tight text-slate-900 truncate">UIUX D</span>
             </div>
 
+            <!-- 메뉴 영역 -->
             <nav class="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
                 <p class="px-4 text-xs font-bold text-slate-400 tracking-wider mb-4">MAIN MENU</p>
                 
@@ -108,11 +111,10 @@
                 </button>
             </nav>
 
+            <!-- 하단 유저 프로필 -->
             <div class="p-6 border-t border-slate-50">
-                <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-100 relative group overflow-hidden">
-                    <!-- 클라우드 연동 상태 표시 -->
-                    <div id="cloud-status" class="absolute top-1 right-2 text-[10px] text-figjam font-bold opacity-0 transition-opacity duration-300">클라우드 연동 켜짐</div>
-                    <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold shrink-0">
+                <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                    <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold">
                         <i data-lucide="user" class="w-5 h-5"></i>
                     </div>
                     <div>
@@ -120,11 +122,13 @@
                         <p class="text-[11px] text-slate-500 font-medium">UI/UX 디자인 과정</p>
                     </div>
                 </div>
+                <!-- 클라우드 연동 상태 표시 추가 -->
+                <p id="cloud-status" class="text-[10px] text-slate-400 font-bold mt-3 text-right opacity-0 transition-opacity uppercase tracking-wider">확인 중...</p>
             </div>
-        </div> 
+        </div>
     </aside>
 
-    <!-- 💡 우측 메인 콘텐츠 -->
+    <!-- 💡 우측 메인 콘텐츠 (스크롤 영역) -->
     <main class="flex-1 overflow-y-auto scroll-smooth">
         <div class="p-8 md:p-12 lg:p-16 max-w-[1200px] mx-auto pb-24">
             
@@ -132,6 +136,8 @@
             <!-- 탭 1: 학습 로드맵                          -->
             <!-- ========================================== -->
             <div id="tab-roadmap" class="tab-content active">
+                
+                <!-- 1. 오늘 툴 과제 -->
                 <section class="mb-10">
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="text-[18px] font-bold text-slate-800 flex items-center gap-2">
@@ -142,17 +148,23 @@
                             <i data-lucide="settings" class="w-4 h-4 inline-block mr-1"></i> 수정 모드 켜기
                         </button>
                     </div>
-                    <div id="render-today-task"></div>
+                    <div id="render-today-task">
+                        <!-- 동적 렌더링 영역 -->
+                    </div>
                 </section>
 
+                <!-- 2. 일일과제 -->
                 <section class="mb-10">
                     <h2 class="text-[18px] font-bold text-slate-800 mb-6 flex items-center gap-2">
                         <i data-lucide="calendar-check" class="w-5 h-5 text-emerald-500"></i>
                         일일과제
                     </h2>
-                    <div id="render-daily-tasks" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5"></div>
+                    <div id="render-daily-tasks" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
+                        <!-- 동적 렌더링 영역 -->
+                    </div>
                 </section>
 
+                <!-- 3. 내부 탭 UI -->
                 <section>
                     <div class="flex items-center gap-6 mb-6 border-b border-slate-200">
                         <button id="sub-roadmap-schedule" onclick="switchRoadmapTab('schedule')" class="roadmap-tab-btn pb-3 text-[16px] font-bold text-figjam border-b-[3px] border-figjam transition-colors">수업 일정</button>
@@ -160,14 +172,15 @@
                         <button id="sub-roadmap-portfolio" onclick="switchRoadmapTab('portfolio')" class="roadmap-tab-btn pb-3 text-[16px] font-medium text-slate-400 hover:text-slate-700 transition-colors">포트폴리오 목표</button>
                     </div>
 
-                    <!-- 내부 탭 콘텐츠: 수업 일정 -->
+                    <!-- 수업 일정 -->
                     <div id="roadmap-schedule" class="roadmap-sub-content block">
                         <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-8">
                             <div class="mb-10">
                                 <div class="flex justify-between items-end mb-3">
                                     <div>
                                         <h3 class="text-[17px] font-bold text-slate-800 flex items-center gap-2.5">
-                                            전체 교육 과정 <span id="course-dday" class="text-[12px] font-extrabold bg-red-50 text-red-500 px-2 py-0.5 rounded-md shadow-sm border border-red-100/50">D-?</span>
+                                            전체 교육 과정 
+                                            <span id="course-dday" class="text-[12px] font-extrabold bg-red-50 text-red-500 px-2 py-0.5 rounded-md shadow-sm border border-red-100/50">D-?</span>
                                         </h3>
                                         <p class="text-[14px] text-slate-500 font-medium mt-1 tracking-wide">2025.12.08 ~ 2026.06.25</p>
                                     </div>
@@ -193,7 +206,10 @@
                                 <div class="space-y-2.5">
                                     <div class="flex flex-col lg:flex-row lg:items-center justify-between p-4.5 px-5 rounded-2xl bg-indigo-50/60 border border-indigo-100 shadow-sm transition-all">
                                         <div class="flex items-center gap-3.5 mb-3 lg:mb-0">
-                                            <span class="relative flex h-3 w-3 shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span></span>
+                                            <span class="relative flex h-3 w-3 shrink-0">
+                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                                                <span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
+                                            </span>
                                             <span class="font-bold text-[15px] text-indigo-900">스마트문화앱 UX 설계</span>
                                         </div>
                                         <div class="flex items-center gap-3">
@@ -203,8 +219,13 @@
                                     </div>
                                     <div class="flex flex-col lg:flex-row lg:items-center justify-between p-4.5 px-5 rounded-2xl bg-indigo-50/60 border border-indigo-100 shadow-sm transition-all">
                                         <div class="flex items-start lg:items-center gap-3.5 mb-3 lg:mb-0">
-                                            <span class="relative flex h-3 w-3 shrink-0 mt-1.5 lg:mt-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span></span>
-                                            <span class="font-bold text-[15px] text-indigo-900 leading-snug">프로토타입 기초데이터 수집 및 스케치,<br>프로토타입 제작 및 사용성 테스트</span>
+                                            <span class="relative flex h-3 w-3 shrink-0 mt-1.5 lg:mt-0">
+                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                                                <span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
+                                            </span>
+                                            <span class="font-bold text-[15px] text-indigo-900 leading-snug">
+                                                프로토타입 기초데이터 수집 및 스케치,<br>프로토타입 제작 및 사용성 테스트
+                                            </span>
                                         </div>
                                         <div class="flex items-center gap-3 shrink-0">
                                             <span class="text-[12px] font-bold text-indigo-600 bg-white border border-indigo-200 px-3 py-1.5 rounded-lg shadow-sm">진행중</span>
@@ -236,7 +257,7 @@
                         </div>
                     </div>
 
-                    <!-- 내부 탭 콘텐츠: UIUX 워크 플로우 -->
+                    <!-- UIUX 워크 플로우 -->
                     <div id="roadmap-workflow" class="roadmap-sub-content hidden">
                         <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-8">
                             <div class="flex items-center justify-between mb-10">
@@ -244,12 +265,15 @@
                                     <i data-lucide="map" class="w-6 h-6 text-figjam"></i>
                                     UIUX 워크 플로우
                                 </h2>
-                                <span class="bg-figjamLight text-figjam text-[13px] font-semibold px-4 py-1.5 rounded-full border border-figjamBorder">실시간 협업중</span>
+                                <span class="bg-figjamLight text-figjam text-[13px] font-semibold px-4 py-1.5 rounded-full border border-figjamBorder">
+                                    실시간 협업중
+                                </span>
                             </div>
                             
                             <div class="relative mt-4 px-2">
                                 <div class="absolute top-1/2 left-[10%] right-[10%] h-[2px] bg-slate-100 -translate-y-1/2 z-0"></div>
                                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4 relative z-10">
+                                    <!-- Steps -->
                                     <div class="bg-white border-[1.5px] border-slate-100 rounded-[20px] p-5 text-center flex flex-col items-center">
                                         <div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center mb-4 text-slate-300"><i data-lucide="check" class="w-5 h-5"></i></div>
                                         <h3 class="font-bold text-slate-700 text-[14px] mb-1">UIUX 이론 & 리서치</h3><p class="text-[12px] text-slate-400 font-medium">완료됨</p>
@@ -276,29 +300,52 @@
                         </div>
                     </div>
 
-                    <!-- 내부 탭 콘텐츠: 포트폴리오 목표 -->
+                    <!-- 포트폴리오 목표 -->
                     <div id="roadmap-portfolio" class="roadmap-sub-content hidden">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                            <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
-                                <div class="flex justify-between items-start mb-6">
-                                    <div class="w-12 h-12 rounded-[14px] bg-indigo-50 text-indigo-500 flex items-center justify-center"><i data-lucide="pen-tool" class="w-6 h-6"></i></div>
-                                    <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                        <div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                                <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div class="w-12 h-12 rounded-[14px] bg-indigo-50 text-indigo-500 flex items-center justify-center"><i data-lucide="pen-tool" class="w-6 h-6"></i></div>
+                                        <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                                    </div>
+                                    <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">로고</h3><p class="text-[14px] text-slate-500 font-medium">브랜드 아이덴티티</p>
                                 </div>
-                                <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">로고</h3><p class="text-[14px] text-slate-500 font-medium">브랜드 아이덴티티</p>
-                            </div>
-                            <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
-                                <div class="flex justify-between items-start mb-6">
-                                    <div class="w-12 h-12 rounded-[14px] bg-pink-50 text-pink-500 flex items-center justify-center"><i data-lucide="package" class="w-6 h-6"></i></div>
-                                    <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                                <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div class="w-12 h-12 rounded-[14px] bg-pink-50 text-pink-500 flex items-center justify-center"><i data-lucide="package" class="w-6 h-6"></i></div>
+                                        <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                                    </div>
+                                    <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">패키지</h3><p class="text-[14px] text-slate-500 font-medium">최종 디자인 적용</p>
                                 </div>
-                                <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">패키지</h3><p class="text-[14px] text-slate-500 font-medium">최종 디자인 적용</p>
-                            </div>
-                            <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
-                                <div class="flex justify-between items-start mb-6">
-                                    <div class="w-12 h-12 rounded-[14px] bg-emerald-50 text-emerald-500 flex items-center justify-center"><i data-lucide="monitor" class="w-6 h-6"></i></div>
-                                    <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                                <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div class="w-12 h-12 rounded-[14px] bg-emerald-50 text-emerald-500 flex items-center justify-center"><i data-lucide="monitor" class="w-6 h-6"></i></div>
+                                        <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                                    </div>
+                                    <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">브랜딩 웹사이트</h3><p class="text-[14px] text-slate-500 font-medium">웹 퍼블리싱</p>
                                 </div>
-                                <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">브랜딩 웹사이트</h3><p class="text-[14px] text-slate-500 font-medium">웹 퍼블리싱</p>
+                                <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div class="w-12 h-12 rounded-[14px] bg-blue-50 text-blue-500 flex items-center justify-center"><i data-lucide="layout-template" class="w-6 h-6"></i></div>
+                                        <span class="text-[12px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-md">진행중</span>
+                                    </div>
+                                    <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">UIUX 기획</h3><p class="text-[14px] text-slate-500 font-medium">기획서 초안 작성</p>
+                                </div>
+                                <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div class="w-12 h-12 rounded-[14px] bg-orange-50 text-orange-500 flex items-center justify-center"><i data-lucide="git-branch" class="w-6 h-6"></i></div>
+                                        <span class="text-[12px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-md">대기</span>
+                                    </div>
+                                    <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">UIUX 설계</h3><p class="text-[14px] text-slate-500 font-medium">와이어프레임 & IA</p>
+                                </div>
+                                <div class="bg-white p-7 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div class="w-12 h-12 rounded-[14px] bg-purple-50 text-purple-500 flex items-center justify-center"><i data-lucide="figma" class="w-6 h-6"></i></div>
+                                        <span class="text-[12px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-md">대기</span>
+                                    </div>
+                                    <h3 class="font-bold text-slate-800 text-[17px] mb-1.5">UIUX 디자인</h3><p class="text-[14px] text-slate-500 font-medium">프로토타입 제작</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -320,6 +367,7 @@
                     </button>
                 </div>
 
+                <!-- 포토샵 -->
                 <div id="tool-photoshop" class="tool-content active">
                     <div class="flex items-center gap-2 mb-8">
                         <button id="btn-photoshop-basic" onclick="switchLevel('photoshop', 'basic')" class="level-btn px-4 py-1.5 text-[14px] font-bold text-figjam bg-figjamLight border border-figjamBorder rounded-full transition-all">기초</button>
@@ -339,8 +387,9 @@
                         </div>
                         <div id="grid-photoshop-advanced" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4"></div>
                     </div>
-                </div> 
+                </div>
 
+                <!-- 일러스트 -->
                 <div id="tool-illustrator" class="tool-content">
                     <div class="flex items-center gap-2 mb-8">
                         <button id="btn-illustrator-basic" onclick="switchLevel('illustrator', 'basic')" class="level-btn px-4 py-1.5 text-[14px] font-bold text-figjam bg-figjamLight border border-figjamBorder rounded-full transition-all">기초</button>
@@ -362,6 +411,7 @@
                     </div>
                 </div>
 
+                <!-- 피그마 -->
                 <div id="tool-figma" class="tool-content">
                     <div class="flex items-center gap-2 mb-8">
                         <button id="btn-figma-basic" onclick="switchLevel('figma', 'basic')" class="level-btn px-4 py-1.5 text-[14px] font-bold text-figjam bg-figjamLight border border-figjamBorder rounded-full transition-all">기초</button>
@@ -381,7 +431,7 @@
                         </div>
                         <div id="grid-figma-advanced" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4"></div>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <!-- ========================================== -->
@@ -411,8 +461,7 @@
                     </div>
                     <div class="flex items-center gap-3">
                         <button onclick="copyProgressData()" class="flex items-center gap-2 px-4 py-3 bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 text-slate-600 font-bold text-[13px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all active:scale-95">
-                            <i data-lucide="copy" class="w-4 h-4"></i>
-                            데이터 복사
+                            <i data-lucide="copy" class="w-4 h-4"></i> 데이터 복사
                         </button>
                         <div class="flex items-center bg-white px-6 py-3 rounded-2xl border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
                             <span class="text-slate-500 font-bold text-[13px] mr-4 uppercase tracking-wider">전체 평균 진척도</span>
@@ -420,7 +469,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="flex flex-row gap-6 w-full items-stretch" style="height: calc(100vh - 260px); min-height: 450px;"> 
                     <div class="w-[280px] bg-white rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-4 flex flex-col shrink-0 z-10 border border-slate-100 overflow-y-auto">
                         <div id="custom-legend" class="flex flex-col gap-1 w-full"></div>
@@ -436,8 +484,8 @@
         </div>
     </main>
 
-    <!-- 모달 팝업 영역 -->
-    <!-- 개별 학생 진척도 수정 모달 -->
+    <!-- 모달 레이어 (진척도, 카드 편집, 비밀번호 등) -->
+    <!-- 진척도 모달 -->
     <div id="modal" class="fixed inset-0 bg-slate-900/20 hidden items-center justify-center z-[100] p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
         <div class="bg-white rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] w-full max-w-2xl overflow-hidden transform transition-all border border-white">
             <div class="px-8 py-6 flex justify-between items-center bg-figjamLight/50 border-b border-figjamBorder/50">
@@ -448,13 +496,14 @@
                 <button onclick="closeModal()" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100 hover:bg-slate-50"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
             <div class="p-8 max-h-[60vh] overflow-y-auto">
+                <p class="text-sm text-slate-500 mb-6 pb-4 border-b border-slate-100 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-figjam"></span> 해당 학생의 과목별 달성률(%)을 입력하세요. (0 ~ 100)</p>
                 <div id="modal-form-grid" class="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-6"></div>
             </div>
             <div class="px-8 py-5 bg-slate-50/50 flex items-center justify-between border-t border-slate-100">
                 <p class="text-xs font-medium text-slate-400">⌨️ 폼에서 Enter 키를 누르면 바로 저장됩니다.</p>
                 <div class="flex gap-3">
-                    <button onclick="closeModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:text-slate-700 shadow-sm">취소</button>
-                    <button onclick="saveData()" class="px-6 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] shadow-md active:scale-95 flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> 수정 완료</button>
+                    <button onclick="closeModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:text-slate-700 transition-colors shadow-sm">취소</button>
+                    <button onclick="saveData()" class="px-6 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] shadow-md transition-all active:scale-95 flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> 수정 완료</button>
                 </div>
             </div>
         </div>
@@ -468,36 +517,34 @@
                 <button onclick="closeToolCardModal()" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100 hover:bg-slate-50"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
             <div class="p-8 max-h-[65vh] overflow-y-auto space-y-5">
-                <input type="hidden" id="tcm-toolId">
-                <input type="hidden" id="tcm-levelId">
-                <input type="hidden" id="tcm-cardId">
+                <input type="hidden" id="tcm-toolId"> <input type="hidden" id="tcm-levelId"> <input type="hidden" id="tcm-cardId">
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">배지 텍스트 (좌상단)</label><input type="text" id="tcm-badge" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold text-slate-700 bg-slate-50"></div>
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">배지 텍스트 (우하단)</label><input type="text" id="tcm-badgeRight" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold text-slate-700 bg-slate-50"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">배지 텍스트 (좌상단)</label><input type="text" id="tcm-badge" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 hover:bg-white focus:bg-white"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">배지 텍스트 (우하단)</label><input type="text" id="tcm-badgeRight" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 hover:bg-white focus:bg-white"></div>
                 </div>
-                <div><label class="block text-xs font-bold text-slate-500 mb-1.5">제목</label><input type="text" id="tcm-title" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold text-slate-700 bg-slate-50"></div>
+                <div><label class="block text-xs font-bold text-slate-500 mb-1.5">제목</label><input type="text" id="tcm-title" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 hover:bg-white focus:bg-white"></div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">영상/링크 1 텍스트</label><input type="text" id="tcm-yText1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium text-slate-700 bg-slate-50"></div>
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">영상/링크 1 URL</label><input type="text" id="tcm-yUrl1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium text-slate-700 bg-slate-50"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">영상/링크 1 텍스트</label><input type="text" id="tcm-yText1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium bg-slate-50 hover:bg-white focus:bg-white"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">영상/링크 1 URL</label><input type="text" id="tcm-yUrl1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium bg-slate-50 hover:bg-white focus:bg-white"></div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">영상/링크 2 텍스트</label><input type="text" id="tcm-yText2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium text-slate-700 bg-slate-50"></div>
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">영상/링크 2 URL</label><input type="text" id="tcm-yUrl2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium text-slate-700 bg-slate-50"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">영상/링크 2 텍스트</label><input type="text" id="tcm-yText2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium bg-slate-50 hover:bg-white focus:bg-white"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">영상/링크 2 URL</label><input type="text" id="tcm-yUrl2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium bg-slate-50 hover:bg-white focus:bg-white"></div>
                 </div>
-                <div><label class="block text-xs font-bold text-slate-500 mb-1.5">설명 텍스트 (줄바꿈 시 새 문단 적용)</label><textarea id="tcm-desc" rows="3" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium text-slate-700 bg-slate-50"></textarea></div>
+                <div><label class="block text-xs font-bold text-slate-500 mb-1.5">설명 텍스트 (줄바꿈 시 새 문단 적용)</label><textarea id="tcm-desc" rows="3" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium bg-slate-50 hover:bg-white focus:bg-white"></textarea></div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">하단 버튼 1 텍스트</label><input type="text" id="tcm-bText1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold text-slate-700 bg-slate-50"></div>
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">하단 버튼 1 URL</label><input type="text" id="tcm-bUrl1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium text-slate-700 bg-slate-50"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">하단 버튼 1 텍스트</label><input type="text" id="tcm-bText1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 hover:bg-white focus:bg-white"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">하단 버튼 1 URL</label><input type="text" id="tcm-bUrl1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium bg-slate-50 hover:bg-white focus:bg-white"></div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">하단 버튼 2 텍스트</label><input type="text" id="tcm-bText2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold text-slate-700 bg-slate-50"></div>
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">하단 버튼 2 URL</label><input type="text" id="tcm-bUrl2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium text-slate-700 bg-slate-50"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">하단 버튼 2 텍스트</label><input type="text" id="tcm-bText2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 hover:bg-white focus:bg-white"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">하단 버튼 2 URL</label><input type="text" id="tcm-bUrl2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium bg-slate-50 hover:bg-white focus:bg-white"></div>
                 </div>
             </div>
             <div class="px-8 py-5 bg-slate-50/50 flex items-center justify-end gap-3 border-t border-slate-100">
                 <button onclick="deleteToolCard()" id="btn-tcm-delete" class="px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto hidden transition-colors">삭제</button>
                 <button onclick="closeToolCardModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shadow-sm transition-colors">취소</button>
-                <button onclick="saveToolCard()" class="px-6 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] shadow-md active:scale-95 flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> 저장</button>
+                <button onclick="saveToolCard()" class="px-6 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] shadow-md transition-all active:scale-95 flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> 저장</button>
             </div>
         </div>
     </div>
@@ -507,26 +554,26 @@
         <div class="bg-white rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] w-full max-w-2xl overflow-hidden transform transition-all border border-white">
             <div class="px-8 py-6 flex justify-between items-center bg-figjamLight/50 border-b border-figjamBorder/50">
                 <h2 class="text-xl font-extrabold text-slate-800">오늘 툴 과제 편집</h2>
-                <button onclick="closeTodayModal()" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <button onclick="closeTodayModal()" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100 hover:bg-slate-50"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
             <div class="p-8 max-h-[65vh] overflow-y-auto space-y-5">
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">과제 제목</label><input type="text" id="ttm-title" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold text-slate-700 bg-slate-50"></div>
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">기한 텍스트</label><input type="text" id="ttm-deadline" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold text-slate-700 bg-slate-50"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">과제 제목</label><input type="text" id="ttm-title" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 hover:bg-white focus:bg-white"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">기한 텍스트</label><input type="text" id="ttm-deadline" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 hover:bg-white focus:bg-white"></div>
                 </div>
-                <div><label class="block text-xs font-bold text-slate-500 mb-1.5">과제 상세 내용</label><textarea id="ttm-desc" rows="4" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium text-slate-700 bg-slate-50"></textarea></div>
+                <div><label class="block text-xs font-bold text-slate-500 mb-1.5">과제 상세 내용 (줄바꿈 시 새 목록 적용)</label><textarea id="ttm-desc" rows="4" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium bg-slate-50 hover:bg-white focus:bg-white"></textarea></div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">우측 버튼 1 텍스트</label><input type="text" id="ttm-bText1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold text-slate-700 bg-slate-50"></div>
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">우측 버튼 1 URL</label><input type="text" id="ttm-bUrl1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium text-slate-700 bg-slate-50"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">우측 버튼 1 텍스트</label><input type="text" id="ttm-bText1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 hover:bg-white focus:bg-white"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">우측 버튼 1 URL</label><input type="text" id="ttm-bUrl1" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium bg-slate-50 hover:bg-white focus:bg-white"></div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">우측 버튼 2 텍스트</label><input type="text" id="ttm-bText2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold text-slate-700 bg-slate-50"></div>
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">우측 버튼 2 URL</label><input type="text" id="ttm-bUrl2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium text-slate-700 bg-slate-50"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">우측 버튼 2 텍스트</label><input type="text" id="ttm-bText2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 hover:bg-white focus:bg-white"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">우측 버튼 2 URL</label><input type="text" id="ttm-bUrl2" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium bg-slate-50 hover:bg-white focus:bg-white"></div>
                 </div>
             </div>
             <div class="px-8 py-5 bg-slate-50/50 flex items-center justify-end gap-3 border-t border-slate-100">
-                <button onclick="closeTodayModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shadow-sm">취소</button>
-                <button onclick="saveTodayModal()" class="px-6 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] shadow-md active:scale-95 flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> 저장</button>
+                <button onclick="closeTodayModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shadow-sm transition-colors">취소</button>
+                <button onclick="saveTodayModal()" class="px-6 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] shadow-md transition-all active:scale-95 flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> 저장</button>
             </div>
         </div>
     </div>
@@ -536,31 +583,32 @@
         <div class="bg-white rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] w-full max-w-lg overflow-hidden transform transition-all border border-white">
             <div class="px-8 py-6 flex justify-between items-center bg-figjamLight/50 border-b border-figjamBorder/50">
                 <h2 class="text-xl font-extrabold text-slate-800">일일과제 편집</h2>
-                <button onclick="closeDailyModal()" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <button onclick="closeDailyModal()" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100 hover:bg-slate-50"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
             <div class="p-8 max-h-[65vh] overflow-y-auto space-y-5">
                 <input type="hidden" id="dtm-id">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-500 mb-1.5">상태</label>
-                        <select id="dtm-status" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold text-slate-700 bg-slate-50">
+                        <select id="dtm-status" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50">
                             <option value="완료">완료</option><option value="진행중">진행중</option><option value="대기">대기</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-500 mb-1.5">아이콘</label>
-                        <select id="dtm-icon" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold text-slate-700 bg-slate-50">
-                            <option value="check-circle">check-circle</option><option value="pen-tool">pen-tool</option><option value="book-open">book-open</option><option value="users">users</option><option value="code">code</option><option value="layout">layout</option><option value="monitor">monitor</option><option value="star">star</option>
+                        <select id="dtm-icon" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50">
+                            <option value="check-circle">check-circle</option><option value="pen-tool">pen-tool</option><option value="book-open">book-open</option>
+                            <option value="users">users</option><option value="code">code</option><option value="layout">layout</option><option value="monitor">monitor</option><option value="star">star</option>
                         </select>
                     </div>
                 </div>
-                <div><label class="block text-xs font-bold text-slate-500 mb-1.5">과제 제목</label><input type="text" id="dtm-title" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold text-slate-700 bg-slate-50"></div>
-                <div><label class="block text-xs font-bold text-slate-500 mb-1.5">제출 URL</label><input type="text" id="dtm-link" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium text-slate-700 bg-slate-50"></div>
+                <div><label class="block text-xs font-bold text-slate-500 mb-1.5">과제 제목</label><input type="text" id="dtm-title" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 hover:bg-white focus:bg-white"></div>
+                <div><label class="block text-xs font-bold text-slate-500 mb-1.5">제출 URL (버튼 연결)</label><input type="text" id="dtm-link" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-medium bg-slate-50 hover:bg-white focus:bg-white"></div>
             </div>
             <div class="px-8 py-5 bg-slate-50/50 flex items-center justify-end gap-3 border-t border-slate-100">
                 <button onclick="deleteDailyTask()" id="btn-dtm-delete" class="px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto hidden transition-colors">삭제</button>
                 <button onclick="closeDailyModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shadow-sm transition-colors">취소</button>
-                <button onclick="saveDailyModal()" class="px-6 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] shadow-md active:scale-95 flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> 저장</button>
+                <button onclick="saveDailyModal()" class="px-6 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] shadow-md transition-all active:scale-95 flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> 저장</button>
             </div>
         </div>
     </div>
@@ -570,21 +618,21 @@
         <div class="bg-white rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] w-full max-w-2xl overflow-hidden transform transition-all border border-white">
             <div class="px-8 py-6 flex justify-between items-center bg-figjamLight/50 border-b border-figjamBorder/50">
                 <h2 class="text-xl font-extrabold text-slate-800">작업 공간 카드 편집</h2>
-                <button onclick="closeWorkspaceModal()" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <button onclick="closeWorkspaceModal()" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100 hover:bg-slate-50"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
             <div class="p-8 max-h-[65vh] overflow-y-auto space-y-6">
                 <input type="hidden" id="wsm-id">
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">이름</label><input type="text" id="wsm-name" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold text-slate-700 bg-slate-50"></div>
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">프로필 텍스트 (1글자)</label><input type="text" id="wsm-avatar" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold text-slate-700 bg-slate-50"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">이름</label><input type="text" id="wsm-name" placeholder="예: 강은수" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 hover:bg-white focus:bg-white"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1.5">프로필 텍스트 (1글자)</label><input type="text" id="wsm-avatar" placeholder="예: 강" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 hover:bg-white focus:bg-white"></div>
                 </div>
                 <div id="wsm-links-container" class="space-y-4 border-t border-slate-100 pt-4"></div>
-                <button type="button" onclick="addNewLinkToWorkspace()" class="w-full py-3 border-2 border-dashed border-slate-200 text-slate-500 font-bold rounded-xl hover:bg-slate-50 hover:text-figjam transition-all flex justify-center items-center gap-2 text-sm mt-2"><i data-lucide="plus" class="w-4 h-4"></i> 링크 추가하기</button>
+                <button type="button" onclick="addNewLinkToWorkspace()" class="w-full py-3 border-2 border-dashed border-slate-200 text-slate-500 font-bold rounded-xl hover:bg-slate-50 hover:text-figjam hover:border-figjam/30 transition-all flex justify-center items-center gap-2 text-sm mt-2"><i data-lucide="plus" class="w-4 h-4"></i> 링크 추가하기</button>
             </div>
             <div class="px-8 py-5 bg-slate-50/50 flex items-center justify-end gap-3 border-t border-slate-100">
                 <button onclick="deleteWorkspaceCard()" id="btn-wsm-delete" class="px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto hidden transition-colors">삭제</button>
                 <button onclick="closeWorkspaceModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shadow-sm transition-colors">취소</button>
-                <button onclick="saveWorkspaceModal()" class="px-6 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] shadow-md active:scale-95 flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> 저장</button>
+                <button onclick="saveWorkspaceModal()" class="px-6 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] shadow-md transition-all active:scale-95 flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> 저장</button>
             </div>
         </div>
     </div>
@@ -594,16 +642,16 @@
         <div class="bg-white rounded-[24px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] w-full max-w-sm overflow-hidden transform transition-all border border-white">
             <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center">
                 <h2 id="pwd-modal-title" class="text-lg font-bold text-slate-800">수정 모드</h2>
-                <button onclick="closePwdModal()" class="text-slate-400 hover:text-red-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <button onclick="closePwdModal()" class="text-slate-400 hover:text-red-500 transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
             <div class="p-6">
                 <p id="pwd-modal-msg" class="text-sm text-slate-500 mb-4 text-center">비밀번호를 입력하세요.</p>
-                <input type="password" id="pwd-input" class="w-full border-2 border-slate-100 rounded-xl p-3 focus:border-figjam outline-none text-center tracking-widest text-xl font-bold text-slate-700 bg-slate-50" placeholder="****">
+                <input type="password" id="pwd-input" class="w-full border-2 border-slate-100 rounded-xl p-3 focus:border-figjam outline-none text-center tracking-widest text-xl font-bold bg-slate-50 hover:bg-white focus:bg-white" placeholder="****">
                 <p id="pwd-error" class="text-xs text-red-500 mt-3 text-center hidden">비밀번호가 일치하지 않습니다.</p>
             </div>
             <div class="px-6 py-4 bg-slate-50/50 flex justify-center gap-3 border-t border-slate-100">
-                <button onclick="closePwdModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 flex-1 shadow-sm">취소</button>
-                <button onclick="submitPwd()" class="px-5 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] flex-1 shadow-sm">확인</button>
+                <button onclick="closePwdModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors flex-1 shadow-sm">취소</button>
+                <button onclick="submitPwd()" class="px-5 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] transition-all flex-1 shadow-sm">확인</button>
             </div>
         </div>
     </div>
@@ -620,38 +668,33 @@
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // ==========================================
-        // const firebaseConfig = {
-  apiKey: "AIzaSyC-rKb-BXBrKofZAJsFz3x_SlBEhArgqCQ",
-  authDomain: "uiux-33a4d.firebaseapp.com",
-  projectId: "uiux-33a4d",
-  storageBucket: "uiux-33a4d.firebasestorage.app",
-  messagingSenderId: "612043380123",
-  appId: "1:612043380123:web:75d06a6ba6e860f525fd3e",
-  measurementId: "G-B66P8H3KMT"
-};
+        // 1. Firebase 및 시스템 전역 설정
         // ==========================================
         const firebaseConfig = {
-            apiKey: "여기에_API_KEY_입력",
-            authDomain: "여기에_AUTH_DOMAIN_입력",
-            projectId: "여기에_PROJECT_ID_입력",
-            storageBucket: "여기에_STORAGE_BUCKET_입력",
-            messagingSenderId: "여기에_MESSAGING_SENDER_ID_입력",
-            appId: "여기에_APP_ID_입력"
+            apiKey: "AIzaSyC-rKb-BXBrKofZAJsFz3x_SlBEhArgqCQ",
+            authDomain: "uiux-33a4d.firebaseapp.com",
+            projectId: "uiux-33a4d",
+            storageBucket: "uiux-33a4d.firebasestorage.app",
+            messagingSenderId: "612043380123",
+            appId: "1:612043380123:web:75d06a6ba6e860f525fd3e",
+            measurementId: "G-B66P8H3KMT"
         };
 
         let app = null, auth = null, db = null;
-        if (firebaseConfig.apiKey !== "여기에_API_KEY_입력") {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
+        if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "여기에_API_KEY_입력") {
+            try {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+            } catch(e) { console.error("Firebase 초기화 에러", e); }
         }
 
-        // ==========================================
-        // 시스템 전역 설정
-        // ==========================================
         let isEditMode = false;
         let isProgressInitialized = false;
+        let myChart = null;
+        let currentEditingStudent = '';
 
+        // Window 객체에 함수 바인딩 (HTML에서 onclick이 작동하기 위함)
         window.toggleSidebar = () => document.body.classList.toggle('sidebar-closed');
         window.switchTab = switchTab;
         window.switchRoadmapTab = switchRoadmapTab;
@@ -692,56 +735,7 @@
         }
 
         // ==========================================
-        // 클라우드 저장소 연동 / 동기화 모듈
-        // ==========================================
-        async function saveToFirebase() {
-            if (db && auth && auth.currentUser) {
-                const stateRef = doc(db, 'uiux_dashboard', 'shared_state');
-                try {
-                    await setDoc(stateRef, {
-                        progress: progressData,
-                        tool: toolData,
-                        roadmap: roadmapData,
-                        workspace: workspaceData,
-                        lastUpdated: Date.now()
-                    });
-                } catch(e) {
-                    console.error("클라우드 저장 실패", e);
-                    alert("데이터베이스 저장에 실패했습니다. Firebase 권한 설정(Rules)을 확인해주세요.");
-                }
-            } else {
-                localStorage.setItem('roadmapData_v1', JSON.stringify(roadmapData));
-                localStorage.setItem('toolCardsData_v1', JSON.stringify(toolData));
-                localStorage.setItem('workspaceData_v1', JSON.stringify(workspaceData));
-                localStorage.setItem('assignmentData_v2', JSON.stringify(progressData));
-            }
-        }
-
-        function loadFromLocal() {
-            const rm = localStorage.getItem('roadmapData_v1'); if (rm) roadmapData = JSON.parse(rm);
-            const tl = localStorage.getItem('toolCardsData_v1'); if (tl) toolData = JSON.parse(tl);
-            const ws = localStorage.getItem('workspaceData_v1'); if (ws) workspaceData = JSON.parse(ws);
-            const pg = localStorage.getItem('assignmentData_v2'); if (pg) progressData = JSON.parse(pg);
-            renderAll();
-        }
-
-        function renderAll() {
-            renderRoadmap();
-            renderAllToolCards();
-            renderWorkspace();
-            renderStudentLegend();
-            updateSummary();
-            
-            const isProgressActive = document.getElementById('tab-progress').classList.contains('active');
-            if (isProgressActive) {
-                if(!myChart) renderChart();
-                else myChart.update();
-            }
-            lucide.createIcons();
-        }
-
-        // ==========================================
-        // 기본 데이터 포맷 설정
+        // 2. 기본 데이터 정의
         // ==========================================
         const defaultRoadmapData = {
             todayTask: {
@@ -787,6 +781,7 @@
 
         const studentsList = ['강은수', '길솔아', '김예지', '김윤겸', '김지원', '김한솜', '김희은', '박진희', '원채련', '이주환', '임도희'];
         const tasksList = ['로고', '패키지 기획', '패키지 무드보드', '패키지 그리드', '패키지 와이어프레임', '패키지 초안', '패키지 수정안', '패키지 최종안', 'Web Wire', 'Web Wire Develop', 'Web Design', 'Web Design Develop'];
+        const studentColors = ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#22c55e', '#10b981', '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6'];
         
         const defaultWorkspaceData = studentsList.map((name, idx) => ({
             id: 'ws_' + idx, name: name, avatar: name.charAt(0),
@@ -809,70 +804,50 @@
         });
 
         // ==========================================
-        // 앱 초기화 및 메인 로직 
+        // 3. 클라우드 연동 & 로컬 스토리지
         // ==========================================
-        function initApp() {
-            updateCourseProgress();
-            
-            ['today-task-modal', 'daily-task-modal', 'tool-card-modal', 'workspace-modal'].forEach(id => {
-                const el = document.getElementById(id);
-                if(el) {
-                    el.addEventListener('keydown', function(e) {
-                        if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
-                            e.preventDefault();
-                            if(id === 'today-task-modal') saveTodayModal();
-                            else if(id === 'daily-task-modal') saveDailyModal();
-                            else if(id === 'tool-card-modal') saveToolCard();
-                            else if(id === 'workspace-modal') saveWorkspaceModal();
-                        }
+        async function saveToFirebase() {
+            if (db && auth && auth.currentUser) {
+                const stateRef = doc(db, 'uiux_dashboard', 'shared_state');
+                try {
+                    await setDoc(stateRef, {
+                        progress: progressData, tool: toolData,
+                        roadmap: roadmapData, workspace: workspaceData, lastUpdated: Date.now()
                     });
-                }
-            });
-
-            if (auth) {
-                signInAnonymously(auth).catch((error) => {
-                    console.error("Firebase 익명 로그인 실패:", error.message);
-                    alert("데이터베이스 연결에 실패했습니다. Firebase 콘솔에서 '익명 로그인'을 켜주세요.");
-                    loadFromLocal();
-                });
-                
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        document.getElementById('cloud-status').classList.remove('opacity-0');
-                        document.getElementById('cloud-status').textContent = '클라우드 연동 켜짐 🟢';
-                        
-                        const stateRef = doc(db, 'uiux_dashboard', 'shared_state');
-                        onSnapshot(stateRef, (snap) => {
-                            if (snap.exists()) {
-                                const data = snap.data();
-                                if (data.roadmap) roadmapData = data.roadmap;
-                                if (data.tool) toolData = data.tool;
-                                if (data.workspace) workspaceData = data.workspace;
-                                if (data.progress) progressData = data.progress;
-                                renderAll();
-                            } else {
-                                loadFromLocal();
-                                saveToFirebase();
-                            }
-                        }, (err) => {
-                            console.error("클라우드 동기화 권한 에러:", err);
-                            document.getElementById('cloud-status').textContent = '권한 에러 🔴';
-                            loadFromLocal();
-                        });
-                    }
-                });
+                } catch(e) { console.error("클라우드 저장 실패", e); }
             } else {
-                document.getElementById('cloud-status').classList.remove('opacity-0');
-                document.getElementById('cloud-status').textContent = '로컬 저장 모드 🟡';
-                loadFromLocal();
+                localStorage.setItem('roadmapData_v1', JSON.stringify(roadmapData));
+                localStorage.setItem('toolCardsData_v1', JSON.stringify(toolData));
+                localStorage.setItem('workspaceData_v1', JSON.stringify(workspaceData));
+                localStorage.setItem('assignmentData_v2', JSON.stringify(progressData));
             }
+        }
 
-            const savedTab = localStorage.getItem('dashboardActiveTab') || 'roadmap';
-            switchTab(savedTab);
+        function loadFromLocal() {
+            const rm = localStorage.getItem('roadmapData_v1'); if (rm) roadmapData = JSON.parse(rm);
+            const tl = localStorage.getItem('toolCardsData_v1'); if (tl) toolData = JSON.parse(tl);
+            const ws = localStorage.getItem('workspaceData_v1'); if (ws) workspaceData = JSON.parse(ws);
+            const pg = localStorage.getItem('assignmentData_v2'); if (pg) progressData = JSON.parse(pg);
+            renderAll();
+        }
+
+        function renderAll() {
+            renderRoadmap();
+            renderAllToolCards();
+            renderWorkspace();
+            renderStudentLegend();
+            updateSummary();
+            
+            const isProgressActive = document.getElementById('tab-progress').classList.contains('active');
+            if (isProgressActive) {
+                if(!myChart) renderChart();
+                else myChart.update();
+            }
+            lucide.createIcons();
         }
 
         // ==========================================
-        // UI 컴포넌트 렌더링 로직 (Roadmap, Tool, Workspace, Progress)
+        // 4. 공통 UI & 탭 전환
         // ==========================================
         function updateCourseProgress() {
             const startDate = new Date('2025-12-08T00:00:00');
@@ -924,7 +899,6 @@
         function switchRoadmapTab(tabId) {
             document.querySelectorAll('.roadmap-sub-content').forEach(el => { el.classList.add('hidden'); el.classList.remove('block'); });
             document.getElementById('roadmap-' + tabId).classList.remove('hidden'); document.getElementById('roadmap-' + tabId).classList.add('block');
-
             document.querySelectorAll('.roadmap-tab-btn').forEach(el => { el.classList.remove('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam'); el.classList.add('font-medium', 'text-slate-400', 'hover:text-slate-700'); });
             const activeBtn = document.getElementById('sub-roadmap-' + tabId);
             activeBtn.classList.remove('font-medium', 'text-slate-400', 'hover:text-slate-700'); activeBtn.classList.add('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
@@ -959,6 +933,9 @@
             }, 150);
         }
 
+        // ==========================================
+        // 5. 수정 모드 및 비밀번호 로직
+        // ==========================================
         function toggleEditMode() {
             const isActivating = !isEditMode;
             document.getElementById('pwd-modal-title').textContent = isActivating ? "수정 모드 켜기" : "수정 모드 끄기";
@@ -1007,6 +984,9 @@
             lucide.createIcons();
         }
 
+        // ==========================================
+        // 6. 렌더링 로직 (Roadmap, Tool, Workspace)
+        // ==========================================
         function renderRoadmap() {
             renderTodayTask();
             renderDailyTasks();
@@ -1080,107 +1060,6 @@
             }
         }
 
-        function openTodayModal() {
-            const data = roadmapData.todayTask;
-            document.getElementById('ttm-title').value = data.title || ''; document.getElementById('ttm-deadline').value = data.deadline || '';
-            document.getElementById('ttm-desc').value = data.desc || ''; document.getElementById('ttm-bText1').value = data.bText1 || '';
-            document.getElementById('ttm-bUrl1').value = data.bUrl1 || ''; document.getElementById('ttm-bText2').value = data.bText2 || '';
-            document.getElementById('ttm-bUrl2').value = data.bUrl2 || '';
-
-            const modal = document.getElementById('today-task-modal');
-            modal.classList.remove('hidden'); modal.classList.add('flex');
-            setTimeout(() => modal.classList.add('opacity-100'), 10);
-        }
-
-        function closeTodayModal() {
-            const modal = document.getElementById('today-task-modal');
-            modal.classList.remove('opacity-100');
-            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
-        }
-
-        function saveTodayModal() {
-            roadmapData.todayTask = {
-                title: document.getElementById('ttm-title').value, deadline: document.getElementById('ttm-deadline').value,
-                desc: document.getElementById('ttm-desc').value, bText1: document.getElementById('ttm-bText1').value,
-                bUrl1: document.getElementById('ttm-bUrl1').value, bText2: document.getElementById('ttm-bText2').value,
-                bUrl2: document.getElementById('ttm-bUrl2').value
-            };
-            saveToFirebase();
-            renderRoadmap();
-            closeTodayModal();
-            showToast('오늘 툴 과제가 저장되었습니다.');
-        }
-
-        function openDailyModal(id) {
-            document.getElementById('dtm-id').value = id;
-            let task = { status: '진행중', icon: 'check-circle', title: '', link: '' };
-            if(id !== 'new') task = roadmapData.dailyTasks.find(t => t.id === id) || task;
-            
-            document.getElementById('dtm-status').value = task.status; document.getElementById('dtm-icon').value = task.icon;
-            document.getElementById('dtm-title').value = task.title; document.getElementById('dtm-link').value = task.link;
-
-            const deleteBtn = document.getElementById('btn-dtm-delete');
-            if(id === 'new') deleteBtn.classList.add('hidden');
-            else deleteBtn.classList.remove('hidden');
-            
-            if(deleteBtn) {
-                deleteBtn.setAttribute('data-confirm', 'false'); deleteBtn.innerHTML = '삭제';
-                deleteBtn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (deleteBtn.classList.contains('hidden') ? ' hidden' : '');
-            }
-
-            const modal = document.getElementById('daily-task-modal');
-            modal.classList.remove('hidden'); modal.classList.add('flex');
-            setTimeout(() => modal.classList.add('opacity-100'), 10);
-        }
-
-        function closeDailyModal() {
-            const modal = document.getElementById('daily-task-modal');
-            modal.classList.remove('opacity-100');
-            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
-        }
-
-        function saveDailyModal() {
-            let id = document.getElementById('dtm-id').value;
-            const taskData = {
-                status: document.getElementById('dtm-status').value, icon: document.getElementById('dtm-icon').value,
-                title: document.getElementById('dtm-title').value, link: document.getElementById('dtm-link').value
-            };
-
-            if (id === 'new') {
-                taskData.id = 'dt_' + Date.now();
-                roadmapData.dailyTasks.push(taskData);
-            } else {
-                taskData.id = id;
-                const idx = roadmapData.dailyTasks.findIndex(t => t.id === id);
-                if(idx > -1) roadmapData.dailyTasks[idx] = taskData;
-            }
-            saveToFirebase();
-            renderRoadmap();
-            closeDailyModal();
-            showToast('일일과제가 저장되었습니다.');
-        }
-
-        let dailyDeleteTimer = null;
-        function deleteDailyTask() {
-            const btn = document.getElementById('btn-dtm-delete');
-            if (btn.getAttribute('data-confirm') === 'true') {
-                const id = document.getElementById('dtm-id').value;
-                roadmapData.dailyTasks = roadmapData.dailyTasks.filter(t => t.id !== id);
-                saveToFirebase();
-                renderRoadmap();
-                closeDailyModal();
-                showToast('일일과제가 삭제되었습니다.');
-            } else {
-                btn.setAttribute('data-confirm', 'true'); btn.innerHTML = '정말 삭제할까요?';
-                btn.className = 'px-5 py-2.5 text-sm font-bold text-white bg-red-500 border border-red-500 rounded-xl hover:bg-red-600 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
-                clearTimeout(dailyDeleteTimer);
-                dailyDeleteTimer = setTimeout(() => { 
-                    btn.setAttribute('data-confirm', 'false'); btn.innerHTML = '삭제';
-                    btn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
-                }, 3000);
-            }
-        }
-
         function createCardHTML(card, toolId, levelId) {
             return `
                 <div id="card_${card.id}" class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full scroll-mt-8 group/card">
@@ -1222,6 +1101,145 @@
             renderToolCards('illustrator', 'basic'); renderToolCards('illustrator', 'advanced');
             renderToolCards('figma', 'basic'); renderToolCards('figma', 'advanced');
             lucide.createIcons();
+        }
+
+        const wsColorMap = {
+            purple: { bg: 'bg-purple-50 text-purple-500 group-hover:bg-purple-100', hover: 'hover:text-figjam' },
+            pink: { bg: 'bg-pink-50 text-pink-500 group-hover:bg-pink-100', hover: 'hover:text-pink-500' },
+            orange: { bg: 'bg-orange-50 text-orange-500 group-hover:bg-orange-100', hover: 'hover:text-orange-500' },
+            blue: { bg: 'bg-blue-50 text-blue-500 group-hover:bg-blue-100', hover: 'hover:text-blue-500' },
+            emerald: { bg: 'bg-emerald-50 text-emerald-500 group-hover:bg-emerald-100', hover: 'hover:text-emerald-500' },
+            red: { bg: 'bg-red-50 text-red-500 group-hover:bg-red-100', hover: 'hover:text-red-500' },
+            slate: { bg: 'bg-slate-50 text-slate-500 group-hover:bg-slate-100', hover: 'hover:text-slate-700' }
+        };
+        const wsIconOptions = ['layout', 'figma', 'edit-3', 'monitor', 'github', 'link', 'folder', 'star', 'image'];
+        const wsColorOptions = ['purple', 'pink', 'orange', 'blue', 'emerald', 'red', 'slate'];
+
+        function renderWorkspace() {
+            const container = document.getElementById('render-workspace-cards');
+            if(!container) return;
+            container.innerHTML = '';
+            
+            workspaceData.forEach(card => {
+                const editBtn = isEditMode ? `<button onclick="openWorkspaceModal('${card.id}')" class="absolute top-4 right-4 text-slate-400 hover:text-figjam z-20 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-xl transition-all opacity-0 group-hover/ws:opacity-100"><i data-lucide="edit" class="w-4 h-4"></i></button>` : '';
+                let linksHtml = '';
+                
+                card.links.forEach(link => {
+                    if(!link.name) return; 
+                    const cMap = wsColorMap[link.color] || wsColorMap['slate'];
+                    linksHtml += `<a href="${link.url || '#'}" target="${link.url ? '_blank' : '_self'}" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 ${cMap.hover} transition-colors group"><div class="w-8 h-8 rounded-lg ${cMap.bg} flex items-center justify-center transition-colors"><i data-lucide="${link.icon || 'link'}" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">${link.name}</span></a>`;
+                });
+
+                container.innerHTML += `
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6 relative group/ws">
+                        ${editBtn}
+                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
+                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">${card.avatar}</div>
+                            <h3 class="font-bold text-slate-800 text-[17px]">${card.name}</h3>
+                        </div>
+                        <div class="space-y-2">${linksHtml}</div>
+                    </div>
+                `;
+            });
+
+            if (isEditMode) {
+                container.innerHTML += `<div onclick="openWorkspaceModal('new')" class="bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[24px] p-6 flex flex-col items-center justify-center text-slate-400 hover:text-figjam hover:border-figjam hover:bg-figjamLight/50 transition-all cursor-pointer h-full min-h-[250px]"><i data-lucide="plus-circle" class="w-10 h-10 mb-3"></i><span class="font-bold text-[15px]">카드 추가하기</span></div>`;
+            }
+            lucide.createIcons();
+        }
+
+        // ==========================================
+        // 7. 모달 핸들러 및 데이터 저장 (Roadmap, Tool, Workspace)
+        // ==========================================
+        function openTodayModal() {
+            const data = roadmapData.todayTask;
+            document.getElementById('ttm-title').value = data.title || ''; document.getElementById('ttm-deadline').value = data.deadline || '';
+            document.getElementById('ttm-desc').value = data.desc || ''; document.getElementById('ttm-bText1').value = data.bText1 || '';
+            document.getElementById('ttm-bUrl1').value = data.bUrl1 || ''; document.getElementById('ttm-bText2').value = data.bText2 || '';
+            document.getElementById('ttm-bUrl2').value = data.bUrl2 || '';
+
+            const modal = document.getElementById('today-task-modal');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => modal.classList.add('opacity-100'), 10);
+        }
+
+        function closeTodayModal() {
+            const modal = document.getElementById('today-task-modal');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
+        }
+
+        function saveTodayModal() {
+            roadmapData.todayTask = {
+                title: document.getElementById('ttm-title').value, deadline: document.getElementById('ttm-deadline').value,
+                desc: document.getElementById('ttm-desc').value, bText1: document.getElementById('ttm-bText1').value,
+                bUrl1: document.getElementById('ttm-bUrl1').value, bText2: document.getElementById('ttm-bText2').value,
+                bUrl2: document.getElementById('ttm-bUrl2').value
+            };
+            saveToFirebase(); renderRoadmap(); closeTodayModal(); showToast('오늘 툴 과제가 저장되었습니다.');
+        }
+
+        function openDailyModal(id) {
+            document.getElementById('dtm-id').value = id;
+            let task = { status: '진행중', icon: 'check-circle', title: '', link: '' };
+            if(id !== 'new') task = roadmapData.dailyTasks.find(t => t.id === id) || task;
+            
+            document.getElementById('dtm-status').value = task.status; document.getElementById('dtm-icon').value = task.icon;
+            document.getElementById('dtm-title').value = task.title; document.getElementById('dtm-link').value = task.link;
+
+            const deleteBtn = document.getElementById('btn-dtm-delete');
+            if(id === 'new') deleteBtn.classList.add('hidden');
+            else deleteBtn.classList.remove('hidden');
+            
+            if(deleteBtn) {
+                deleteBtn.setAttribute('data-confirm', 'false'); deleteBtn.innerHTML = '삭제';
+                deleteBtn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (deleteBtn.classList.contains('hidden') ? ' hidden' : '');
+            }
+
+            const modal = document.getElementById('daily-task-modal');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => modal.classList.add('opacity-100'), 10);
+        }
+
+        function closeDailyModal() {
+            const modal = document.getElementById('daily-task-modal');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
+        }
+
+        function saveDailyModal() {
+            let id = document.getElementById('dtm-id').value;
+            const taskData = {
+                status: document.getElementById('dtm-status').value, icon: document.getElementById('dtm-icon').value,
+                title: document.getElementById('dtm-title').value, link: document.getElementById('dtm-link').value
+            };
+
+            if (id === 'new') {
+                taskData.id = 'dt_' + Date.now(); roadmapData.dailyTasks.push(taskData);
+            } else {
+                taskData.id = id;
+                const idx = roadmapData.dailyTasks.findIndex(t => t.id === id);
+                if(idx > -1) roadmapData.dailyTasks[idx] = taskData;
+            }
+            saveToFirebase(); renderRoadmap(); closeDailyModal(); showToast('일일과제가 저장되었습니다.');
+        }
+
+        let dailyDeleteTimer = null;
+        function deleteDailyTask() {
+            const btn = document.getElementById('btn-dtm-delete');
+            if (btn.getAttribute('data-confirm') === 'true') {
+                const id = document.getElementById('dtm-id').value;
+                roadmapData.dailyTasks = roadmapData.dailyTasks.filter(t => t.id !== id);
+                saveToFirebase(); renderRoadmap(); closeDailyModal(); showToast('일일과제가 삭제되었습니다.');
+            } else {
+                btn.setAttribute('data-confirm', 'true'); btn.innerHTML = '정말 삭제할까요?';
+                btn.className = 'px-5 py-2.5 text-sm font-bold text-white bg-red-500 border border-red-500 rounded-xl hover:bg-red-600 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
+                clearTimeout(dailyDeleteTimer);
+                dailyDeleteTimer = setTimeout(() => { 
+                    btn.setAttribute('data-confirm', 'false'); btn.innerHTML = '삭제';
+                    btn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
+                }, 3000);
+            }
         }
 
         function openToolCardModal(toolId, levelId, cardId) {
@@ -1274,17 +1292,13 @@
             };
             
             if (cardId === 'new') {
-                cardData.id = 'card_' + Date.now();
-                toolData[toolId][levelId].push(cardData);
+                cardData.id = 'card_' + Date.now(); toolData[toolId][levelId].push(cardData);
             } else {
                 cardData.id = cardId;
                 const idx = toolData[toolId][levelId].findIndex(c => c.id === cardId);
                 if (idx > -1) toolData[toolId][levelId][idx] = cardData;
             }
-            saveToFirebase();
-            renderAllToolCards();
-            closeToolCardModal();
-            showToast('카드 정보가 저장되었습니다.');
+            saveToFirebase(); renderAllToolCards(); closeToolCardModal(); showToast('카드 정보가 저장되었습니다.');
         }
 
         let deleteConfirmTimer = null;
@@ -1295,10 +1309,7 @@
                 const levelId = document.getElementById('tcm-levelId').value;
                 const cardId = document.getElementById('tcm-cardId').value;
                 toolData[toolId][levelId] = toolData[toolId][levelId].filter(c => c.id !== cardId);
-                saveToFirebase();
-                renderAllToolCards();
-                closeToolCardModal();
-                showToast('카드가 삭제되었습니다.');
+                saveToFirebase(); renderAllToolCards(); closeToolCardModal(); showToast('카드가 삭제되었습니다.');
             } else {
                 btn.setAttribute('data-confirm', 'true'); btn.innerHTML = '정말 삭제할까요?';
                 btn.className = 'px-5 py-2.5 text-sm font-bold text-white bg-red-500 border border-red-500 rounded-xl hover:bg-red-600 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
@@ -1309,52 +1320,6 @@
                 }, 3000);
             }
         }
-
-        const wsColorMap = {
-            purple: { bg: 'bg-purple-50 text-purple-500 group-hover:bg-purple-100', hover: 'hover:text-figjam' },
-            pink: { bg: 'bg-pink-50 text-pink-500 group-hover:bg-pink-100', hover: 'hover:text-pink-500' },
-            orange: { bg: 'bg-orange-50 text-orange-500 group-hover:bg-orange-100', hover: 'hover:text-orange-500' },
-            blue: { bg: 'bg-blue-50 text-blue-500 group-hover:bg-blue-100', hover: 'hover:text-blue-500' },
-            emerald: { bg: 'bg-emerald-50 text-emerald-500 group-hover:bg-emerald-100', hover: 'hover:text-emerald-500' },
-            red: { bg: 'bg-red-50 text-red-500 group-hover:bg-red-100', hover: 'hover:text-red-500' },
-            slate: { bg: 'bg-slate-50 text-slate-500 group-hover:bg-slate-100', hover: 'hover:text-slate-700' }
-        };
-
-        function renderWorkspace() {
-            const container = document.getElementById('render-workspace-cards');
-            if(!container) return;
-            container.innerHTML = '';
-            
-            workspaceData.forEach(card => {
-                const editBtn = isEditMode ? `<button onclick="openWorkspaceModal('${card.id}')" class="absolute top-4 right-4 text-slate-400 hover:text-figjam z-20 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-xl transition-all opacity-0 group-hover/ws:opacity-100"><i data-lucide="edit" class="w-4 h-4"></i></button>` : '';
-                let linksHtml = '';
-                
-                card.links.forEach(link => {
-                    if(!link.name) return; 
-                    const cMap = wsColorMap[link.color] || wsColorMap['slate'];
-                    linksHtml += `<a href="${link.url || '#'}" target="${link.url ? '_blank' : '_self'}" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 ${cMap.hover} transition-colors group"><div class="w-8 h-8 rounded-lg ${cMap.bg} flex items-center justify-center transition-colors"><i data-lucide="${link.icon || 'link'}" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">${link.name}</span></a>`;
-                });
-
-                container.innerHTML += `
-                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6 relative group/ws">
-                        ${editBtn}
-                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
-                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">${card.avatar}</div>
-                            <h3 class="font-bold text-slate-800 text-[17px]">${card.name}</h3>
-                        </div>
-                        <div class="space-y-2">${linksHtml}</div>
-                    </div>
-                `;
-            });
-
-            if (isEditMode) {
-                container.innerHTML += `<div onclick="openWorkspaceModal('new')" class="bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[24px] p-6 flex flex-col items-center justify-center text-slate-400 hover:text-figjam hover:border-figjam hover:bg-figjamLight/50 transition-all cursor-pointer h-full min-h-[250px]"><i data-lucide="plus-circle" class="w-10 h-10 mb-3"></i><span class="font-bold text-[15px]">카드 추가하기</span></div>`;
-            }
-            lucide.createIcons();
-        }
-
-        const wsIconOptions = ['layout', 'figma', 'edit-3', 'monitor', 'github', 'link', 'folder', 'star', 'image'];
-        const wsColorOptions = ['purple', 'pink', 'orange', 'blue', 'emerald', 'red', 'slate'];
 
         function addLinkBlock(link) {
             const container = document.getElementById('wsm-links-container');
@@ -1434,17 +1399,13 @@
 
             const cardData = { name: document.getElementById('wsm-name').value, avatar: document.getElementById('wsm-avatar').value, links: newLinks };
             if (id === 'new') {
-                cardData.id = 'ws_' + Date.now();
-                workspaceData.push(cardData);
+                cardData.id = 'ws_' + Date.now(); workspaceData.push(cardData);
             } else {
                 cardData.id = id;
                 const idx = workspaceData.findIndex(c => c.id === id);
                 if (idx > -1) workspaceData[idx] = cardData;
             }
-            saveToFirebase();
-            renderWorkspace();
-            closeWorkspaceModal();
-            showToast('작업 공간 카드가 저장되었습니다.');
+            saveToFirebase(); renderWorkspace(); closeWorkspaceModal(); showToast('작업 공간 카드가 저장되었습니다.');
         }
 
         let wsDeleteTimer = null;
@@ -1453,10 +1414,7 @@
             if (btn.getAttribute('data-confirm') === 'true') {
                 const id = document.getElementById('wsm-id').value;
                 workspaceData = workspaceData.filter(c => c.id !== id);
-                saveToFirebase();
-                renderWorkspace();
-                closeWorkspaceModal();
-                showToast('카드가 삭제되었습니다.');
+                saveToFirebase(); renderWorkspace(); closeWorkspaceModal(); showToast('카드가 삭제되었습니다.');
             } else {
                 btn.setAttribute('data-confirm', 'true'); btn.innerHTML = '정말 삭제할까요?';
                 btn.className = 'px-5 py-2.5 text-sm font-bold text-white bg-red-500 border border-red-500 rounded-xl hover:bg-red-600 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
@@ -1468,6 +1426,9 @@
             }
         }
 
+        // ==========================================
+        // 8. 진척도 (Chart.js 및 모달)
+        // ==========================================
         function updateSummary() {
             let totalScore = 0;
             let totalCount = studentsList.length * tasksList.length;
@@ -1609,11 +1570,7 @@
                 if (val > 100) val = 100;
                 progressData[currentEditingStudent][task] = val;
             });
-            saveToFirebase();
-            renderStudentLegend();
-            renderChart();
-            updateSummary();
-            closeModal();
+            saveToFirebase(); renderStudentLegend(); renderChart(); updateSummary(); closeModal();
             showToast(`'${currentEditingStudent}' 학생의 데이터가 갱신되었습니다.`);
         }
 
@@ -1627,14 +1584,85 @@
             document.body.removeChild(textArea);
         }
 
-        window.addEventListener('click', function(e) {
-            if (e.target === document.getElementById('modal')) closeModal();
-            if (e.target === document.getElementById('tool-card-modal')) closeToolCardModal();
-            if (e.target === document.getElementById('pwd-modal')) closePwdModal();
-            if (e.target === document.getElementById('today-task-modal')) closeTodayModal();
-            if (e.target === document.getElementById('daily-task-modal')) closeDailyModal();
-            if (e.target === document.getElementById('workspace-modal')) closeWorkspaceModal(); 
+        // ==========================================
+        // 9. 앱 초기화 및 이벤트 리스너 세팅
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            updateCourseProgress();
+            
+            // 엔터키 저장 로직 모달별 처리
+            ['today-task-modal', 'daily-task-modal', 'tool-card-modal', 'workspace-modal', 'modal', 'pwd-modal'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    el.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                            e.preventDefault();
+                            if(id === 'today-task-modal') saveTodayModal();
+                            else if(id === 'daily-task-modal') saveDailyModal();
+                            else if(id === 'tool-card-modal') saveToolCard();
+                            else if(id === 'workspace-modal') saveWorkspaceModal();
+                            else if(id === 'modal') saveData();
+                            else if(id === 'pwd-modal') submitPwd();
+                        }
+                    });
+                }
+            });
+
+            // 모달 외부 클릭 시 닫기
+            window.addEventListener('click', function(e) {
+                if (e.target === document.getElementById('modal')) closeModal();
+                if (e.target === document.getElementById('tool-card-modal')) closeToolCardModal();
+                if (e.target === document.getElementById('pwd-modal')) closePwdModal();
+                if (e.target === document.getElementById('today-task-modal')) closeTodayModal();
+                if (e.target === document.getElementById('daily-task-modal')) closeDailyModal();
+                if (e.target === document.getElementById('workspace-modal')) closeWorkspaceModal(); 
+            });
+
+            const statusEl = document.getElementById('cloud-status');
+
+            if (auth) {
+                signInAnonymously(auth).catch((error) => {
+                    console.error("Firebase 익명 로그인 실패:", error.message);
+                    statusEl.textContent = '로컬 모드 (연결 실패) 🟡';
+                    statusEl.classList.remove('opacity-0');
+                    loadFromLocal();
+                });
+                
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        statusEl.textContent = '클라우드 연동 켜짐 🟢';
+                        statusEl.classList.remove('opacity-0');
+                        
+                        const stateRef = doc(db, 'uiux_dashboard', 'shared_state');
+                        onSnapshot(stateRef, (snap) => {
+                            if (snap.exists()) {
+                                const data = snap.data();
+                                if (data.roadmap) roadmapData = data.roadmap;
+                                if (data.tool) toolData = data.tool;
+                                if (data.workspace) workspaceData = data.workspace;
+                                if (data.progress) progressData = data.progress;
+                                renderAll();
+                            } else {
+                                loadFromLocal();
+                                saveToFirebase();
+                            }
+                        }, (err) => {
+                            console.error("클라우드 동기화 권한 에러:", err);
+                            statusEl.textContent = '권한 에러 (로컬 모드) 🔴';
+                            statusEl.classList.remove('opacity-0');
+                            loadFromLocal();
+                        });
+                    }
+                });
+            } else {
+                statusEl.textContent = '로컬 저장 모드 🟡';
+                statusEl.classList.remove('opacity-0');
+                loadFromLocal();
+            }
+
+            const savedTab = localStorage.getItem('dashboardActiveTab') || 'roadmap';
+            switchTab(savedTab);
         });
     </script>
-  </body>
+</body>
 </html>
