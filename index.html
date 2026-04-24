@@ -783,13 +783,14 @@
         const tasksList = ['로고', '패키지 기획', '패키지 무드보드', '패키지 그리드', '패키지 와이어프레임', '패키지 초안', '패키지 수정안', '패키지 최종안', 'Web Wire', 'Web Wire Develop', 'Web Design', 'Web Design Develop'];
         const studentColors = ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#22c55e', '#10b981', '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6'];
         
+        // 💡 [수정 포인트] 개인 작업 공간 카드에 기본으로 생성되는 링크 데이터를 아래 url 부분에 입력하세요.
         const defaultWorkspaceData = studentsList.map((name, idx) => ({
             id: 'ws_' + idx, name: name, avatar: name.charAt(0),
             links: [
-                { name: '브랜딩 피그잼', url: '', icon: 'layout', color: 'purple' },
-                { name: '웹디자인 피그마', url: '', icon: 'figma', color: 'pink' },
-                { name: '연습장', url: '', icon: 'edit-3', color: 'orange' },
-                { name: '웹사이트', url: '', icon: 'monitor', color: 'blue' }
+                { name: '브랜딩 피그잼', url: 'https://www.figma.com/figjam', icon: 'layout', color: 'purple' },
+                { name: '웹디자인 피그마', url: 'https://www.figma.com', icon: 'figma', color: 'pink' },
+                { name: '연습장', url: 'https://www.notion.so', icon: 'edit-3', color: 'orange' },
+                { name: '웹사이트', url: 'https://www.google.com', icon: 'monitor', color: 'blue' }
             ]
         }));
 
@@ -818,7 +819,7 @@
             } else {
                 localStorage.setItem('roadmapData_v1', JSON.stringify(roadmapData));
                 localStorage.setItem('toolCardsData_v1', JSON.stringify(toolData));
-                localStorage.setItem('workspaceData_v1', JSON.stringify(workspaceData));
+                localStorage.setItem('workspaceData_v3', JSON.stringify(workspaceData)); // 강제 반영을 위해 v3로 변경
                 localStorage.setItem('assignmentData_v2', JSON.stringify(progressData));
             }
         }
@@ -826,7 +827,7 @@
         function loadFromLocal() {
             const rm = localStorage.getItem('roadmapData_v1'); if (rm) roadmapData = JSON.parse(rm);
             const tl = localStorage.getItem('toolCardsData_v1'); if (tl) toolData = JSON.parse(tl);
-            const ws = localStorage.getItem('workspaceData_v1'); if (ws) workspaceData = JSON.parse(ws);
+            const ws = localStorage.getItem('workspaceData_v3'); if (ws) workspaceData = JSON.parse(ws); // 강제 반영을 위해 v3로 변경
             const pg = localStorage.getItem('assignmentData_v2'); if (pg) progressData = JSON.parse(pg);
             renderAll();
         }
@@ -840,8 +841,7 @@
             
             const isProgressActive = document.getElementById('tab-progress').classList.contains('active');
             if (isProgressActive) {
-                if(!myChart) renderChart();
-                else myChart.update();
+                renderChart();
             }
             lucide.createIcons();
         }
@@ -891,7 +891,7 @@
                 activeBtn.classList.remove('text-slate-500', 'font-medium', 'hover:bg-slate-50', 'hover:text-slate-800');
                 activeBtn.classList.add('bg-figjam/10', 'text-figjam', 'font-bold');
             }
-            if (tabId === 'progress') setTimeout(() => { if (!myChart) renderChart(); else myChart.resize(); }, 50);
+            if (tabId === 'progress') setTimeout(() => { renderChart(); if (myChart) myChart.resize(); }, 50);
             if (tabId === 'roadmap') setTimeout(updateCourseProgress, 50);
             localStorage.setItem('dashboardActiveTab', tabId);
         }
