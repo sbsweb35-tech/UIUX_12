@@ -614,33 +614,44 @@
         <span id="toast-msg">저장되었습니다.</span>
     </div>
 
-    <!-- Firebase & 비즈니스 로직 연동 스크립트 -->
     <script type="module">
-        // Firebase 라이브러리 임포트 (클라우드 연동)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // 시스템 전역 설정
-        let isEditMode = false;
-        let isProgressInitialized = false;
+        // ==========================================
+        // const firebaseConfig = {
+  apiKey: "AIzaSyC-rKb-BXBrKofZAJsFz3x_SlBEhArgqCQ",
+  authDomain: "uiux-33a4d.firebaseapp.com",
+  projectId: "uiux-33a4d",
+  storageBucket: "uiux-33a4d.firebasestorage.app",
+  messagingSenderId: "612043380123",
+  appId: "1:612043380123:web:75d06a6ba6e860f525fd3e",
+  measurementId: "G-B66P8H3KMT"
+};
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "여기에_API_KEY_입력",
+            authDomain: "여기에_AUTH_DOMAIN_입력",
+            projectId: "여기에_PROJECT_ID_입력",
+            storageBucket: "여기에_STORAGE_BUCKET_입력",
+            messagingSenderId: "여기에_MESSAGING_SENDER_ID_입력",
+            appId: "여기에_APP_ID_입력"
+        };
 
-        // 클라우드 저장소(Firebase) 환경 변수 설정
-        const hasFirebase = typeof __firebase_config !== 'undefined' && __firebase_config;
-        let db = null, auth = null;
-        let appId = 'default-app-id';
-
-        if (hasFirebase) {
-            const firebaseConfig = JSON.parse(__firebase_config);
-            appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            const app = initializeApp(firebaseConfig);
+        let app = null, auth = null, db = null;
+        if (firebaseConfig.apiKey !== "여기에_API_KEY_입력") {
+            app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
         }
 
         // ==========================================
-        // 글로벌 함수 바인딩 (HTML에서 onclick 호출 허용)
+        // 시스템 전역 설정
         // ==========================================
+        let isEditMode = false;
+        let isProgressInitialized = false;
+
         window.toggleSidebar = () => document.body.classList.toggle('sidebar-closed');
         window.switchTab = switchTab;
         window.switchRoadmapTab = switchRoadmapTab;
@@ -678,6 +689,55 @@
             document.getElementById('toast-msg').textContent = msg;
             toast.classList.remove('translate-y-full', 'opacity-0');
             setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-full'); }, 2500);
+        }
+
+        // ==========================================
+        // 클라우드 저장소 연동 / 동기화 모듈
+        // ==========================================
+        async function saveToFirebase() {
+            if (db && auth && auth.currentUser) {
+                const stateRef = doc(db, 'uiux_dashboard', 'shared_state');
+                try {
+                    await setDoc(stateRef, {
+                        progress: progressData,
+                        tool: toolData,
+                        roadmap: roadmapData,
+                        workspace: workspaceData,
+                        lastUpdated: Date.now()
+                    });
+                } catch(e) {
+                    console.error("클라우드 저장 실패", e);
+                    alert("데이터베이스 저장에 실패했습니다. Firebase 권한 설정(Rules)을 확인해주세요.");
+                }
+            } else {
+                localStorage.setItem('roadmapData_v1', JSON.stringify(roadmapData));
+                localStorage.setItem('toolCardsData_v1', JSON.stringify(toolData));
+                localStorage.setItem('workspaceData_v1', JSON.stringify(workspaceData));
+                localStorage.setItem('assignmentData_v2', JSON.stringify(progressData));
+            }
+        }
+
+        function loadFromLocal() {
+            const rm = localStorage.getItem('roadmapData_v1'); if (rm) roadmapData = JSON.parse(rm);
+            const tl = localStorage.getItem('toolCardsData_v1'); if (tl) toolData = JSON.parse(tl);
+            const ws = localStorage.getItem('workspaceData_v1'); if (ws) workspaceData = JSON.parse(ws);
+            const pg = localStorage.getItem('assignmentData_v2'); if (pg) progressData = JSON.parse(pg);
+            renderAll();
+        }
+
+        function renderAll() {
+            renderRoadmap();
+            renderAllToolCards();
+            renderWorkspace();
+            renderStudentLegend();
+            updateSummary();
+            
+            const isProgressActive = document.getElementById('tab-progress').classList.contains('active');
+            if (isProgressActive) {
+                if(!myChart) renderChart();
+                else myChart.update();
+            }
+            lucide.createIcons();
         }
 
         // ==========================================
@@ -729,9 +789,7 @@
         const tasksList = ['로고', '패키지 기획', '패키지 무드보드', '패키지 그리드', '패키지 와이어프레임', '패키지 초안', '패키지 수정안', '패키지 최종안', 'Web Wire', 'Web Wire Develop', 'Web Design', 'Web Design Develop'];
         
         const defaultWorkspaceData = studentsList.map((name, idx) => ({
-            id: 'ws_' + idx,
-            name: name,
-            avatar: name.charAt(0),
+            id: 'ws_' + idx, name: name, avatar: name.charAt(0),
             links: [
                 { name: '브랜딩 피그잼', url: '', icon: 'layout', color: 'purple' },
                 { name: '웹디자인 피그마', url: '', icon: 'figma', color: 'pink' },
@@ -751,67 +809,70 @@
         });
 
         // ==========================================
-        // 클라우드 저장소 연동 / 동기화 모듈
+        // 앱 초기화 및 메인 로직 
         // ==========================================
-        async function saveToFirebase() {
-            // Firebase가 연결되어 있으면 클라우드에 전체 데이터 상태를 저장합니다.
-            if (db && auth && auth.currentUser) {
-                const stateRef = doc(db, 'artifacts', appId, 'public', 'data', 'dashboard', 'sharedState');
-                try {
-                    await setDoc(stateRef, {
-                        progress: progressData,
-                        tool: toolData,
-                        roadmap: roadmapData,
-                        workspace: workspaceData
+        function initApp() {
+            updateCourseProgress();
+            
+            ['today-task-modal', 'daily-task-modal', 'tool-card-modal', 'workspace-modal'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    el.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                            e.preventDefault();
+                            if(id === 'today-task-modal') saveTodayModal();
+                            else if(id === 'daily-task-modal') saveDailyModal();
+                            else if(id === 'tool-card-modal') saveToolCard();
+                            else if(id === 'workspace-modal') saveWorkspaceModal();
+                        }
                     });
-                } catch(e) {
-                    console.error("클라우드 저장 실패", e);
                 }
+            });
+
+            if (auth) {
+                signInAnonymously(auth).catch((error) => {
+                    console.error("Firebase 익명 로그인 실패:", error.message);
+                    alert("데이터베이스 연결에 실패했습니다. Firebase 콘솔에서 '익명 로그인'을 켜주세요.");
+                    loadFromLocal();
+                });
+                
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        document.getElementById('cloud-status').classList.remove('opacity-0');
+                        document.getElementById('cloud-status').textContent = '클라우드 연동 켜짐 🟢';
+                        
+                        const stateRef = doc(db, 'uiux_dashboard', 'shared_state');
+                        onSnapshot(stateRef, (snap) => {
+                            if (snap.exists()) {
+                                const data = snap.data();
+                                if (data.roadmap) roadmapData = data.roadmap;
+                                if (data.tool) toolData = data.tool;
+                                if (data.workspace) workspaceData = data.workspace;
+                                if (data.progress) progressData = data.progress;
+                                renderAll();
+                            } else {
+                                loadFromLocal();
+                                saveToFirebase();
+                            }
+                        }, (err) => {
+                            console.error("클라우드 동기화 권한 에러:", err);
+                            document.getElementById('cloud-status').textContent = '권한 에러 🔴';
+                            loadFromLocal();
+                        });
+                    }
+                });
             } else {
-                // Firebase가 없거나 오류 시 오프라인 로컬 저장소로 fallback 동작합니다.
-                localStorage.setItem('roadmapData_v1', JSON.stringify(roadmapData));
-                localStorage.setItem('toolCardsData_v1', JSON.stringify(toolData));
-                localStorage.setItem('workspaceData_v1', JSON.stringify(workspaceData));
-                localStorage.setItem('assignmentData_v2', JSON.stringify(progressData));
+                document.getElementById('cloud-status').classList.remove('opacity-0');
+                document.getElementById('cloud-status').textContent = '로컬 저장 모드 🟡';
+                loadFromLocal();
             }
-        }
 
-        function renderAll() {
-            renderRoadmap();
-            renderAllToolCards();
-            renderWorkspace();
-            renderStudentLegend();
-            updateSummary();
-            
-            // 차트 렌더링은 진척도 탭이 활성화 되어있을때만 처리 (차트 찌그러짐 방지)
-            const isProgressActive = document.getElementById('tab-progress').classList.contains('active');
-            if (isProgressActive) {
-                if(!myChart) renderChart();
-                else myChart.update();
-            }
-            
-            lucide.createIcons();
-        }
-
-        function loadFromLocal() {
-            // 클라우드 연동 실패 시 브라우저 내부의 데이터를 우선 호출
-            const rm = localStorage.getItem('roadmapData_v1');
-            if (rm) roadmapData = JSON.parse(rm);
-            
-            const tl = localStorage.getItem('toolCardsData_v1');
-            if (tl) toolData = JSON.parse(tl);
-            
-            const ws = localStorage.getItem('workspaceData_v1');
-            if (ws) workspaceData = JSON.parse(ws);
-            
-            const pg = localStorage.getItem('assignmentData_v2');
-            if (pg) progressData = JSON.parse(pg);
-
-            renderAll();
+            const savedTab = localStorage.getItem('dashboardActiveTab') || 'roadmap';
+            switchTab(savedTab);
         }
 
         // ==========================================
-        // UI 제어 함수 모음
+        // UI 컴포넌트 렌더링 로직 (Roadmap, Tool, Workspace, Progress)
         // ==========================================
         function updateCourseProgress() {
             const startDate = new Date('2025-12-08T00:00:00');
@@ -838,7 +899,6 @@
             const yy = String(today.getFullYear()).slice(-2);
             const mm = String(today.getMonth() + 1).padStart(2, '0');
             const dd = String(today.getDate()).padStart(2, '0');
-            
             const todayLabelEl = document.getElementById('course-today-label');
             if(todayLabelEl) todayLabelEl.innerHTML = `오늘 (${yy}.${mm}.${dd})<div class="absolute -top-6 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-figjam rounded-full"></div>`;
         }
@@ -851,72 +911,44 @@
                 el.classList.remove('bg-figjam/10', 'text-figjam', 'font-bold');
                 el.classList.add('text-slate-500', 'font-medium', 'hover:bg-slate-50', 'hover:text-slate-800');
             });
-
             const activeBtn = document.getElementById('btn-' + tabId);
             if(activeBtn) {
                 activeBtn.classList.remove('text-slate-500', 'font-medium', 'hover:bg-slate-50', 'hover:text-slate-800');
                 activeBtn.classList.add('bg-figjam/10', 'text-figjam', 'font-bold');
             }
-
-            if (tabId === 'progress') {
-                setTimeout(() => {
-                    if (!myChart) renderChart();
-                    else myChart.resize();
-                }, 50);
-            }
+            if (tabId === 'progress') setTimeout(() => { if (!myChart) renderChart(); else myChart.resize(); }, 50);
             if (tabId === 'roadmap') setTimeout(updateCourseProgress, 50);
             localStorage.setItem('dashboardActiveTab', tabId);
         }
 
         function switchRoadmapTab(tabId) {
-            document.querySelectorAll('.roadmap-sub-content').forEach(el => {
-                el.classList.add('hidden');
-                el.classList.remove('block');
-            });
-            document.getElementById('roadmap-' + tabId).classList.remove('hidden');
-            document.getElementById('roadmap-' + tabId).classList.add('block');
+            document.querySelectorAll('.roadmap-sub-content').forEach(el => { el.classList.add('hidden'); el.classList.remove('block'); });
+            document.getElementById('roadmap-' + tabId).classList.remove('hidden'); document.getElementById('roadmap-' + tabId).classList.add('block');
 
-            document.querySelectorAll('.roadmap-tab-btn').forEach(el => {
-                el.classList.remove('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
-                el.classList.add('font-medium', 'text-slate-400', 'hover:text-slate-700');
-            });
+            document.querySelectorAll('.roadmap-tab-btn').forEach(el => { el.classList.remove('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam'); el.classList.add('font-medium', 'text-slate-400', 'hover:text-slate-700'); });
             const activeBtn = document.getElementById('sub-roadmap-' + tabId);
-            activeBtn.classList.remove('font-medium', 'text-slate-400', 'hover:text-slate-700');
-            activeBtn.classList.add('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
-            
+            activeBtn.classList.remove('font-medium', 'text-slate-400', 'hover:text-slate-700'); activeBtn.classList.add('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
             if(tabId === 'schedule') setTimeout(updateCourseProgress, 50);
         }
 
         function switchTool(toolId) {
             document.querySelectorAll('.tool-content').forEach(el => el.classList.remove('active'));
             document.getElementById('tool-' + toolId).classList.add('active');
-            document.querySelectorAll('.sub-tab-btn').forEach(el => {
-                el.classList.remove('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
-                el.classList.add('font-medium', 'text-slate-400', 'hover:text-slate-700');
-            });
+            document.querySelectorAll('.sub-tab-btn').forEach(el => { el.classList.remove('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam'); el.classList.add('font-medium', 'text-slate-400', 'hover:text-slate-700'); });
             const activeBtn = document.getElementById('sub-' + toolId);
-            activeBtn.classList.remove('font-medium', 'text-slate-400', 'hover:text-slate-700');
-            activeBtn.classList.add('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
+            activeBtn.classList.remove('font-medium', 'text-slate-400', 'hover:text-slate-700'); activeBtn.classList.add('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
         }
 
         function switchLevel(toolId, level) {
-            document.querySelectorAll('#tool-' + toolId + ' .level-content').forEach(el => {
-                el.classList.add('hidden');
-                el.classList.remove('block');
-            });
-            document.getElementById(toolId + '-' + level).classList.remove('hidden');
-            document.getElementById(toolId + '-' + level).classList.add('block');
-            document.querySelectorAll('#tool-' + toolId + ' .level-btn').forEach(btn => {
-                btn.className = 'level-btn px-4 py-1.5 text-[14px] font-medium text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-700 rounded-full transition-all shadow-sm';
-            });
+            document.querySelectorAll('#tool-' + toolId + ' .level-content').forEach(el => { el.classList.add('hidden'); el.classList.remove('block'); });
+            document.getElementById(toolId + '-' + level).classList.remove('hidden'); document.getElementById(toolId + '-' + level).classList.add('block');
+            document.querySelectorAll('#tool-' + toolId + ' .level-btn').forEach(btn => { btn.className = 'level-btn px-4 py-1.5 text-[14px] font-medium text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-700 rounded-full transition-all shadow-sm'; });
             const activeBtn = document.getElementById('btn-' + toolId + '-' + level);
             activeBtn.className = 'level-btn px-4 py-1.5 text-[14px] font-bold text-figjam bg-figjamLight border border-figjamBorder rounded-full transition-all';
         }
 
         function goToIllustratorAdvancedTask() {
-            switchTab('tool');
-            switchTool('illustrator');
-            switchLevel('illustrator', 'advanced');
+            switchTab('tool'); switchTool('illustrator'); switchLevel('illustrator', 'advanced');
             setTimeout(() => {
                 const targetCard = document.getElementById('card_il_a_1'); 
                 if(targetCard) {
@@ -935,12 +967,8 @@
             document.getElementById('pwd-error').classList.add('hidden');
             
             const modal = document.getElementById('pwd-modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            setTimeout(() => {
-                modal.classList.add('opacity-100');
-                document.getElementById('pwd-input').focus();
-            }, 10);
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => { modal.classList.add('opacity-100'); document.getElementById('pwd-input').focus(); }, 10);
         }
 
         function closePwdModal() {
@@ -964,10 +992,6 @@
             }
         }
 
-        document.getElementById('pwd-input').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') { e.preventDefault(); submitPwd(); }
-        });
-
         function updateEditModeUI() {
             const buttons = [ document.getElementById('btn-tool-edit'), document.getElementById('btn-roadmap-edit'), document.getElementById('btn-workspace-edit') ];
             buttons.forEach(btn => {
@@ -983,9 +1007,6 @@
             lucide.createIcons();
         }
 
-        // ==========================================
-        // 학습 로드맵 제어 함수
-        // ==========================================
         function renderRoadmap() {
             renderTodayTask();
             renderDailyTasks();
@@ -1004,7 +1025,6 @@
                 const target1 = data.bUrl1 && !data.bUrl1.startsWith('javascript:') ? 'target="_blank"' : '';
                 btn1Html = `<a href="${data.bUrl1 || '#'}" ${target1} class="flex items-center justify-center w-full md:w-auto min-w-[160px] gap-2 px-5 py-3.5 bg-white border-2 border-figjam text-figjam hover:bg-figjam hover:text-white rounded-xl font-bold transition-all duration-200 shadow-sm text-[14px]"><i data-lucide="arrow-right-circle" class="w-5 h-5"></i> ${data.bText1}</a>`;
             }
-
             let btn2Html = '';
             if(data.bText2) {
                 const target2 = data.bUrl2 && !data.bUrl2.startsWith('javascript:') ? 'target="_blank"' : '';
@@ -1056,28 +1076,19 @@
             });
 
             if (isEditMode) {
-                container.innerHTML += `
-                    <div onclick="openDailyModal('new')" class="bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[24px] p-6 flex flex-col items-center justify-center text-slate-400 hover:text-figjam hover:border-figjam hover:bg-figjamLight/50 transition-all cursor-pointer h-full min-h-[180px]">
-                        <i data-lucide="plus-circle" class="w-8 h-8 mb-2"></i>
-                        <span class="font-bold text-[14px]">추가하기</span>
-                    </div>
-                `;
+                container.innerHTML += `<div onclick="openDailyModal('new')" class="bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[24px] p-6 flex flex-col items-center justify-center text-slate-400 hover:text-figjam hover:border-figjam hover:bg-figjamLight/50 transition-all cursor-pointer h-full min-h-[180px]"><i data-lucide="plus-circle" class="w-8 h-8 mb-2"></i><span class="font-bold text-[14px]">추가하기</span></div>`;
             }
         }
 
         function openTodayModal() {
             const data = roadmapData.todayTask;
-            document.getElementById('ttm-title').value = data.title || '';
-            document.getElementById('ttm-deadline').value = data.deadline || '';
-            document.getElementById('ttm-desc').value = data.desc || '';
-            document.getElementById('ttm-bText1').value = data.bText1 || '';
-            document.getElementById('ttm-bUrl1').value = data.bUrl1 || '';
-            document.getElementById('ttm-bText2').value = data.bText2 || '';
+            document.getElementById('ttm-title').value = data.title || ''; document.getElementById('ttm-deadline').value = data.deadline || '';
+            document.getElementById('ttm-desc').value = data.desc || ''; document.getElementById('ttm-bText1').value = data.bText1 || '';
+            document.getElementById('ttm-bUrl1').value = data.bUrl1 || ''; document.getElementById('ttm-bText2').value = data.bText2 || '';
             document.getElementById('ttm-bUrl2').value = data.bUrl2 || '';
 
             const modal = document.getElementById('today-task-modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
             setTimeout(() => modal.classList.add('opacity-100'), 10);
         }
 
@@ -1089,12 +1100,9 @@
 
         function saveTodayModal() {
             roadmapData.todayTask = {
-                title: document.getElementById('ttm-title').value,
-                deadline: document.getElementById('ttm-deadline').value,
-                desc: document.getElementById('ttm-desc').value,
-                bText1: document.getElementById('ttm-bText1').value,
-                bUrl1: document.getElementById('ttm-bUrl1').value,
-                bText2: document.getElementById('ttm-bText2').value,
+                title: document.getElementById('ttm-title').value, deadline: document.getElementById('ttm-deadline').value,
+                desc: document.getElementById('ttm-desc').value, bText1: document.getElementById('ttm-bText1').value,
+                bUrl1: document.getElementById('ttm-bUrl1').value, bText2: document.getElementById('ttm-bText2').value,
                 bUrl2: document.getElementById('ttm-bUrl2').value
             };
             saveToFirebase();
@@ -1108,25 +1116,20 @@
             let task = { status: '진행중', icon: 'check-circle', title: '', link: '' };
             if(id !== 'new') task = roadmapData.dailyTasks.find(t => t.id === id) || task;
             
-            document.getElementById('dtm-status').value = task.status;
-            document.getElementById('dtm-icon').value = task.icon;
-            document.getElementById('dtm-title').value = task.title;
-            document.getElementById('dtm-link').value = task.link;
+            document.getElementById('dtm-status').value = task.status; document.getElementById('dtm-icon').value = task.icon;
+            document.getElementById('dtm-title').value = task.title; document.getElementById('dtm-link').value = task.link;
 
             const deleteBtn = document.getElementById('btn-dtm-delete');
             if(id === 'new') deleteBtn.classList.add('hidden');
             else deleteBtn.classList.remove('hidden');
             
-            const btn = document.getElementById('btn-dtm-delete');
-            if(btn) {
-                btn.setAttribute('data-confirm', 'false');
-                btn.innerHTML = '삭제';
-                btn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
+            if(deleteBtn) {
+                deleteBtn.setAttribute('data-confirm', 'false'); deleteBtn.innerHTML = '삭제';
+                deleteBtn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (deleteBtn.classList.contains('hidden') ? ' hidden' : '');
             }
 
             const modal = document.getElementById('daily-task-modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
             setTimeout(() => modal.classList.add('opacity-100'), 10);
         }
 
@@ -1139,10 +1142,8 @@
         function saveDailyModal() {
             let id = document.getElementById('dtm-id').value;
             const taskData = {
-                status: document.getElementById('dtm-status').value,
-                icon: document.getElementById('dtm-icon').value,
-                title: document.getElementById('dtm-title').value,
-                link: document.getElementById('dtm-link').value
+                status: document.getElementById('dtm-status').value, icon: document.getElementById('dtm-icon').value,
+                title: document.getElementById('dtm-title').value, link: document.getElementById('dtm-link').value
             };
 
             if (id === 'new') {
@@ -1170,24 +1171,302 @@
                 closeDailyModal();
                 showToast('일일과제가 삭제되었습니다.');
             } else {
-                btn.setAttribute('data-confirm', 'true');
-                btn.innerHTML = '정말 삭제할까요?';
+                btn.setAttribute('data-confirm', 'true'); btn.innerHTML = '정말 삭제할까요?';
                 btn.className = 'px-5 py-2.5 text-sm font-bold text-white bg-red-500 border border-red-500 rounded-xl hover:bg-red-600 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
                 clearTimeout(dailyDeleteTimer);
                 dailyDeleteTimer = setTimeout(() => { 
-                    btn.setAttribute('data-confirm', 'false');
-                    btn.innerHTML = '삭제';
+                    btn.setAttribute('data-confirm', 'false'); btn.innerHTML = '삭제';
                     btn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
                 }, 3000);
             }
         }
 
-        // ==========================================
-        // 진척도 (Progress) 제어 함수
-        // ==========================================
-        let myChart = null;
-        let currentEditingStudent = '';
-        const studentColors = ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#22c55e', '#10b981', '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6'];
+        function createCardHTML(card, toolId, levelId) {
+            return `
+                <div id="card_${card.id}" class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full scroll-mt-8 group/card">
+                    ${isEditMode ? `<button onclick="openToolCardModal('${toolId}', '${levelId}', '${card.id}')" class="absolute top-4 right-4 text-slate-400 hover:text-figjam z-20 bg-slate-50 hover:bg-slate-100 p-2 rounded-xl transition-all opacity-0 group-hover/card:opacity-100"><i data-lucide="edit" class="w-4 h-4"></i></button>` : ''}
+                    ${card.badge ? `<div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">${card.badge}</div>` : ''}
+                    ${card.title ? `<h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3 pr-6 pl-6">${card.title}</h3>` : '<div class="mt-2 mb-4 pb-3"></div>'}
+                    <div class="flex-1 space-y-3 mt-2">
+                        ${card.yText1 ? `<${card.yUrl1 ? `a href="${card.yUrl1}" target="_blank"` : 'div'} class="flex items-start gap-2 group"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0 ${card.yUrl1 ? 'group-hover:scale-110 transition-transform' : ''}"></i><p class="text-[13px] text-slate-600 font-medium leading-tight ${card.yUrl1 ? 'group-hover:text-figjam transition-colors' : ''}">${card.yText1}</p></${card.yUrl1 ? 'a' : 'div'}>` : ''}
+                        ${card.yText2 ? `<${card.yUrl2 ? `a href="${card.yUrl2}" target="_blank"` : 'div'} class="flex items-start gap-2 group"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0 ${card.yUrl2 ? 'group-hover:scale-110 transition-transform' : ''}"></i><p class="text-[13px] text-slate-600 font-medium leading-tight ${card.yUrl2 ? 'group-hover:text-figjam transition-colors' : ''}">${card.yText2}</p></${card.yUrl2 ? 'a' : 'div'}>` : ''}
+                        ${card.desc ? `<div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100">${card.desc.split('\n').map(line => `<p class="text-[11px] text-slate-500 leading-tight">${line}</p>`).join('')}</div>` : ''}
+                    </div>
+                    <div class="mt-5 w-full space-y-2">
+                        ${card.bText1 ? `<${card.bUrl1 ? `a href="${card.bUrl1}" target="_blank"` : 'button'} class="w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px] flex justify-center items-center gap-1.5">${card.bUrl1 && card.bUrl1.includes('drive') ? '<i data-lucide="folder-down" class="w-4 h-4"></i>' : ''} ${card.bText1}</${card.bUrl1 ? 'a' : 'button'}>` : ''}
+                        ${card.bText2 ? `<${card.bUrl2 ? `a href="${card.bUrl2}" target="_blank"` : 'button'} class="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-2.5 rounded-xl transition-colors text-[12px] flex justify-center items-center gap-1.5">${card.bUrl2 && card.bUrl2.includes('drive') ? '<i data-lucide="folder" class="w-4 h-4"></i>' : ''} ${card.bText2}</${card.bUrl2 ? 'a' : 'button'}>` : ''}
+                    </div>
+                    ${card.badgeRight ? `<div class="absolute -bottom-3 -right-3 w-10 h-10 bg-[#10B981] text-white rounded-full flex items-center justify-center text-[13px] font-bold border-[3px] border-white shadow-md z-10">${card.badgeRight}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function renderToolCards(toolId, levelId) {
+            const grid = document.getElementById(`grid-${toolId}-${levelId}`);
+            if (!grid) return;
+            grid.innerHTML = '';
+            const cards = toolData[toolId][levelId] || [];
+            
+            cards.forEach(card => { grid.insertAdjacentHTML('beforeend', createCardHTML(card, toolId, levelId)); });
+            
+            if (isEditMode) {
+                const addCardHtml = `<div onclick="openToolCardModal('${toolId}', '${levelId}', 'new')" class="bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[20px] p-6 flex flex-col items-center justify-center text-slate-400 hover:text-figjam hover:border-figjam hover:bg-figjamLight/50 transition-all cursor-pointer h-full min-h-[300px]"><i data-lucide="plus-circle" class="w-10 h-10 mb-3"></i><span class="font-bold text-[15px]">카드 추가하기</span></div>`;
+                grid.insertAdjacentHTML('beforeend', addCardHtml);
+            } else if (cards.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 flex items-center justify-center text-slate-400 font-medium border-2 border-dashed border-slate-200 rounded-[24px]">등록된 콘텐츠가 없습니다.</div>`;
+            }
+        }
+
+        function renderAllToolCards() {
+            renderToolCards('photoshop', 'basic'); renderToolCards('photoshop', 'advanced');
+            renderToolCards('illustrator', 'basic'); renderToolCards('illustrator', 'advanced');
+            renderToolCards('figma', 'basic'); renderToolCards('figma', 'advanced');
+            lucide.createIcons();
+        }
+
+        function openToolCardModal(toolId, levelId, cardId) {
+            document.getElementById('tcm-toolId').value = toolId;
+            document.getElementById('tcm-levelId').value = levelId;
+            document.getElementById('tcm-cardId').value = cardId;
+            
+            let card = { badge: '', title: '', yText1: '', yUrl1: '', yText2: '', yUrl2: '', desc: '', bText1: '', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' };
+            if (cardId !== 'new') card = toolData[toolId][levelId].find(c => c.id === cardId) || card;
+            
+            document.getElementById('tcm-badge').value = card.badge || ''; document.getElementById('tcm-badgeRight').value = card.badgeRight || '';
+            document.getElementById('tcm-title').value = card.title || ''; document.getElementById('tcm-desc').value = card.desc || '';
+            document.getElementById('tcm-yText1').value = card.yText1 || ''; document.getElementById('tcm-yUrl1').value = card.yUrl1 || '';
+            document.getElementById('tcm-yText2').value = card.yText2 || ''; document.getElementById('tcm-yUrl2').value = card.yUrl2 || '';
+            document.getElementById('tcm-bText1').value = card.bText1 || ''; document.getElementById('tcm-bUrl1').value = card.bUrl1 || '';
+            document.getElementById('tcm-bText2').value = card.bText2 || ''; document.getElementById('tcm-bUrl2').value = card.bUrl2 || '';
+            
+            const deleteBtn = document.getElementById('btn-tcm-delete');
+            if (cardId === 'new') deleteBtn.classList.add('hidden');
+            else deleteBtn.classList.remove('hidden');
+            
+            if(deleteBtn) {
+                deleteBtn.setAttribute('data-confirm', 'false'); deleteBtn.innerHTML = '삭제';
+                deleteBtn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (deleteBtn.classList.contains('hidden') ? ' hidden' : '');
+            }
+
+            const modal = document.getElementById('tool-card-modal');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => modal.classList.add('opacity-100'), 10);
+        }
+
+        function closeToolCardModal() {
+            const modal = document.getElementById('tool-card-modal');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
+        }
+
+        function saveToolCard() {
+            const toolId = document.getElementById('tcm-toolId').value;
+            const levelId = document.getElementById('tcm-levelId').value;
+            let cardId = document.getElementById('tcm-cardId').value;
+            
+            const cardData = {
+                badge: document.getElementById('tcm-badge').value, badgeRight: document.getElementById('tcm-badgeRight').value,
+                title: document.getElementById('tcm-title').value, desc: document.getElementById('tcm-desc').value,
+                yText1: document.getElementById('tcm-yText1').value, yUrl1: document.getElementById('tcm-yUrl1').value,
+                yText2: document.getElementById('tcm-yText2').value, yUrl2: document.getElementById('tcm-yUrl2').value,
+                bText1: document.getElementById('tcm-bText1').value, bUrl1: document.getElementById('tcm-bUrl1').value,
+                bText2: document.getElementById('tcm-bText2').value, bUrl2: document.getElementById('tcm-bUrl2').value,
+            };
+            
+            if (cardId === 'new') {
+                cardData.id = 'card_' + Date.now();
+                toolData[toolId][levelId].push(cardData);
+            } else {
+                cardData.id = cardId;
+                const idx = toolData[toolId][levelId].findIndex(c => c.id === cardId);
+                if (idx > -1) toolData[toolId][levelId][idx] = cardData;
+            }
+            saveToFirebase();
+            renderAllToolCards();
+            closeToolCardModal();
+            showToast('카드 정보가 저장되었습니다.');
+        }
+
+        let deleteConfirmTimer = null;
+        function deleteToolCard() {
+            const btn = document.getElementById('btn-tcm-delete');
+            if (btn.getAttribute('data-confirm') === 'true') {
+                const toolId = document.getElementById('tcm-toolId').value;
+                const levelId = document.getElementById('tcm-levelId').value;
+                const cardId = document.getElementById('tcm-cardId').value;
+                toolData[toolId][levelId] = toolData[toolId][levelId].filter(c => c.id !== cardId);
+                saveToFirebase();
+                renderAllToolCards();
+                closeToolCardModal();
+                showToast('카드가 삭제되었습니다.');
+            } else {
+                btn.setAttribute('data-confirm', 'true'); btn.innerHTML = '정말 삭제할까요?';
+                btn.className = 'px-5 py-2.5 text-sm font-bold text-white bg-red-500 border border-red-500 rounded-xl hover:bg-red-600 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
+                clearTimeout(deleteConfirmTimer);
+                deleteConfirmTimer = setTimeout(() => {
+                    btn.setAttribute('data-confirm', 'false'); btn.innerHTML = '삭제';
+                    btn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
+                }, 3000);
+            }
+        }
+
+        const wsColorMap = {
+            purple: { bg: 'bg-purple-50 text-purple-500 group-hover:bg-purple-100', hover: 'hover:text-figjam' },
+            pink: { bg: 'bg-pink-50 text-pink-500 group-hover:bg-pink-100', hover: 'hover:text-pink-500' },
+            orange: { bg: 'bg-orange-50 text-orange-500 group-hover:bg-orange-100', hover: 'hover:text-orange-500' },
+            blue: { bg: 'bg-blue-50 text-blue-500 group-hover:bg-blue-100', hover: 'hover:text-blue-500' },
+            emerald: { bg: 'bg-emerald-50 text-emerald-500 group-hover:bg-emerald-100', hover: 'hover:text-emerald-500' },
+            red: { bg: 'bg-red-50 text-red-500 group-hover:bg-red-100', hover: 'hover:text-red-500' },
+            slate: { bg: 'bg-slate-50 text-slate-500 group-hover:bg-slate-100', hover: 'hover:text-slate-700' }
+        };
+
+        function renderWorkspace() {
+            const container = document.getElementById('render-workspace-cards');
+            if(!container) return;
+            container.innerHTML = '';
+            
+            workspaceData.forEach(card => {
+                const editBtn = isEditMode ? `<button onclick="openWorkspaceModal('${card.id}')" class="absolute top-4 right-4 text-slate-400 hover:text-figjam z-20 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-xl transition-all opacity-0 group-hover/ws:opacity-100"><i data-lucide="edit" class="w-4 h-4"></i></button>` : '';
+                let linksHtml = '';
+                
+                card.links.forEach(link => {
+                    if(!link.name) return; 
+                    const cMap = wsColorMap[link.color] || wsColorMap['slate'];
+                    linksHtml += `<a href="${link.url || '#'}" target="${link.url ? '_blank' : '_self'}" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 ${cMap.hover} transition-colors group"><div class="w-8 h-8 rounded-lg ${cMap.bg} flex items-center justify-center transition-colors"><i data-lucide="${link.icon || 'link'}" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">${link.name}</span></a>`;
+                });
+
+                container.innerHTML += `
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6 relative group/ws">
+                        ${editBtn}
+                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
+                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">${card.avatar}</div>
+                            <h3 class="font-bold text-slate-800 text-[17px]">${card.name}</h3>
+                        </div>
+                        <div class="space-y-2">${linksHtml}</div>
+                    </div>
+                `;
+            });
+
+            if (isEditMode) {
+                container.innerHTML += `<div onclick="openWorkspaceModal('new')" class="bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[24px] p-6 flex flex-col items-center justify-center text-slate-400 hover:text-figjam hover:border-figjam hover:bg-figjamLight/50 transition-all cursor-pointer h-full min-h-[250px]"><i data-lucide="plus-circle" class="w-10 h-10 mb-3"></i><span class="font-bold text-[15px]">카드 추가하기</span></div>`;
+            }
+            lucide.createIcons();
+        }
+
+        const wsIconOptions = ['layout', 'figma', 'edit-3', 'monitor', 'github', 'link', 'folder', 'star', 'image'];
+        const wsColorOptions = ['purple', 'pink', 'orange', 'blue', 'emerald', 'red', 'slate'];
+
+        function addLinkBlock(link) {
+            const container = document.getElementById('wsm-links-container');
+            const html = `
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 space-y-3 wsm-link-item relative group/link">
+                    <div class="flex justify-between items-center">
+                        <p class="text-xs font-bold text-figjam">링크 <span class="link-number"></span></p>
+                        <button type="button" onclick="this.closest('.wsm-link-item').remove(); updateLinkNumbers();" class="text-slate-400 hover:text-red-500 opacity-0 group-hover/link:opacity-100 transition-opacity p-1 rounded-md hover:bg-white border border-transparent hover:border-slate-200" title="링크 삭제"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div class="md:col-span-2"><label class="block text-[11px] font-bold text-slate-500 mb-1">라벨명</label><input type="text" value="${link.name || ''}" placeholder="예: 브랜딩 피그잼" class="link-name w-full border-2 border-slate-200 rounded-lg p-2 focus:border-figjam outline-none text-sm"></div>
+                        <div class="md:col-span-2"><label class="block text-[11px] font-bold text-slate-500 mb-1">URL</label><input type="text" value="${link.url || ''}" placeholder="https://" class="link-url w-full border-2 border-slate-200 rounded-lg p-2 focus:border-figjam outline-none text-sm"></div>
+                        <div class="md:col-span-2">
+                            <label class="block text-[11px] font-bold text-slate-500 mb-1">아이콘</label>
+                            <select class="link-icon w-full border-2 border-slate-200 rounded-lg p-2 focus:border-figjam outline-none text-sm">${wsIconOptions.map(opt => `<option value="${opt}" ${link.icon === opt ? 'selected' : ''}>${opt}</option>`).join('')}</select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-[11px] font-bold text-slate-500 mb-1">색상</label>
+                            <select class="link-color w-full border-2 border-slate-200 rounded-lg p-2 focus:border-figjam outline-none text-sm">${wsColorOptions.map(opt => `<option value="${opt}" ${link.color === opt ? 'selected' : ''}>${opt}</option>`).join('')}</select>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+            updateLinkNumbers();
+            lucide.createIcons();
+        }
+
+        function addNewLinkToWorkspace() { addLinkBlock({name: '', url: '', icon: 'link', color: 'slate'}); }
+        function updateLinkNumbers() { document.querySelectorAll('.wsm-link-item .link-number').forEach((el, idx) => el.textContent = idx + 1); }
+
+        function openWorkspaceModal(id) {
+            document.getElementById('wsm-id').value = id;
+            let card = { name: '', avatar: '', links: [] };
+            if (id !== 'new') {
+                const found = workspaceData.find(c => c.id === id);
+                if(found) card = JSON.parse(JSON.stringify(found));
+            }
+            if (card.links.length === 0) card.links.push({name: '', url: '', icon: 'link', color: 'slate'});
+
+            document.getElementById('wsm-name').value = card.name || '';
+            document.getElementById('wsm-avatar').value = card.avatar || '';
+
+            const linksContainer = document.getElementById('wsm-links-container');
+            linksContainer.innerHTML = '';
+            card.links.forEach(link => addLinkBlock(link));
+            
+            const deleteBtn = document.getElementById('btn-wsm-delete');
+            if (id === 'new') deleteBtn.classList.add('hidden');
+            else deleteBtn.classList.remove('hidden');
+            
+            if(deleteBtn) {
+                deleteBtn.setAttribute('data-confirm', 'false'); deleteBtn.innerHTML = '삭제';
+                deleteBtn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (deleteBtn.classList.contains('hidden') ? ' hidden' : '');
+            }
+
+            const modal = document.getElementById('workspace-modal');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => modal.classList.add('opacity-100'), 10);
+        }
+
+        function closeWorkspaceModal() {
+            const modal = document.getElementById('workspace-modal');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
+        }
+
+        function saveWorkspaceModal() {
+            let id = document.getElementById('wsm-id').value;
+            const newLinks = [];
+            document.querySelectorAll('.wsm-link-item').forEach(item => {
+                newLinks.push({
+                    name: item.querySelector('.link-name').value, url: item.querySelector('.link-url').value,
+                    icon: item.querySelector('.link-icon').value, color: item.querySelector('.link-color').value,
+                });
+            });
+
+            const cardData = { name: document.getElementById('wsm-name').value, avatar: document.getElementById('wsm-avatar').value, links: newLinks };
+            if (id === 'new') {
+                cardData.id = 'ws_' + Date.now();
+                workspaceData.push(cardData);
+            } else {
+                cardData.id = id;
+                const idx = workspaceData.findIndex(c => c.id === id);
+                if (idx > -1) workspaceData[idx] = cardData;
+            }
+            saveToFirebase();
+            renderWorkspace();
+            closeWorkspaceModal();
+            showToast('작업 공간 카드가 저장되었습니다.');
+        }
+
+        let wsDeleteTimer = null;
+        function deleteWorkspaceCard() {
+            const btn = document.getElementById('btn-wsm-delete');
+            if (btn.getAttribute('data-confirm') === 'true') {
+                const id = document.getElementById('wsm-id').value;
+                workspaceData = workspaceData.filter(c => c.id !== id);
+                saveToFirebase();
+                renderWorkspace();
+                closeWorkspaceModal();
+                showToast('카드가 삭제되었습니다.');
+            } else {
+                btn.setAttribute('data-confirm', 'true'); btn.innerHTML = '정말 삭제할까요?';
+                btn.className = 'px-5 py-2.5 text-sm font-bold text-white bg-red-500 border border-red-500 rounded-xl hover:bg-red-600 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
+                clearTimeout(wsDeleteTimer);
+                wsDeleteTimer = setTimeout(() => {
+                    btn.setAttribute('data-confirm', 'false'); btn.innerHTML = '삭제';
+                    btn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
+                }, 3000);
+            }
+        }
 
         function updateSummary() {
             let totalScore = 0;
@@ -1299,8 +1578,7 @@
                             <span class="w-1.5 h-1.5 rounded-full bg-figjam"></span>${task}
                         </label>
                         <div class="relative group">
-                            <input type="number" id="input-${task}" value="${val}" min="0" max="100" 
-                                class="w-full border-2 border-slate-100 rounded-xl px-4 py-2.5 pr-8 focus:ring-4 focus:ring-figjam/20 focus:border-figjam outline-none transition-all text-right font-bold text-slate-800 bg-slate-50 hover:bg-white focus:bg-white text-base">
+                            <input type="number" id="input-${task}" value="${val}" min="0" max="100" class="w-full border-2 border-slate-100 rounded-xl px-4 py-2.5 pr-8 focus:ring-4 focus:ring-figjam/20 focus:border-figjam outline-none transition-all text-right font-bold text-slate-800 bg-slate-50 hover:bg-white focus:bg-white text-base">
                             <span class="absolute right-3 top-3 text-slate-400 font-bold group-focus-within:text-figjam transition-colors">%</span>
                         </div>
                     </div>
@@ -1308,8 +1586,7 @@
             });
             
             const modal = document.getElementById('modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
                 modal.classList.add('opacity-100');
@@ -1343,322 +1620,13 @@
         function copyProgressData() {
             const dataStr = JSON.stringify(progressData, null, 2);
             const textArea = document.createElement("textarea");
-            textArea.value = dataStr;
-            textArea.style.position = "fixed";
-            textArea.style.left = "-9999px";
-            document.body.appendChild(textArea);
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                showToast('진척도 데이터가 클립보드에 복사되었습니다.');
-            } catch (err) {
-                showToast('데이터 복사에 실패했습니다.');
-            }
+            textArea.value = dataStr; textArea.style.position = "fixed"; textArea.style.left = "-9999px";
+            document.body.appendChild(textArea); textArea.select();
+            try { document.execCommand('copy'); showToast('진척도 데이터가 클립보드에 복사되었습니다.'); } 
+            catch (err) { showToast('데이터 복사에 실패했습니다.'); }
             document.body.removeChild(textArea);
         }
 
-        // ==========================================
-        // Tool 수업 제어 함수
-        // ==========================================
-        function createCardHTML(card, toolId, levelId) {
-            return `
-                <div id="card_${card.id}" class="bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full scroll-mt-8 group/card">
-                    ${isEditMode ? `<button onclick="openToolCardModal('${toolId}', '${levelId}', '${card.id}')" class="absolute top-4 right-4 text-slate-400 hover:text-figjam z-20 bg-slate-50 hover:bg-slate-100 p-2 rounded-xl transition-all opacity-0 group-hover/card:opacity-100"><i data-lucide="edit" class="w-4 h-4"></i></button>` : ''}
-                    ${card.badge ? `<div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">${card.badge}</div>` : ''}
-                    ${card.title ? `<h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3 pr-6 pl-6">${card.title}</h3>` : '<div class="mt-2 mb-4 pb-3"></div>'}
-                    <div class="flex-1 space-y-3 mt-2">
-                        ${card.yText1 ? `<${card.yUrl1 ? `a href="${card.yUrl1}" target="_blank"` : 'div'} class="flex items-start gap-2 group"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0 ${card.yUrl1 ? 'group-hover:scale-110 transition-transform' : ''}"></i><p class="text-[13px] text-slate-600 font-medium leading-tight ${card.yUrl1 ? 'group-hover:text-figjam transition-colors' : ''}">${card.yText1}</p></${card.yUrl1 ? 'a' : 'div'}>` : ''}
-                        ${card.yText2 ? `<${card.yUrl2 ? `a href="${card.yUrl2}" target="_blank"` : 'div'} class="flex items-start gap-2 group"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0 ${card.yUrl2 ? 'group-hover:scale-110 transition-transform' : ''}"></i><p class="text-[13px] text-slate-600 font-medium leading-tight ${card.yUrl2 ? 'group-hover:text-figjam transition-colors' : ''}">${card.yText2}</p></${card.yUrl2 ? 'a' : 'div'}>` : ''}
-                        ${card.desc ? `<div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100">${card.desc.split('\n').map(line => `<p class="text-[11px] text-slate-500 leading-tight">${line}</p>`).join('')}</div>` : ''}
-                    </div>
-                    <div class="mt-5 w-full space-y-2">
-                        ${card.bText1 ? `<${card.bUrl1 ? `a href="${card.bUrl1}" target="_blank"` : 'button'} class="w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px] flex justify-center items-center gap-1.5">${card.bUrl1 && card.bUrl1.includes('drive') ? '<i data-lucide="folder-down" class="w-4 h-4"></i>' : ''} ${card.bText1}</${card.bUrl1 ? 'a' : 'button'}>` : ''}
-                        ${card.bText2 ? `<${card.bUrl2 ? `a href="${card.bUrl2}" target="_blank"` : 'button'} class="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-2.5 rounded-xl transition-colors text-[12px] flex justify-center items-center gap-1.5">${card.bUrl2 && card.bUrl2.includes('drive') ? '<i data-lucide="folder" class="w-4 h-4"></i>' : ''} ${card.bText2}</${card.bUrl2 ? 'a' : 'button'}>` : ''}
-                    </div>
-                    ${card.badgeRight ? `<div class="absolute -bottom-3 -right-3 w-10 h-10 bg-[#10B981] text-white rounded-full flex items-center justify-center text-[13px] font-bold border-[3px] border-white shadow-md z-10">${card.badgeRight}</div>` : ''}
-                </div>
-            `;
-        }
-
-        function renderToolCards(toolId, levelId) {
-            const grid = document.getElementById(`grid-${toolId}-${levelId}`);
-            if (!grid) return;
-            grid.innerHTML = '';
-            const cards = toolData[toolId][levelId] || [];
-            
-            cards.forEach(card => { grid.insertAdjacentHTML('beforeend', createCardHTML(card, toolId, levelId)); });
-            
-            if (isEditMode) {
-                const addCardHtml = `<div onclick="openToolCardModal('${toolId}', '${levelId}', 'new')" class="bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[20px] p-6 flex flex-col items-center justify-center text-slate-400 hover:text-figjam hover:border-figjam hover:bg-figjamLight/50 transition-all cursor-pointer h-full min-h-[300px]"><i data-lucide="plus-circle" class="w-10 h-10 mb-3"></i><span class="font-bold text-[15px]">카드 추가하기</span></div>`;
-                grid.insertAdjacentHTML('beforeend', addCardHtml);
-            } else if (cards.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-12 flex items-center justify-center text-slate-400 font-medium border-2 border-dashed border-slate-200 rounded-[24px]">등록된 콘텐츠가 없습니다.</div>`;
-            }
-        }
-
-        function renderAllToolCards() {
-            renderToolCards('photoshop', 'basic'); renderToolCards('photoshop', 'advanced');
-            renderToolCards('illustrator', 'basic'); renderToolCards('illustrator', 'advanced');
-            renderToolCards('figma', 'basic'); renderToolCards('figma', 'advanced');
-            lucide.createIcons();
-        }
-
-        function openToolCardModal(toolId, levelId, cardId) {
-            document.getElementById('tcm-toolId').value = toolId;
-            document.getElementById('tcm-levelId').value = levelId;
-            document.getElementById('tcm-cardId').value = cardId;
-            
-            let card = { badge: '', title: '', yText1: '', yUrl1: '', yText2: '', yUrl2: '', desc: '', bText1: '', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' };
-            if (cardId !== 'new') card = toolData[toolId][levelId].find(c => c.id === cardId) || card;
-            
-            document.getElementById('tcm-badge').value = card.badge || ''; document.getElementById('tcm-badgeRight').value = card.badgeRight || '';
-            document.getElementById('tcm-title').value = card.title || ''; document.getElementById('tcm-desc').value = card.desc || '';
-            document.getElementById('tcm-yText1').value = card.yText1 || ''; document.getElementById('tcm-yUrl1').value = card.yUrl1 || '';
-            document.getElementById('tcm-yText2').value = card.yText2 || ''; document.getElementById('tcm-yUrl2').value = card.yUrl2 || '';
-            document.getElementById('tcm-bText1').value = card.bText1 || ''; document.getElementById('tcm-bUrl1').value = card.bUrl1 || '';
-            document.getElementById('tcm-bText2').value = card.bText2 || ''; document.getElementById('tcm-bUrl2').value = card.bUrl2 || '';
-            
-            const deleteBtn = document.getElementById('btn-tcm-delete');
-            if (cardId === 'new') deleteBtn.classList.add('hidden');
-            else deleteBtn.classList.remove('hidden');
-            
-            if(deleteBtn) {
-                deleteBtn.setAttribute('data-confirm', 'false');
-                deleteBtn.innerHTML = '삭제';
-                deleteBtn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (deleteBtn.classList.contains('hidden') ? ' hidden' : '');
-            }
-
-            const modal = document.getElementById('tool-card-modal');
-            modal.classList.remove('hidden'); modal.classList.add('flex');
-            setTimeout(() => modal.classList.add('opacity-100'), 10);
-        }
-
-        function closeToolCardModal() {
-            const modal = document.getElementById('tool-card-modal');
-            modal.classList.remove('opacity-100');
-            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
-        }
-
-        function saveToolCard() {
-            const toolId = document.getElementById('tcm-toolId').value;
-            const levelId = document.getElementById('tcm-levelId').value;
-            let cardId = document.getElementById('tcm-cardId').value;
-            
-            const cardData = {
-                badge: document.getElementById('tcm-badge').value, badgeRight: document.getElementById('tcm-badgeRight').value,
-                title: document.getElementById('tcm-title').value, desc: document.getElementById('tcm-desc').value,
-                yText1: document.getElementById('tcm-yText1').value, yUrl1: document.getElementById('tcm-yUrl1').value,
-                yText2: document.getElementById('tcm-yText2').value, yUrl2: document.getElementById('tcm-yUrl2').value,
-                bText1: document.getElementById('tcm-bText1').value, bUrl1: document.getElementById('tcm-bUrl1').value,
-                bText2: document.getElementById('tcm-bText2').value, bUrl2: document.getElementById('tcm-bUrl2').value,
-            };
-            
-            if (cardId === 'new') {
-                cardData.id = 'card_' + Date.now();
-                toolData[toolId][levelId].push(cardData);
-            } else {
-                cardData.id = cardId;
-                const idx = toolData[toolId][levelId].findIndex(c => c.id === cardId);
-                if (idx > -1) toolData[toolId][levelId][idx] = cardData;
-            }
-            saveToFirebase();
-            renderAllToolCards();
-            closeToolCardModal();
-            showToast('카드 정보가 저장되었습니다.');
-        }
-
-        let deleteConfirmTimer = null;
-        function deleteToolCard() {
-            const btn = document.getElementById('btn-tcm-delete');
-            if (btn.getAttribute('data-confirm') === 'true') {
-                const toolId = document.getElementById('tcm-toolId').value;
-                const levelId = document.getElementById('tcm-levelId').value;
-                const cardId = document.getElementById('tcm-cardId').value;
-                toolData[toolId][levelId] = toolData[toolId][levelId].filter(c => c.id !== cardId);
-                saveToFirebase();
-                renderAllToolCards();
-                closeToolCardModal();
-                showToast('카드가 삭제되었습니다.');
-            } else {
-                btn.setAttribute('data-confirm', 'true');
-                btn.innerHTML = '정말 삭제할까요?';
-                btn.className = 'px-5 py-2.5 text-sm font-bold text-white bg-red-500 border border-red-500 rounded-xl hover:bg-red-600 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
-                clearTimeout(deleteConfirmTimer);
-                deleteConfirmTimer = setTimeout(() => {
-                    btn.setAttribute('data-confirm', 'false');
-                    btn.innerHTML = '삭제';
-                    btn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
-                }, 3000);
-            }
-        }
-
-        // ==========================================
-        // 작업 공간 (Workspace) 제어 함수
-        // ==========================================
-        const wsColorMap = {
-            purple: { bg: 'bg-purple-50 text-purple-500 group-hover:bg-purple-100', hover: 'hover:text-figjam' },
-            pink: { bg: 'bg-pink-50 text-pink-500 group-hover:bg-pink-100', hover: 'hover:text-pink-500' },
-            orange: { bg: 'bg-orange-50 text-orange-500 group-hover:bg-orange-100', hover: 'hover:text-orange-500' },
-            blue: { bg: 'bg-blue-50 text-blue-500 group-hover:bg-blue-100', hover: 'hover:text-blue-500' },
-            emerald: { bg: 'bg-emerald-50 text-emerald-500 group-hover:bg-emerald-100', hover: 'hover:text-emerald-500' },
-            red: { bg: 'bg-red-50 text-red-500 group-hover:bg-red-100', hover: 'hover:text-red-500' },
-            slate: { bg: 'bg-slate-50 text-slate-500 group-hover:bg-slate-100', hover: 'hover:text-slate-700' }
-        };
-
-        function renderWorkspace() {
-            const container = document.getElementById('render-workspace-cards');
-            if(!container) return;
-            container.innerHTML = '';
-            
-            workspaceData.forEach(card => {
-                const editBtn = isEditMode ? `<button onclick="openWorkspaceModal('${card.id}')" class="absolute top-4 right-4 text-slate-400 hover:text-figjam z-20 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-xl transition-all opacity-0 group-hover/ws:opacity-100"><i data-lucide="edit" class="w-4 h-4"></i></button>` : '';
-                let linksHtml = '';
-                
-                card.links.forEach(link => {
-                    if(!link.name) return; 
-                    const cMap = wsColorMap[link.color] || wsColorMap['slate'];
-                    linksHtml += `<a href="${link.url || '#'}" target="${link.url ? '_blank' : '_self'}" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-600 ${cMap.hover} transition-colors group"><div class="w-8 h-8 rounded-lg ${cMap.bg} flex items-center justify-center transition-colors"><i data-lucide="${link.icon || 'link'}" class="w-4 h-4"></i></div><span class="font-medium text-[14px]">${link.name}</span></a>`;
-                });
-
-                container.innerHTML += `
-                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.06)] transition-all p-6 relative group/ws">
-                        ${editBtn}
-                        <div class="flex items-center gap-3 mb-5 pb-4 border-b border-slate-50">
-                            <div class="w-10 h-10 rounded-full bg-[#E2D2FE] text-figjam font-bold flex items-center justify-center text-[15px]">${card.avatar}</div>
-                            <h3 class="font-bold text-slate-800 text-[17px]">${card.name}</h3>
-                        </div>
-                        <div class="space-y-2">${linksHtml}</div>
-                    </div>
-                `;
-            });
-
-            if (isEditMode) {
-                container.innerHTML += `<div onclick="openWorkspaceModal('new')" class="bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[24px] p-6 flex flex-col items-center justify-center text-slate-400 hover:text-figjam hover:border-figjam hover:bg-figjamLight/50 transition-all cursor-pointer h-full min-h-[250px]"><i data-lucide="plus-circle" class="w-10 h-10 mb-3"></i><span class="font-bold text-[15px]">카드 추가하기</span></div>`;
-            }
-            lucide.createIcons();
-        }
-
-        const wsIconOptions = ['layout', 'figma', 'edit-3', 'monitor', 'github', 'link', 'folder', 'star', 'image'];
-        const wsColorOptions = ['purple', 'pink', 'orange', 'blue', 'emerald', 'red', 'slate'];
-
-        function addLinkBlock(link) {
-            const container = document.getElementById('wsm-links-container');
-            const html = `
-                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 space-y-3 wsm-link-item relative group/link">
-                    <div class="flex justify-between items-center">
-                        <p class="text-xs font-bold text-figjam">링크 <span class="link-number"></span></p>
-                        <button type="button" onclick="this.closest('.wsm-link-item').remove(); updateLinkNumbers();" class="text-slate-400 hover:text-red-500 opacity-0 group-hover/link:opacity-100 transition-opacity p-1 rounded-md hover:bg-white border border-transparent hover:border-slate-200" title="링크 삭제"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </div>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div class="md:col-span-2"><label class="block text-[11px] font-bold text-slate-500 mb-1">라벨명</label><input type="text" value="${link.name || ''}" placeholder="예: 브랜딩 피그잼" class="link-name w-full border-2 border-slate-200 rounded-lg p-2 focus:border-figjam outline-none text-sm"></div>
-                        <div class="md:col-span-2"><label class="block text-[11px] font-bold text-slate-500 mb-1">URL</label><input type="text" value="${link.url || ''}" placeholder="https://" class="link-url w-full border-2 border-slate-200 rounded-lg p-2 focus:border-figjam outline-none text-sm"></div>
-                        <div class="md:col-span-2">
-                            <label class="block text-[11px] font-bold text-slate-500 mb-1">아이콘</label>
-                            <select class="link-icon w-full border-2 border-slate-200 rounded-lg p-2 focus:border-figjam outline-none text-sm">${wsIconOptions.map(opt => `<option value="${opt}" ${link.icon === opt ? 'selected' : ''}>${opt}</option>`).join('')}</select>
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-[11px] font-bold text-slate-500 mb-1">색상</label>
-                            <select class="link-color w-full border-2 border-slate-200 rounded-lg p-2 focus:border-figjam outline-none text-sm">${wsColorOptions.map(opt => `<option value="${opt}" ${link.color === opt ? 'selected' : ''}>${opt}</option>`).join('')}</select>
-                        </div>
-                    </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', html);
-            updateLinkNumbers();
-            lucide.createIcons();
-        }
-
-        function addNewLinkToWorkspace() { addLinkBlock({name: '', url: '', icon: 'link', color: 'slate'}); }
-        function updateLinkNumbers() { document.querySelectorAll('.wsm-link-item .link-number').forEach((el, idx) => el.textContent = idx + 1); }
-
-        function openWorkspaceModal(id) {
-            document.getElementById('wsm-id').value = id;
-            let card = { name: '', avatar: '', links: [] };
-            if (id !== 'new') {
-                const found = workspaceData.find(c => c.id === id);
-                if(found) card = JSON.parse(JSON.stringify(found));
-            }
-            if (card.links.length === 0) card.links.push({name: '', url: '', icon: 'link', color: 'slate'});
-
-            document.getElementById('wsm-name').value = card.name || '';
-            document.getElementById('wsm-avatar').value = card.avatar || '';
-
-            const linksContainer = document.getElementById('wsm-links-container');
-            linksContainer.innerHTML = '';
-            card.links.forEach(link => addLinkBlock(link));
-            
-            const deleteBtn = document.getElementById('btn-wsm-delete');
-            if (id === 'new') deleteBtn.classList.add('hidden');
-            else deleteBtn.classList.remove('hidden');
-            
-            if(deleteBtn) {
-                deleteBtn.setAttribute('data-confirm', 'false');
-                deleteBtn.innerHTML = '삭제';
-                deleteBtn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (deleteBtn.classList.contains('hidden') ? ' hidden' : '');
-            }
-
-            const modal = document.getElementById('workspace-modal');
-            modal.classList.remove('hidden'); modal.classList.add('flex');
-            setTimeout(() => modal.classList.add('opacity-100'), 10);
-        }
-
-        function closeWorkspaceModal() {
-            const modal = document.getElementById('workspace-modal');
-            modal.classList.remove('opacity-100');
-            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
-        }
-
-        function saveWorkspaceModal() {
-            let id = document.getElementById('wsm-id').value;
-            const newLinks = [];
-            document.querySelectorAll('.wsm-link-item').forEach(item => {
-                newLinks.push({
-                    name: item.querySelector('.link-name').value, url: item.querySelector('.link-url').value,
-                    icon: item.querySelector('.link-icon').value, color: item.querySelector('.link-color').value,
-                });
-            });
-
-            const cardData = { name: document.getElementById('wsm-name').value, avatar: document.getElementById('wsm-avatar').value, links: newLinks };
-            if (id === 'new') {
-                cardData.id = 'ws_' + Date.now();
-                workspaceData.push(cardData);
-            } else {
-                cardData.id = id;
-                const idx = workspaceData.findIndex(c => c.id === id);
-                if (idx > -1) workspaceData[idx] = cardData;
-            }
-            saveToFirebase();
-            renderWorkspace();
-            closeWorkspaceModal();
-            showToast('작업 공간 카드가 저장되었습니다.');
-        }
-
-        let wsDeleteTimer = null;
-        function deleteWorkspaceCard() {
-            const btn = document.getElementById('btn-wsm-delete');
-            if (btn.getAttribute('data-confirm') === 'true') {
-                const id = document.getElementById('wsm-id').value;
-                workspaceData = workspaceData.filter(c => c.id !== id);
-                saveToFirebase();
-                renderWorkspace();
-                closeWorkspaceModal();
-                showToast('카드가 삭제되었습니다.');
-            } else {
-                btn.setAttribute('data-confirm', 'true');
-                btn.innerHTML = '정말 삭제할까요?';
-                btn.className = 'px-5 py-2.5 text-sm font-bold text-white bg-red-500 border border-red-500 rounded-xl hover:bg-red-600 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
-                clearTimeout(wsDeleteTimer);
-                wsDeleteTimer = setTimeout(() => {
-                    btn.setAttribute('data-confirm', 'false');
-                    btn.innerHTML = '삭제';
-                    btn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
-                }, 3000);
-            }
-        }
-
-        // ==========================================
-        // 모달 외부 클릭 & 시스템 초기화
-        // ==========================================
         window.addEventListener('click', function(e) {
             if (e.target === document.getElementById('modal')) closeModal();
             if (e.target === document.getElementById('tool-card-modal')) closeToolCardModal();
@@ -1667,75 +1635,6 @@
             if (e.target === document.getElementById('daily-task-modal')) closeDailyModal();
             if (e.target === document.getElementById('workspace-modal')) closeWorkspaceModal(); 
         });
-
-        // 앱 초기화 및 Firebase 연동
-        function initApp() {
-            updateCourseProgress();
-            
-            // 엔터키 저장 지원 (모달들)
-            ['today-task-modal', 'daily-task-modal', 'tool-card-modal', 'workspace-modal'].forEach(id => {
-                const el = document.getElementById(id);
-                if(el) {
-                    el.addEventListener('keydown', function(e) {
-                        if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
-                            e.preventDefault();
-                            if(id === 'today-task-modal') saveTodayModal();
-                            else if(id === 'daily-task-modal') saveDailyModal();
-                            else if(id === 'tool-card-modal') saveToolCard();
-                            else if(id === 'workspace-modal') saveWorkspaceModal();
-                        }
-                    });
-                }
-            });
-
-            if (auth) {
-                const initAuth = async () => {
-                    try {
-                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
-                        else await signInAnonymously(auth);
-                    } catch(e) {
-                        console.error("인증 실패, 로컬 스토리지 사용:", e);
-                        loadFromLocal();
-                    }
-                };
-                initAuth();
-                
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        // 좌측 메뉴 상단 클라우드 연동 상태 표시
-                        document.getElementById('cloud-status').classList.remove('opacity-0');
-                        
-                        const stateRef = doc(db, 'artifacts', appId, 'public', 'data', 'dashboard', 'sharedState');
-                        onSnapshot(stateRef, (snap) => {
-                            if (snap.exists()) {
-                                const data = snap.data();
-                                if (data.roadmap) roadmapData = data.roadmap;
-                                if (data.tool) toolData = data.tool;
-                                if (data.workspace) workspaceData = data.workspace;
-                                if (data.progress) progressData = data.progress;
-                                renderAll();
-                            } else {
-                                // 처음 클라우드에 연결될 때 로컬 데이터를 업로드하여 동기화 기반 마련
-                                loadFromLocal(); // 최신 로컬 데이터 병합
-                                saveToFirebase();
-                            }
-                        }, (err) => {
-                            console.error("클라우드 동기화 에러:", err);
-                            loadFromLocal();
-                        });
-                    }
-                });
-            } else {
-                loadFromLocal();
-            }
-
-            const savedTab = localStorage.getItem('dashboardActiveTab') || 'roadmap';
-            switchTab(savedTab);
-        }
-
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initApp);
-        else initApp();
-
     </script>
-</body>
+  </body>
 </html>
