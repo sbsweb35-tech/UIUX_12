@@ -1050,21 +1050,69 @@
         }
 
         function loadFromLocal() {
-            const mo = localStorage.getItem('menuOrder_v1'); if (mo) menuOrder = JSON.parse(mo);
-            const nt = localStorage.getItem('noticeData_v1'); if (nt) noticeData = JSON.parse(nt);
-            const md = localStorage.getItem('memoData_v1'); if (md) memoData = JSON.parse(md);
-            const rm = localStorage.getItem('roadmapData_v1'); if (rm) roadmapData = JSON.parse(rm);
+            const mo = localStorage.getItem('menuOrder_v1') || localStorage.getItem('menuOrder'); if (mo) menuOrder = JSON.parse(mo);
+            const nt = localStorage.getItem('noticeData_v1') || localStorage.getItem('noticeData'); if (nt) noticeData = JSON.parse(nt);
+            const md = localStorage.getItem('memoData_v1') || localStorage.getItem('memoData'); if (md) memoData = JSON.parse(md);
+            const rm = localStorage.getItem('roadmapData_v1') || localStorage.getItem('roadmapData'); if (rm) roadmapData = JSON.parse(rm);
             
-            const tl = localStorage.getItem('toolCardsData_v19'); 
+            // 이전 버전의 로컬 스토리지 데이터를 모두 확인하여 유실(초기화) 방지
+            const tl = localStorage.getItem('toolCardsData_v19') || localStorage.getItem('toolCardsData_v18') || localStorage.getItem('toolCardsData_v1') || localStorage.getItem('toolCardsData'); 
             if (tl) {
                 toolData = migrateToolDataFormat(JSON.parse(tl));
             } else {
                 toolData = migrateToolDataFormat(JSON.parse(JSON.stringify(defaultToolData)));
             }
             
-            const ws = localStorage.getItem('workspaceData_v3'); if (ws) workspaceData = JSON.parse(ws); 
-            const pg = localStorage.getItem('assignmentData_v2'); if (pg) progressData = JSON.parse(pg);
+            const ws = localStorage.getItem('workspaceData_v3') || localStorage.getItem('workspaceData_v2') || localStorage.getItem('workspaceData_v1') || localStorage.getItem('workspaceData'); 
+            if (ws) workspaceData = JSON.parse(ws); 
+            
+            const pg = localStorage.getItem('assignmentData_v2') || localStorage.getItem('assignmentData_v1') || localStorage.getItem('assignmentData'); 
+            if (pg) progressData = JSON.parse(pg);
+            
             renderAll();
+        }
+
+        // 파이어베이스(서버)에서 데이터를 실시간으로 불러오고 동기화하는 함수 복구
+        function initFirebaseAndLoad() {
+            if (auth && db) {
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        const stateRef = doc(db, 'uiux_dashboard', 'shared_state');
+                        onSnapshot(stateRef, (docSnap) => {
+                            if (docSnap.exists()) {
+                                const data = docSnap.data();
+                                if(data.menuOrder) menuOrder = data.menuOrder;
+                                if(data.notice) noticeData = data.notice;
+                                if(data.memo) memoData = data.memo;
+                                if(data.progress) progressData = data.progress;
+                                if(data.tool) toolData = migrateToolDataFormat(data.tool);
+                                if(data.roadmap) roadmapData = data.roadmap;
+                                if(data.workspace) workspaceData = data.workspace;
+                                
+                                const cloudStatus = document.getElementById('cloud-status');
+                                if(cloudStatus) {
+                                    cloudStatus.textContent = "클라우드 연동됨";
+                                    cloudStatus.classList.remove('opacity-0', 'text-slate-400');
+                                    cloudStatus.classList.add('opacity-100', 'text-emerald-500');
+                                }
+                                renderAll();
+                            } else {
+                                loadFromLocal();
+                            }
+                        }, (error) => {
+                            console.error("Firebase 데이터 로드 실패:", error);
+                            loadFromLocal();
+                        });
+                    } else {
+                        signInAnonymously(auth).catch(error => {
+                            console.error("Firebase 익명 로그인 실패:", error);
+                            loadFromLocal();
+                        });
+                    }
+                });
+            } else {
+                loadFromLocal();
+            }
         }
 
         function renderAll() {
@@ -2527,9 +2575,10 @@
                 showToast("복사 실패: " + err);
             });
         }
+        
         // 로드 시 초기화
         window.addEventListener('DOMContentLoaded', () => {
-            loadFromLocal();
+            initFirebaseAndLoad();
             initMenuDragAndDrop();
         });
     </script>
