@@ -299,9 +299,10 @@
                         <button id="sub-photoshop" onclick="switchTool('photoshop')" class="sub-tab-btn pb-3 text-[16px] font-bold text-figjam border-b-[3px] border-figjam transition-colors">포토샵</button>
                         <button id="sub-illustrator" onclick="switchTool('illustrator')" class="sub-tab-btn pb-3 text-[16px] font-medium text-slate-400 hover:text-slate-700 transition-colors">일러스트</button>
                         <button id="sub-figma" onclick="switchTool('figma')" class="sub-tab-btn pb-3 text-[16px] font-medium text-slate-400 hover:text-slate-700 transition-colors">피그마</button>
+                        <button id="sub-design" onclick="switchTool('design')" class="sub-tab-btn pb-3 text-[16px] font-medium text-slate-400 hover:text-slate-700 transition-colors">디자인</button>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="openMemoListModal()" class="px-4 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-lg text-[13px] font-bold transition-colors mb-2 shadow-sm flex items-center gap-1">
+                        <button id="btn-tool-memo" onclick="openMemoListModal()" class="px-4 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-lg text-[13px] font-bold transition-colors mb-2 shadow-sm flex items-center gap-1">
                             <i data-lucide="file-text" class="w-4 h-4"></i> (메모)
                         </button>
                         <button id="btn-tool-edit" onclick="toggleEditMode()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[13px] font-bold transition-colors mb-2 flex items-center gap-1">
@@ -355,6 +356,14 @@
                     <div id="figma-advanced" class="level-content hidden">
                         <div class="mb-10"><h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">피그마(심화 Tool) ✨</h1><p class="text-slate-500 text-[15px]">피그마의 컴포넌트, 오토레이아웃 등 고급 기능을 학습합니다.</p></div>
                         <div id="grid-figma-advanced" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4"></div>
+                    </div>
+                </div>
+
+                <!-- 디자인 -->
+                <div id="tool-design" class="tool-content">
+                    <div id="design-basic" class="level-content block">
+                        <div class="mb-10"><h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">디자인 🎨</h1><p class="text-slate-500 text-[15px]">디자인 이론 및 실무 과제를 확인합니다.</p></div>
+                        <div id="grid-design-basic" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4"></div>
                     </div>
                 </div>
             </div>
@@ -667,8 +676,9 @@
                         <button onclick="switchMemoTool('photoshop')" id="memotab-tool-photoshop" class="memo-tool-tab font-bold text-indigo-600 border-b-[3px] border-indigo-600 pb-1 text-[15px] transition-colors">포토샵</button>
                         <button onclick="switchMemoTool('illustrator')" id="memotab-tool-illustrator" class="memo-tool-tab font-medium text-slate-400 hover:text-slate-700 pb-1 text-[15px] transition-colors">일러스트</button>
                         <button onclick="switchMemoTool('figma')" id="memotab-tool-figma" class="memo-tool-tab font-medium text-slate-400 hover:text-slate-700 pb-1 text-[15px] transition-colors">피그마</button>
+                        <button onclick="switchMemoTool('design')" id="memotab-tool-design" class="memo-tool-tab font-medium text-slate-400 hover:text-slate-700 pb-1 text-[15px] transition-colors">디자인</button>
                     </div>
-                    <div class="flex gap-2 bg-slate-50 p-1 rounded-full border border-slate-100">
+                    <div id="memo-level-tabs" class="flex gap-2 bg-slate-50 p-1 rounded-full border border-slate-100">
                         <button onclick="switchMemoLevel('basic')" id="memotab-level-basic" class="memo-level-tab px-4 py-1 text-[13px] font-bold text-indigo-600 bg-white rounded-full shadow-sm transition-all">기초</button>
                         <button onclick="switchMemoLevel('advanced')" id="memotab-level-advanced" class="memo-level-tab px-4 py-1 text-[13px] font-medium text-slate-500 rounded-full hover:text-slate-700 transition-all">심화</button>
                     </div>
@@ -887,7 +897,46 @@
                     { id: 'il_a_2', badge: '[라인 일러스트]', title: '[라인 일러스트]', yText1: '(유)UIUXD_일러스트 심화(2일차) | 260423 (1)', yUrl1: 'https://youtu.be/ZpJOrl5eqnk', yText2: '', yUrl2: '', desc: '', bText1: '(과제용 예제 폴더)', bUrl1: 'https://drive.google.com/drive/folders/1FCGd15Rt8qvjMlPYgRSYpAu1DmqEQ-7L?usp=drive_link', bText2: '(수업 진행용 예제)', bUrl2: 'https://drive.google.com/drive/folders/1S-Up1N7e-TQHGh5-OkXZTV5o2_QeCvcM?usp=drive_link', badgeRight: '' }
                 ]
             },
-            figma: { basic: [], advanced: [] }
+            figma: { basic: [], advanced: [] },
+            design: { 
+                basic: [
+                    { id: 'ds_b_1', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(브랜딩 리서치)브랜드를 위한 리서치는 무엇인가?', yUrl1: '', yText2: '(유)(브랜딩 리서치)브랜딩 리서치 실습 진행 안내', yUrl2: '', desc: '(1)성공한 유튜버 사례로 브랜딩과 리서치 알아보기\n(2)리서치의 가장 기본적인 방식, 강사와 함께 실습', bText1: '(D14)관련영상', bUrl1: '', bText2: '과제', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_2', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(브랜딩 리서치)포트폴리오 제작과 시장조사', yUrl1: '', yText2: '', yUrl2: '', desc: '(1)포트폴리오 최종형태 확인, 포트폴리오와 능력단위 연관성, 질의응답\n(2)연령대 트렌드 키워드 -> 마인드맵을 통한 키워드 추출 개별 실습 진행', bText1: '(D15)관련영상', bUrl1: '', bText2: '과제', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_3', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(리서치)사용자 범위 설정 이론', yUrl1: '', yText2: '(유)(리서치)사용자 범위 설정을 위한 설문조사', yUrl2: '', desc: '• (유)(리서치_실습)챗gpt를 활용한 사용자 범위 설정\n• (유)(리서치_과제)챗gpt를 활용한 사용한 소비자 범위 설정 응용\n\n(1)사용자 범위 설정 이론\n(2)사용자 범위 설정을 위한 설문조사\n(3)사용자 범위 설정 실습 -> 개인 프로젝트 응용 안내', bText1: 'D16', bUrl1: '', bText2: '과제', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_4', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(리서치)경쟁사 분석에서 얻을 수 있는 이점', yUrl1: '', yText2: '(유)(리서치)경쟁사 기반 수요조사를 통해 브랜딩 프로젝트 기획', yUrl2: '', desc: '(1)소비자 범위 기반으로 경쟁사(타 브랜드) 리서치(조사)\n(2)경쟁사 조사 후 수요조사를 통해 프로젝트 방향성 기획', bText1: 'D18', bUrl1: '', bText2: '과제', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_5', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(리서치)제품 사용자 리뷰 조사하기', yUrl1: '', yText2: '', yUrl2: '', desc: '(1)경쟁사 수요조사 기반 사용자 리뷰로 제품 시장조사\n(2)프로젝트 방향성 기획', bText1: '(D19)관련사이트', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_6', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(브랜딩)포트폴리오 참고 사이트와 내가 좋아하는 디자인', yUrl1: '', yText2: '', yUrl2: '', desc: '(1)포트폴리오 참고 사이트 알아보기, 포트폴리오 방향성 확립 리서치\n(2)시각 디자인 리서치', bText1: '(D20)관련사이트', bUrl1: '', bText2: '과제', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_7', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(리서치)시각디자인 트렌드 리서치 진행방법', yUrl1: '', yText2: '(유)(리서치)시각디자인 트렌드 리서치 분류방법', yUrl2: '', desc: '• (유)(리서치)시각디자인 트렌드 리서치 명도와 채도 분리\n\n(1)트렌드를 파악하지 못하면 생기는 문제점\n(2)트렌드 리서치와 분류 기준, 색상으로 분류하는 방법\n(3)채도와 명도(저, 고)이론과 개념', bText1: '(D21)관련사이트', bUrl1: '', bText2: '과제', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_8', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(리서치)트렌드 포지셔닝 맵 제작 방법', yUrl1: '', yText2: '(유)(리서치)포지셔닝 맵을 통해 브랜드 방향성 확립하는 방법', yUrl2: '', desc: '(1)조사된 트렌드 데이터를 기반으로 포지셔닝 맵 제작하기\n(2)포지셔닝 맵과 좋아하는 디자인을 결합하여 브랜드 방향성 확립', bText1: '(D22)', bUrl1: '', bText2: '과제', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_9', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(리서치)패키지 상품 기획을 위한 와이어프레임', yUrl1: '', yText2: '(유)(리서치)웹사이트 패키지 제품 분석 후 와이어프레임 구현', yUrl2: '', desc: 'ㄴ 시간상 간단하게 진행한 초안\n\n(1)포트폴리오 프로젝트 진행을 위한 웹사이트 리서치\n(2)포트폴리오 프로젝트 패키지 구상을 위한 웹사이트 분석\n(3)포트폴리오 프로젝트 패키지 구상을 위한 와이어프레임 구현', bText1: '(D23)', bUrl1: '', bText2: '과제', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_10', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(리서치)패키지 상품 기획을 위한 와이어프레임', yUrl1: '', yText2: '', yUrl2: '', desc: 'ㄴ최종 정리 영상\n\n(1)포트폴리오 프로젝트 진행을 위한 패키지 기획 최종 정리', bText1: '(D24)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_11', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(리서치)포트폴리오 제작을 위한 AI 만들기/리서치', yUrl1: '', yText2: '', yUrl2: '', desc: '포트폴리오 같이 만들어갈 AI 채팅과 기반으로 와이어프레임 제작', bText1: '(D26)관련 자료', bUrl1: '', bText2: '과제', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_12', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(브랜딩)AI 활용 브랜딩(1)', yUrl1: '', yText2: '(유)(브랜딩)AI 활용 브랜딩(2)/패키지 구성 구상', yUrl2: '', desc: '(1)AI활용 사회, 문화, 기술 기획 및 리서치/포트폴리오 문구 작성\n(2)AI활용 리서치 자료 기반 자사 브랜딩/패키지 구성 상품 기획', bText1: '(D27)관련 자료', bUrl1: '', bText2: '과제', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_13', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(브랜딩)AI 활용 제품 무드보드 제작', yUrl1: '', yText2: '(유)(브랜딩)AI활용 BI확립 BI(Brand Identity)란?', yUrl2: '', desc: '• (유)(브랜딩)디자인 과정과 CI, BI 시안\n• (유)(브랜딩)CI, BI 기반 무드보드 제작 방법\n• (유)(브랜딩)무드보드 양식 안내, 과제 설명\n\n(1)AI활용 제품 기획, BI시안 및 확립, BI와 디자인 연결, 패키지 무드보드 제작', bText1: '(D28)관련 자료', bUrl1: '', bText2: '과제', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_14', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(브랜딩)무드보드 기반 웹사이트 와이어프레임 수정보완', yUrl1: '', yText2: '', yUrl2: '', desc: '초안으로 제작했던 피그마 와이어프레임 무드보드 기반 수정 보완', bText1: '(D30)', bUrl1: '', bText2: '과제', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_15', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(리서치)타이틀 디자인 분석하는 방법', yUrl1: '', yText2: '(유)(리서치)분석한 디자인과 비슷한 레퍼런스 찾는 방법', yUrl2: '', desc: '• (유)(리서치)디자인은 관심과 관찰에서 시작된다\n• (유)(리서치)디자인에서 타이틀이 주는 힘\n• (유)(리서치)디자인 분석 표 작성하는 방법\n• (유)(리서치)진척도 체크와 과제 일정 안내\n\n디자인 감각을 높여주는 분석 방법', bText1: '(D34)관련사이트', bUrl1: '', bText2: '과제', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_16', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(리서치)와이어프레임 기반으로 패키지 방향성 확립', yUrl1: '', yText2: '', yUrl2: '', desc: '패키지 무드보드 확립, 디자인 컨셉 지정', bText1: '(D35)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_17', badge: '', title: '[브랜딩과 리서치]', yText1: '(유)(브랜딩)기획 기반으로 마인드맵 작성하는 방법', yUrl1: '', yText2: '(유)(브랜딩)마인드맵 키워드 기반으로 모티브 레퍼런스 수집', yUrl2: '', desc: '• (유)(브랜딩)모티브 레퍼런스 활용 예시\n• (유)(브랜딩)디자인 카피 과제 안내\n\n기획안 기반으로 디자인 컨셉 추출', bText1: '(D36)관련사이트', bUrl1: '', bText2: '과제', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_18', badge: '', title: '[로고 브랜딩]', yText1: '(유)(브랜딩)로고 타입 / 로고 시안 무드보드', yUrl1: '', yText2: '(유)(브랜딩)대표로고 기반 로고 그리드', yUrl2: '', desc: '• (유)(브랜딩)한 파일 내에서 CMYK와 RGB 동시 작업\n\n워드마크, 심볼, 레터마크, 콤비네이션 / 로고 그리드 / 로고 작업 방법', bText1: '(D46)관련사이트', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_19', badge: '', title: '[로고 브랜딩]', yText1: '(유)(브랜딩)브랜드 네이밍 TIP', yUrl1: '', yText2: '(브랜딩)제작할 로고와 맞는 그리드 서치(영상 없음)', yUrl2: '', desc: '• (브랜딩)AI파일로 그리드 제작하기(영상 없음, 하단 파일 참고)\n\n브랜드 네이밍 TIP', bText1: '(D46)관련사이트', bUrl1: '', bText2: '관련 파일', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_20', badge: '', title: '[웹사이트 제작]', yText1: '(유)[디자인 구성요소 설계]웹사이트 설계 중요성', yUrl1: '', yText2: '(유)[디자인 구성요소 설계]디자인 작업 방식(파일 관리)', yUrl2: '', desc: '• (유)[디자인 구성요소 설계]웹사이트 작업 기본 셋팅\n• (유)[디자인 구성요소 설계]UIUX 그리드 종류, 웹사이트 와이어프레임 작업TIP\n\n웹사이트 UX 설계, 기본적인 디자인 작업 방식, 그리드 기초 이론', bText1: '(D48)관련사이트', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_21', badge: '', title: '[웹사이트 제작]', yText1: '(유)[디자인 구성요소 설계]웹 프로세스 포트폴리오 제작하는 방법과 TIP', yUrl1: '', yText2: '', yUrl2: '', desc: '프로세스란? 프로세스 형태로 포트폴리오를 제작하는 이유', bText1: '(D53)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_22', badge: '', title: '[웹사이트 제작]', yText1: '(유)[디자인 구성요소 설계]정보의 계층 이론과 실습', yUrl1: '', yText2: '(유)[타이포그래피]글자 디자인 중요성과 글자의 계층 이론', yUrl2: '', desc: '디자인 정보 계층 중요성, 타이포그래피 기본과 글자 계층 이론', bText1: '(D54)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_23', badge: '', title: '[웹사이트 제작]', yText1: '(유)[디자인 구성요소 설계]디자인 시스템 이론과 웹디자인 실무 시스템 이해하기', yUrl1: '', yText2: '', yUrl2: '', desc: '디자인 시스템이 필요한 이유와 웹디자이너 실무 프로세스 이해하기', bText1: '(D55)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_24', badge: '', title: '[웹사이트 제작]', yText1: '(유)[디자인 구성요소 설계]디자인 시스템 이론과 웹디자인 실무 시스템 이해하기', yUrl1: '', yText2: '', yUrl2: '', desc: '디자인 시스템이 필요한 이유와 웹디자이너 실무 프로세스 이해하기', bText1: '(D56)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_25', badge: '', title: '[웹사이트 제작]', yText1: '(유)[figma]실무 figma(Variable) 응용(1)', yUrl1: '', yText2: '(유)[figma]실무 figma(Variable) 응용(2)과 계층구조 타이포그래피 실습', yUrl2: '', desc: '*영상 길이 2시간\n※2026.03.09(월) 과제부터 Variable 활용 예정\n\n실무에서 사용되는 figma 사용 방법과 실무 웹디자인 기초', bText1: '(D57)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_26', badge: '', title: '[Variable]', yText1: '(유)[AI]웹디자인 초안 구축 / Git', yUrl1: '', yText2: '(유)[AI]제미나이 활용 베리어블 네이밍(1)', yUrl2: '', desc: '• (유)[AI]제미나이 활용 베리어블 네이밍(2)\n• (유)[figma]베리어블 기반 스타일 등록과 수정\n• (유)[AI 디자인]단상자 전개도 구현\n\n제미나이 활용하여 초안 구축하는 방법', bText1: '(D58)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_27', badge: '', title: '[Variable]', yText1: '(유)[AI&figma][figma]디자인 시스템 구축', yUrl1: '', yText2: '(유)[AI활용 figma]베리어블 토큰 이름 지정, 등록', yUrl2: '', desc: '• (유)[AI활용 figma]웹디자인에 자주 사용되는 폰트 사이즈 베리어블 등록\n\nAi활용 베리어블 네이밍 및 베리어블 등록으로 배우는 웹디자인 기초', bText1: '(D59)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_28', badge: '', title: '[Variable]', yText1: '(유)[figma]토큰 연결을 활용한 디자인 스타일 일괄 변경 실습', yUrl1: '', yText2: '(유)[figma]Gemini로 폰트 사이즈 스타일 가이드 기반 폰트 두께 추천 후 베리어블 등록', yUrl2: '', desc: '• (유)[figma]토큰을 활용한 스타일 상속과 제어\n• (유)[figma]텍스트 계층 구조에 따른 베리어블 기반 스타일 가이드 구축\n• (유)[figma]베리어블 기반 컴포넌트 활용\n\n토큰과 베리어블 기반의 체계적인 디자인 시스템 구축 및 컴포넌트 응용 실무', bText1: '(D60)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_29', badge: '', title: '[디자인 시스템]', yText1: '(유)[figma]디자인 시스템 구축 및 스타일 가이드 관리 실무', yUrl1: '', yText2: '(유)[figma]실무에서 활용하는 디자인 시스템 프로젝트 적용법', yUrl2: '', desc: '• (유)[figma]효율적인 UI디자인을 위한 베리어블 활용 실무\n\n베리어블 기반 디자인 시스템 구축부터 스타일 가이드 관리 및 실무 프로젝트 적용까지', bText1: '(D61)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_30', badge: '', title: '[디자인 시스템]', yText1: '(유)(figma)실무 프로젝트 사례로 배우는 웹디자인 그리드 기반 타이포그래피', yUrl1: '', yText2: '', yUrl2: '', desc: '웹디자인 그리드를 기반으로 웹사이트 타이포그래피 배치', bText1: '(D62)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_31', badge: '', title: '[디자인 시스템]', yText1: '(유)(figma)웹디자인 그리드 기반 디자인 여백 기본기 응용', yUrl1: '', yText2: '(유)(figma)지금까지 과정 요약과 웹사이트 설계를 위한 사이트 선정', yUrl2: '', desc: '웹디자인 그리드를 기반으로 웹사이트 여백 응용 / 웹 메인 페이지와 웹사이트 설계까지 정돈과 사이트 선정', bText1: '(D63)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_32', badge: '', title: '[기획과 설계]', yText1: '(유)사용자 경험 간접 체험', yUrl1: '', yText2: '', yUrl2: '', desc: '사용자 경험을 간접적으로 체험하기 위해 페르소나를 작성하고 목적에 맞게 프로토타입 재생', bText1: '(D64)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_33', badge: '', title: '[분석과 설계]', yText1: '(유)(UX)AI 툴을 연동한 타 브랜드 분석 및 디자인 기획 자동화 가이드(Figma Make, NoteBook LM, Gemini)', yUrl1: '', yText2: '', yUrl2: '', desc: '타 브랜드의 장단점을 분석하기 위해 제미나이로 최적의 프롬프트를 설계, 노트북LM의 딥 리서치 기능 활용 방법', bText1: '(관련 사이트)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' },
+                    { id: 'ds_b_34', badge: '', title: '[분석과 설계]', yText1: '(유)(UX)AI 분석 데이터를 활용한 브랜드 전략 및 UI/UX 웹디자인 시스템 구축', yUrl1: '', yText2: '', yUrl2: '', desc: 'AI활용 경쟁사 데이터 수집 및 딥 리서치와 초안 예시', bText1: '(관련 사이트)', bUrl1: '', bText2: '', bUrl2: '', badgeRight: '' }
+                ], 
+                advanced: [] 
+            }
         };
 
         const studentsList = ['강은수', '길솔아', '김예지', '김윤겸', '김지원', '김한솜', '김희은', '박진희', '원채련', '이주환', '임도희'];
@@ -937,7 +986,7 @@
                 localStorage.setItem('noticeData_v1', JSON.stringify(noticeData));
                 localStorage.setItem('memoData_v1', JSON.stringify(memoData));
                 localStorage.setItem('roadmapData_v1', JSON.stringify(roadmapData));
-                localStorage.setItem('toolCardsData_v1', JSON.stringify(toolData));
+                localStorage.setItem('toolCardsData_v16', JSON.stringify(toolData)); // 버전을 v16으로 업데이트하여 즉시 반영
                 localStorage.setItem('workspaceData_v3', JSON.stringify(workspaceData)); 
                 localStorage.setItem('assignmentData_v2', JSON.stringify(progressData));
             }
@@ -948,7 +997,14 @@
             const nt = localStorage.getItem('noticeData_v1'); if (nt) noticeData = JSON.parse(nt);
             const md = localStorage.getItem('memoData_v1'); if (md) memoData = JSON.parse(md);
             const rm = localStorage.getItem('roadmapData_v1'); if (rm) roadmapData = JSON.parse(rm);
-            const tl = localStorage.getItem('toolCardsData_v1'); if (tl) toolData = JSON.parse(tl);
+            
+            const tl = localStorage.getItem('toolCardsData_v16'); // v16 로드
+            if (tl) {
+                toolData = JSON.parse(tl);
+            } else {
+                toolData = JSON.parse(JSON.stringify(defaultToolData));
+            }
+            
             const ws = localStorage.getItem('workspaceData_v3'); if (ws) workspaceData = JSON.parse(ws); 
             const pg = localStorage.getItem('assignmentData_v2'); if (pg) progressData = JSON.parse(pg);
             renderAll();
@@ -1043,6 +1099,17 @@
             document.querySelectorAll('.sub-tab-btn').forEach(el => { el.classList.remove('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam'); el.classList.add('font-medium', 'text-slate-400', 'hover:text-slate-700'); });
             const activeBtn = document.getElementById('sub-' + toolId);
             activeBtn.classList.remove('font-medium', 'text-slate-400', 'hover:text-slate-700'); activeBtn.classList.add('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
+
+            const memoBtn = document.getElementById('btn-tool-memo');
+            if (memoBtn) {
+                if (toolId === 'design') {
+                    memoBtn.classList.add('hidden');
+                    memoBtn.classList.remove('flex');
+                } else {
+                    memoBtn.classList.remove('hidden');
+                    memoBtn.classList.add('flex');
+                }
+            }
         }
 
         function switchLevel(toolId, level) {
@@ -1497,7 +1564,8 @@
 
         function createCardHTML(card, toolId, levelId) {
             const linkedMemo = memoData.find(m => m.cardId === card.id);
-            const memoBtnHtml = linkedMemo ? `<button onclick="openMemoViewModal('${linkedMemo.id}')" class="text-indigo-500 hover:text-white bg-indigo-50 hover:bg-indigo-500 p-2 rounded-xl transition-all shadow-sm" title="연결된 메모 보기"><i data-lucide="file-text" class="w-4 h-4"></i></button>` : '';
+            // 💡 디자인 탭인 경우 메모 아이콘 표시 안함
+            const memoBtnHtml = (linkedMemo && toolId !== 'design') ? `<button onclick="openMemoViewModal('${linkedMemo.id}')" class="text-indigo-500 hover:text-white bg-indigo-50 hover:bg-indigo-500 p-2 rounded-xl transition-all shadow-sm" title="연결된 메모 보기"><i data-lucide="file-text" class="w-4 h-4"></i></button>` : '';
             const editBtnHtml = isEditMode ? `<button onclick="openToolCardModal('${toolId}', '${levelId}', '${card.id}')" class="text-slate-400 hover:text-figjam bg-slate-50 hover:bg-slate-100 p-2 rounded-xl transition-all opacity-0 group-hover/card:opacity-100"><i data-lucide="edit" class="w-4 h-4"></i></button>` : '';
 
             return `
@@ -1539,9 +1607,12 @@
         }
 
         function renderAllToolCards() {
+            if (!toolData.design) toolData.design = { basic: [], advanced: [] }; // 하위 호환성
+            
             renderToolCards('photoshop', 'basic'); renderToolCards('photoshop', 'advanced');
             renderToolCards('illustrator', 'basic'); renderToolCards('illustrator', 'advanced');
             renderToolCards('figma', 'basic'); renderToolCards('figma', 'advanced');
+            renderToolCards('design', 'basic');
             lucide.createIcons();
         }
 
@@ -1863,7 +1934,7 @@
                 clearTimeout(wsDeleteTimer);
                 wsDeleteTimer = setTimeout(() => {
                     btn.setAttribute('data-confirm', 'false'); btn.innerHTML = '삭제';
-                    btn.className = 'px-5 py-2.5 text-sm font-bold text-red-500 bg-white border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
+                    btn.className = 'px-5 py-2.5 text-sm font-bold text-white bg-red-500 border border-red-200 rounded-xl hover:bg-red-50 shadow-sm mr-auto transition-colors' + (btn.classList.contains('hidden') ? ' hidden' : '');
                 }, 3000);
             }
         }
@@ -1893,6 +1964,17 @@
             const activeBtn = document.getElementById(`memotab-tool-${tool}`);
             activeBtn.classList.remove('font-medium', 'text-slate-400', 'hover:text-slate-700');
             activeBtn.classList.add('font-bold', 'text-indigo-600', 'border-b-[3px]', 'border-indigo-600');
+            
+            const levelTabs = document.getElementById('memo-level-tabs');
+            if (tool === 'design') {
+                levelTabs.classList.add('hidden');
+                levelTabs.classList.remove('flex');
+                currentMemoLevel = 'basic'; // 디자인은 기초(단일 탭)로 고정
+            } else {
+                levelTabs.classList.remove('hidden');
+                levelTabs.classList.add('flex');
+            }
+
             renderMemoList();
         }
 
@@ -2133,6 +2215,7 @@
             if (currentViewMemoId) {
                 const memo = memoData.find(m => m.id === currentViewMemoId);
                 if (memo) {
+                    switchTab('tool');
                     switchMemoTool(memo.toolId);
                     switchMemoLevel(memo.levelId);
                 }
@@ -2223,40 +2306,39 @@
                 };
             });
 
+            // 💡 0% 버그 해결: 기존 차트가 있으면 완전히 지우고 다시 생성합니다.
             if (myChart) {
-                myChart.data.labels = tasksList;
-                myChart.data.datasets = datasets;
-                myChart.update();
-            } else {
-                Chart.defaults.font.family = "'Pretendard', sans-serif";
-                Chart.defaults.color = '#94a3b8';
-                myChart = new Chart(ctx, {
-                    type: 'line',
-                    data: { labels: tasksList, datasets: datasets },
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                        layout: { padding: { top: 10, bottom: 20, right: 10 } },
-                        interaction: { mode: 'index', intersect: false },
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                backgroundColor: 'rgba(255, 255, 255, 0.98)', titleColor: '#1e293b', bodyColor: '#475569',
-                                borderColor: '#e2e8f0', borderWidth: 1, padding: 14, boxPadding: 8,
-                                usePointStyle: true, titleFont: { size: 14, weight: 'bold' },
-                                bodyFont: { size: 13, weight: 'bold' }, cornerRadius: 12, boxShadow: '0 10px 25px rgba(0,0,0,0.05)'
-                            }
-                        },
-                        scales: {
-                            y: {
-                                position: 'right', min: 0, max: 100, border: { display: false },
-                                grid: { color: '#f1f5f9', drawTicks: false, lineWidth: 1 },
-                                ticks: { stepSize: 10, callback: val => val + '%', padding: 15, font: { size: 12, weight: '600' }, color: '#cbd5e1' }
-                            },
-                            x: { border: { display: false }, grid: { display: false }, ticks: { padding: 15, font: { weight: '800', size: 13 }, color: '#94a3b8' } }
-                        }
-                    }
-                });
+                myChart.destroy();
             }
+
+            Chart.defaults.font.family = "'Pretendard', sans-serif";
+            Chart.defaults.color = '#94a3b8';
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: { labels: tasksList, datasets: datasets },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    layout: { padding: { top: 10, bottom: 20, right: 10 } },
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.98)', titleColor: '#1e293b', bodyColor: '#475569',
+                            borderColor: '#e2e8f0', borderWidth: 1, padding: 14, boxPadding: 8,
+                            usePointStyle: true, titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13, weight: 'bold' }, cornerRadius: 12, boxShadow: '0 10px 25px rgba(0,0,0,0.05)'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            position: 'right', min: 0, max: 100, border: { display: false },
+                            grid: { color: '#f1f5f9', drawTicks: false, lineWidth: 1 },
+                            ticks: { stepSize: 10, callback: val => val + '%', padding: 15, font: { size: 12, weight: '600' }, color: '#cbd5e1' }
+                        },
+                        x: { border: { display: false }, grid: { display: false }, ticks: { padding: 15, font: { weight: '800', size: 13 }, color: '#94a3b8' } }
+                    }
+                }
+            });
         }
 
         function openModal(std) {
@@ -2385,7 +2467,10 @@
                                 if (data.notice) noticeData = data.notice;
                                 if (data.memo) memoData = data.memo;
                                 if (data.roadmap) roadmapData = data.roadmap;
-                                if (data.tool) toolData = data.tool;
+                                if (data.tool) {
+                                    toolData = data.tool;
+                                    if (!toolData.design) toolData.design = defaultToolData.design; // 클라우드 데이터 병합 보완
+                                }
                                 if (data.workspace) workspaceData = data.workspace;
                                 if (data.progress) progressData = data.progress;
                                 renderAll();
