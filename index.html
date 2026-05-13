@@ -70,15 +70,11 @@
 
     <!-- 💡 좌측 GNB (사이드바) -->
     <aside id="sidebar" class="w-[280px] flex-shrink-0 bg-white border-r border-slate-100 flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20 relative">
-        
-        <!-- 사이드바 토글 버튼 -->
         <button id="sidebar-toggle-btn" onclick="toggleSidebar()" class="absolute top-7 left-6 w-10 h-10 bg-white border border-slate-100 rounded-full flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.08)] text-slate-500 hover:text-figjam transition-all z-50">
             <i data-lucide="menu" class="w-5 h-5"></i>
         </button>
 
-        <!-- 사이드바 콘텐츠 컨테이너 -->
         <div id="sidebar-content" class="w-[280px] h-full flex flex-col overflow-hidden">
-            <!-- 로고 영역 -->
             <div class="h-24 flex items-center pl-[76px] pr-6 border-b border-slate-50 cursor-pointer hover:bg-slate-50 transition-colors" onclick="switchTab('roadmap')">
                 <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center mr-3 shadow-md shrink-0">
                     <i data-lucide="layers" class="w-6 h-6"></i>
@@ -86,7 +82,6 @@
                 <span class="text-xl font-extrabold tracking-tight text-slate-900 truncate">UIUX D</span>
             </div>
 
-            <!-- 메뉴 영역 -->
             <nav class="flex-1 px-4 py-8 overflow-y-auto">
                 <div class="mb-4 flex items-center justify-between">
                     <p class="text-xs font-bold text-slate-400 tracking-wider">MAIN MENU</p>
@@ -123,7 +118,6 @@
                 </div>
             </nav>
 
-            <!-- 하단 유저 프로필 -->
             <div class="p-6 border-t border-slate-50">
                 <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-100">
                     <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold">
@@ -150,9 +144,7 @@
 
         <div class="p-8 md:p-12 lg:p-16 max-w-[1200px] mx-auto pb-24">
             
-            <!-- ========================================== -->
-            <!-- 탭 0: 공지사항                             -->
-            <!-- ========================================== -->
+            <!-- 탭 0: 공지사항 -->
             <div id="tab-notice" class="tab-content">
                 <div class="flex items-center justify-between mb-10">
                     <div>
@@ -173,9 +165,7 @@
                 </div>
             </div>
 
-            <!-- ========================================== -->
-            <!-- 탭 1: 학습 로드맵                          -->
-            <!-- ========================================== -->
+            <!-- 탭 1: 학습 로드맵 -->
             <div id="tab-roadmap" class="tab-content active">
                 <section class="mb-10">
                     <div class="flex items-center justify-between mb-6">
@@ -289,9 +279,7 @@
                 </section>
             </div>
 
-            <!-- ========================================== -->
-            <!-- 탭 2: Tool 수업                            -->
-            <!-- ========================================== -->
+            <!-- 탭 2: Tool 수업 -->
             <div id="tab-tool" class="tab-content">
                 <div class="flex items-center justify-between mb-4 border-b border-slate-200">
                     <div class="flex items-center gap-6">
@@ -385,9 +373,7 @@
                 </div>
             </div>
 
-            <!-- ========================================== -->
-            <!-- 탭 3: 작업 공간                            -->
-            <!-- ========================================== -->
+            <!-- 탭 3: 작업 공간 -->
             <div id="tab-workspace" class="tab-content">
                 <div class="flex items-center justify-between mb-10">
                     <div>
@@ -401,9 +387,7 @@
                 <div id="render-workspace-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
             </div>
 
-            <!-- ========================================== -->
-            <!-- 탭 4: 진척도                               -->
-            <!-- ========================================== -->
+            <!-- 탭 4: 진척도 -->
             <div id="tab-progress" class="tab-content">
                 <div class="mb-6 flex flex-row items-end justify-between gap-4">
                     <div>
@@ -883,6 +867,7 @@
 
         let scrollDirection = 'down'; 
         let lastScrollTopPos = 0;
+        let scrollHideTimeout = null;
 
         // Window 객체에 함수 바인딩 (HTML에서 onclick이 작동하기 위함)
         Object.assign(window, {
@@ -1025,10 +1010,6 @@
             tasksList.forEach(t => progressData[std][t] = 0);
         });
 
-        // ==========================================
-        // 3. 클라우드 연동 & 로컬 스토리지
-        // ==========================================
-        
         function migrateToolDataFormat(data) {
             if (!data) return data;
             const newData = JSON.parse(JSON.stringify(data));
@@ -1077,7 +1058,7 @@
                 localStorage.setItem('memoData_v1', JSON.stringify(memoData));
                 localStorage.setItem('designFilters_v1', JSON.stringify(designFilters));
                 localStorage.setItem('roadmapData_v1', JSON.stringify(roadmapData));
-                localStorage.setItem('toolCardsData_v19', JSON.stringify(toolData)); // 버전을 v19로 업데이트하여 즉시 반영
+                localStorage.setItem('toolCardsData_v19', JSON.stringify(toolData));
                 localStorage.setItem('workspaceData_v3', JSON.stringify(workspaceData)); 
                 localStorage.setItem('assignmentData_v2', JSON.stringify(progressData));
             }
@@ -1090,7 +1071,6 @@
             const df = localStorage.getItem('designFilters_v1'); if (df) designFilters = JSON.parse(df);
             const rm = localStorage.getItem('roadmapData_v1') || localStorage.getItem('roadmapData'); if (rm) roadmapData = JSON.parse(rm);
             
-            // 이전 버전의 로컬 스토리지 데이터를 모두 확인하여 유실(초기화) 방지
             const tl = localStorage.getItem('toolCardsData_v19') || localStorage.getItem('toolCardsData_v18') || localStorage.getItem('toolCardsData_v1') || localStorage.getItem('toolCardsData'); 
             if (tl) {
                 toolData = migrateToolDataFormat(JSON.parse(tl));
@@ -1108,7 +1088,6 @@
             renderAll();
         }
 
-        // 파이어베이스(서버)에서 데이터를 실시간으로 불러오고 동기화하는 함수 복구
         function initFirebaseAndLoad() {
             if (auth && db) {
                 onAuthStateChanged(auth, (user) => {
@@ -1159,7 +1138,7 @@
             renderRoadmap();
             renderAllToolCards();
             if(document.getElementById('memo-list-modal').classList.contains('flex')) {
-                renderMemoList(); // 메모 팝업이 열려있다면 새로고침
+                renderMemoList();
             }
             renderWorkspace();
             renderStudentLegend();
@@ -1176,13 +1155,9 @@
                 checkGlobalPopup();
             }
             
-            // 데이터 로드 완료 직후 수업 일정 진행률 재호출
             updateCourseProgress();
         }
 
-        // ==========================================
-        // 스크롤 상단/하단 토글 기능
-        // ==========================================
         function initScrollToggle() {
             const mainEl = document.getElementById('main-scroll-container');
             const btn = document.getElementById('scroll-toggle-btn');
@@ -1191,11 +1166,8 @@
             
             if (!mainEl || !btn || !iconUp || !iconDown) return;
 
-            let scrollTimeout;
-
             const checkVisibility = () => {
                 const allowedTabs = ['notice', 'tool', 'workspace'];
-                // 허용된 탭이 아니거나 스크롤이 불필요하면 무조건 숨김
                 if (!allowedTabs.includes(currentTabId) || mainEl.scrollHeight <= mainEl.clientHeight + 10) {
                     btn.classList.add('hidden');
                     btn.classList.remove('opacity-100', 'scale-100');
@@ -1204,50 +1176,55 @@
             };
 
             mainEl.addEventListener('scroll', () => {
+                const allowedTabs = ['notice', 'tool', 'workspace'];
+                if (!allowedTabs.includes(currentTabId)) return;
+
                 const scrollTop = mainEl.scrollTop;
                 const scrollHeight = mainEl.scrollHeight;
                 const clientHeight = mainEl.clientHeight;
 
-                const allowedTabs = ['notice', 'tool', 'workspace'];
-                if (!allowedTabs.includes(currentTabId) || scrollHeight <= clientHeight + 10) return;
+                if (scrollHeight <= clientHeight + 10) return;
 
-                // 스크롤 발생 시 버튼 표시
-                btn.classList.remove('hidden');
-                btn.classList.remove('scale-90');
+                // Show button
+                btn.classList.remove('hidden', 'scale-90');
                 btn.classList.add('opacity-100', 'scale-100');
 
-                // 스크롤 방향 감지 및 아이콘 전환
-                if (scrollTop <= 10 && scrollDirection !== 'down') {
+                // Determine direction
+                if (scrollTop > lastScrollTopPos) {
                     scrollDirection = 'down';
+                } else if (scrollTop < lastScrollTopPos) {
+                    scrollDirection = 'up';
+                }
+                
+                // Edge cases
+                if (scrollTop <= 10) {
+                    scrollDirection = 'down';
+                } else if (scrollTop + clientHeight >= scrollHeight - 10) {
+                    scrollDirection = 'up';
+                }
+
+                // Apply Icons safely
+                if (scrollDirection === 'down') {
                     iconUp.classList.add('hidden');
                     iconDown.classList.remove('hidden');
-                } else if (scrollTop + clientHeight >= scrollHeight - 10 && scrollDirection !== 'up') {
-                    scrollDirection = 'up';
-                    iconDown.classList.add('hidden');
-                    iconUp.classList.remove('hidden');
-                } else if (scrollTop > lastScrollTopPos && scrollDirection !== 'down') {
-                    scrollDirection = 'down';
-                    iconUp.classList.add('hidden');
-                    iconDown.classList.remove('hidden');
-                } else if (scrollTop < lastScrollTopPos && scrollDirection !== 'up') {
-                    scrollDirection = 'up';
+                } else {
                     iconDown.classList.add('hidden');
                     iconUp.classList.remove('hidden');
                 }
                 
                 lastScrollTopPos = scrollTop <= 0 ? 0 : scrollTop;
 
-                // 스크롤이 멈추면 일정 시간 후 버튼 숨김
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
+                // Auto hide
+                clearTimeout(scrollHideTimeout);
+                scrollHideTimeout = setTimeout(() => {
                     btn.classList.remove('opacity-100', 'scale-100');
                     btn.classList.add('scale-90');
                     setTimeout(() => {
                         if (btn.classList.contains('scale-90')) {
                             btn.classList.add('hidden');
                         }
-                    }, 300); // transition 지속 시간과 맞춤
-                }, 1500); // 1.5초 후 숨김
+                    }, 300);
+                }, 1500);
             });
 
             btn.addEventListener('click', () => {
@@ -1258,15 +1235,13 @@
                 }
             });
 
-            // 초기 및 동적 변경 감지
-            const observer = new MutationObserver(checkVisibility);
+            // Handle DOM resizes safely without loops
+            const observer = new MutationObserver(() => {
+                window.requestAnimationFrame(checkVisibility);
+            });
             observer.observe(mainEl, { childList: true, subtree: true });
-            setTimeout(checkVisibility, 500);
         }
 
-        // ==========================================
-        // 디자인 필터 관리 기능
-        // ==========================================
         function openFilterModal() {
             renderFilterManageList();
             const modal = document.getElementById('filter-manage-modal');
@@ -1308,7 +1283,6 @@
         function updateDesignFilter(idx, val) {
             val = val.trim();
             if(val && val !== designFilters[idx]) {
-                // 기존 툴 데이터의 category 업데이트
                 ['photoshop', 'illustrator', 'figma', 'design'].forEach(t => {
                     ['basic', 'advanced'].forEach(l => {
                         toolData[t][l].forEach(c => {
@@ -1323,7 +1297,6 @@
         }
 
         function deleteDesignFilter(idx) {
-            // 툴 데이터 category 빈 문자열로
             ['photoshop', 'illustrator', 'figma', 'design'].forEach(t => {
                 ['basic', 'advanced'].forEach(l => {
                     toolData[t][l].forEach(c => {
@@ -1361,9 +1334,6 @@
             }
         }
 
-        // ==========================================
-        // 4. 공통 UI & 탭 전환
-        // ==========================================
         function updateCourseProgress() {
             const startDate = new Date('2025-12-08T00:00:00');
             const endDate = new Date('2026-06-25T23:59:59');
@@ -1396,13 +1366,13 @@
         function switchTab(tabId) {
             currentTabId = tabId;
 
-            // 탭 전환 시 스크롤 버튼 가시성 즉시 체크
+            // Handle scroll button visibility gracefully
             const mainEl = document.getElementById('main-scroll-container');
             const btn = document.getElementById('scroll-toggle-btn');
             if (btn && mainEl) {
                 const allowedTabs = ['notice', 'tool', 'workspace'];
                 if (!allowedTabs.includes(currentTabId) || mainEl.scrollHeight <= mainEl.clientHeight + 10) {
-                    btn.classList.add('hidden');
+                    btn.classList.add('hidden', 'scale-90');
                     btn.classList.remove('opacity-100', 'scale-100');
                 }
             }
@@ -1440,8 +1410,11 @@
             const activeBtn = document.getElementById('sub-' + toolId);
             activeBtn.classList.remove('font-medium', 'text-slate-400', 'hover:text-slate-700'); activeBtn.classList.add('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
 
+            const memoBtn = document.getElementById('btn-tool-memo');
             const filterContainer = document.getElementById('design-filter-container');
             
+            if(memoBtn) { memoBtn.classList.remove('hidden'); memoBtn.classList.add('flex'); }
+
             if (toolId === 'design') {
                 if(filterContainer) { filterContainer.classList.remove('hidden'); }
             } else {
@@ -1489,9 +1462,6 @@
             }, 150);
         }
 
-        // ==========================================
-        // 5. 수정 모드 및 비밀번호 로직 (다용도)
-        // ==========================================
         let pwdActionType = 'editMode';
         let pwdActionPayload = null;
 
@@ -1570,14 +1540,12 @@
                 }
             });
 
-            // 필터 관리 버튼 UI
             const btnManageFilters = document.getElementById('btn-manage-filters');
             if(btnManageFilters) {
                 if(isEditMode) btnManageFilters.classList.remove('hidden');
                 else btnManageFilters.classList.add('hidden');
             }
 
-            // 메뉴 드래그 UI 업데이트
             const menuItems = document.querySelectorAll('.menu-drag-item');
             menuItems.forEach(item => {
                 if(isEditMode) {
@@ -1592,9 +1560,6 @@
             lucide.createIcons();
         }
 
-        // ==========================================
-        // 5.3. MAIN MENU 드래그 앤 드롭 기능
-        // ==========================================
         function initMenuDragAndDrop() {
             const container = document.getElementById('menu-item-container');
             let draggedItem = null;
@@ -1602,10 +1567,7 @@
             const items = container.querySelectorAll('.menu-drag-item');
             items.forEach(item => {
                 item.addEventListener('dragstart', function(e) {
-                    if (!isEditMode) {
-                        e.preventDefault();
-                        return;
-                    }
+                    if (!isEditMode) { e.preventDefault(); return; }
                     draggedItem = this;
                     e.dataTransfer.effectAllowed = 'move';
                     setTimeout(() => this.classList.add('opacity-40', 'bg-slate-100', 'scale-95'), 0);
@@ -1651,9 +1613,6 @@
             });
         }
 
-        // ==========================================
-        // 5.5. 공지사항 및 글로벌 팝업 로직
-        // ==========================================
         function renderNoticeBoard() {
             const container = document.getElementById('render-notice-board');
             if(!container) return;
@@ -1849,10 +1808,6 @@
             }, 300);
         }
 
-
-        // ==========================================
-        // 6. 렌더링 로직 (Roadmap, Tool, Workspace)
-        // ==========================================
         function renderRoadmap() {
             renderTodayTask();
             renderDailyTasks();
@@ -1926,7 +1881,6 @@
             }
         }
 
-        // 그리드 형태 렌더링
         function createGridCardHTML(card, toolId, levelId) {
             const linkedMemo = memoData.find(m => m.cardId === card.id);
             const isTodayTask = roadmapData.todayTask && roadmapData.todayTask.cardId === card.id;
@@ -1974,7 +1928,6 @@
             `;
         }
 
-        // 리스트 형태 렌더링
         function createListCardHTML(card, toolId, levelId, index, totalLength) {
             const linkedMemo = memoData.find(m => m.cardId === card.id);
             const isTodayTask = roadmapData.todayTask && roadmapData.todayTask.cardId === card.id;
@@ -2028,7 +1981,6 @@
             
             let cards = toolData[toolId][levelId] || [];
             
-            // 디자인 탭 필터 적용
             if (toolId === 'design' && currentDesignFilter !== 'all') {
                 cards = cards.filter(c => c.category === currentDesignFilter);
             }
@@ -2041,7 +1993,6 @@
                     grid.insertAdjacentHTML('beforeend', `<div onclick="openToolCardModal('${toolId}', '${levelId}', 'new')" class="bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[20px] p-6 flex flex-col items-center justify-center text-slate-400 hover:text-figjam hover:border-figjam hover:bg-figjamLight/50 transition-all cursor-pointer h-full min-h-[300px]"><i data-lucide="plus-circle" class="w-10 h-10 mb-3"></i><span class="font-bold text-[15px]">카드 추가하기</span></div>`);
                 }
             } else {
-                // 리스트 레이아웃 (공지사항 구조)
                 grid.className = 'flex flex-col border-t border-slate-100 pt-2 mt-4';
                 
                 if (cards.length > 0 || isEditMode) {
@@ -2066,7 +2017,6 @@
             }
         }
 
-        // 동적 폼 추가 (링크)
         function addToolLinkRow(text='', url='') {
             const container = document.getElementById('tcm-links-container');
             const html = `
@@ -2082,7 +2032,6 @@
             lucide.createIcons();
         }
 
-        // 동적 폼 추가 (버튼)
         function addToolButtonRow(text='', url='') {
             const container = document.getElementById('tcm-buttons-container');
             const html = `
@@ -2106,13 +2055,11 @@
             let card = { badge: '', badgeRight: '', title: '', desc: '', category: '', links: [], buttons: [] };
             if (cardId !== 'new') card = toolData[toolId][levelId].find(c => c.id === cardId) || card;
             
-            // 기본 정보
             document.getElementById('tcm-badge').value = card.badge || ''; 
             document.getElementById('tcm-badgeRight').value = card.badgeRight || '';
             document.getElementById('tcm-title').value = card.title || ''; 
             document.getElementById('tcm-desc').value = card.desc || '';
             
-            // 필터 (디자인 탭 전용)
             const catWrapper = document.getElementById('tcm-category-wrapper');
             if (toolId === 'design') {
                 catWrapper.classList.remove('hidden');
@@ -2121,14 +2068,12 @@
                 catWrapper.classList.add('hidden');
             }
             
-            // 링크/버튼 초기화 및 렌더링
             document.getElementById('tcm-links-container').innerHTML = '';
             document.getElementById('tcm-buttons-container').innerHTML = '';
             
             (card.links || []).forEach(l => addToolLinkRow(l.text, l.url));
             (card.buttons || []).forEach(b => addToolButtonRow(b.text, b.url));
             
-            // 신규 생성일 경우 기본으로 1개씩 깔아두기
             if(cardId === 'new' && (!card.links || card.links.length === 0)) addToolLinkRow();
             if(cardId === 'new' && (!card.buttons || card.buttons.length === 0)) addToolButtonRow();
 
@@ -2351,7 +2296,6 @@
             document.getElementById('ttm-bText2').value = data.bText2 || '';
             document.getElementById('ttm-bUrl2').value = data.bUrl2 || '';
 
-            // Tool 카드 선택 옵션 렌더링
             const cardSelect = document.getElementById('ttm-cardId');
             if (cardSelect) {
                 cardSelect.innerHTML = `<option value="">연결 안함</option>`;
@@ -2480,7 +2424,6 @@
                 `;
                 container.appendChild(btn);
                 
-                // 초기 상태
                 if(myChart && myChart.isDatasetVisible(i) === false) {
                     btn.classList.add('opacity-40');
                 }
@@ -2577,7 +2520,7 @@
                     }
                 });
             }
-            renderStudentLegend(); // 범례 동기화
+            renderStudentLegend();
         }
 
         function openModal(studentName) {
@@ -2638,7 +2581,6 @@
             });
         }
 
-        // 메모 리스트 모달
         function openMemoListModal() {
             const modal = document.getElementById('memo-list-modal');
             modal.classList.remove('hidden'); modal.classList.add('flex');
