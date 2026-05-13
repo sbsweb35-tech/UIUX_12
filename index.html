@@ -141,9 +141,11 @@
 
     <!-- 💡 우측 메인 콘텐츠 -->
     <main class="flex-1 overflow-y-auto scroll-smooth relative" id="main-scroll-container">
-        <!-- 플로팅 스크롤 버튼 -->
-        <button id="scroll-toggle-btn" class="fixed bottom-8 left-8 w-12 h-12 bg-white text-slate-500 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] flex items-center justify-center hover:text-figjam hover:bg-slate-50 transition-all z-[90] hidden opacity-0 border border-slate-100">
-            <i data-lucide="arrow-down" id="scroll-icon" class="w-6 h-6"></i>
+        
+        <!-- 플로팅 스크롤 버튼 (우측 하단) -->
+        <button id="scroll-toggle-btn" class="fixed bottom-8 right-8 w-12 h-12 bg-white text-slate-500 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] flex items-center justify-center hover:text-figjam hover:bg-slate-50 transition-all duration-300 z-[90] hidden opacity-0 border border-slate-100 scale-90">
+            <i data-lucide="arrow-up" id="scroll-icon-up" class="w-6 h-6 hidden"></i>
+            <i data-lucide="arrow-down" id="scroll-icon-down" class="w-6 h-6"></i>
         </button>
 
         <div class="p-8 md:p-12 lg:p-16 max-w-[1200px] mx-auto pb-24">
@@ -866,6 +868,7 @@
         let myChart = null;
         let currentEditingStudent = '';
         let hasCheckedGlobalPopup = false; 
+        let currentTabId = 'roadmap';
 
         let currentToolLayout = 'grid'; 
         let currentDesignFilter = 'all';
@@ -1183,37 +1186,68 @@
         function initScrollToggle() {
             const mainEl = document.getElementById('main-scroll-container');
             const btn = document.getElementById('scroll-toggle-btn');
-            const icon = document.getElementById('scroll-icon');
+            const iconUp = document.getElementById('scroll-icon-up');
+            const iconDown = document.getElementById('scroll-icon-down');
             
-            if (!mainEl || !btn || !icon) return;
+            if (!mainEl || !btn || !iconUp || !iconDown) return;
+
+            let scrollTimeout;
+
+            const checkVisibility = () => {
+                const allowedTabs = ['notice', 'tool', 'workspace'];
+                // 허용된 탭이 아니거나 스크롤이 불필요하면 무조건 숨김
+                if (!allowedTabs.includes(currentTabId) || mainEl.scrollHeight <= mainEl.clientHeight + 10) {
+                    btn.classList.add('hidden');
+                    btn.classList.remove('opacity-100', 'scale-100');
+                    btn.classList.add('scale-90');
+                }
+            };
 
             mainEl.addEventListener('scroll', () => {
                 const scrollTop = mainEl.scrollTop;
                 const scrollHeight = mainEl.scrollHeight;
                 const clientHeight = mainEl.clientHeight;
 
-                // 스크롤바가 활성화되어 있을 때만 보임
-                if (scrollHeight > clientHeight + 10) {
-                    btn.classList.remove('hidden');
-                    btn.classList.add('opacity-100');
-                } else {
-                    btn.classList.add('hidden');
-                    btn.classList.remove('opacity-100');
-                    return;
-                }
+                const allowedTabs = ['notice', 'tool', 'workspace'];
+                if (!allowedTabs.includes(currentTabId) || scrollHeight <= clientHeight + 10) return;
 
-                if (scrollTop > lastScrollTopPos) {
-                    // 아래로 스크롤 중 -> 아이콘 아래 화살표
+                // 스크롤 발생 시 버튼 표시
+                btn.classList.remove('hidden');
+                btn.classList.remove('scale-90');
+                btn.classList.add('opacity-100', 'scale-100');
+
+                // 스크롤 방향 감지 및 아이콘 전환
+                if (scrollTop <= 10 && scrollDirection !== 'down') {
                     scrollDirection = 'down';
-                    icon.setAttribute('data-lucide', 'arrow-down');
-                } else if (scrollTop < lastScrollTopPos) {
-                    // 위로 스크롤 중 -> 아이콘 위 화살표
+                    iconUp.classList.add('hidden');
+                    iconDown.classList.remove('hidden');
+                } else if (scrollTop + clientHeight >= scrollHeight - 10 && scrollDirection !== 'up') {
                     scrollDirection = 'up';
-                    icon.setAttribute('data-lucide', 'arrow-up');
+                    iconDown.classList.add('hidden');
+                    iconUp.classList.remove('hidden');
+                } else if (scrollTop > lastScrollTopPos && scrollDirection !== 'down') {
+                    scrollDirection = 'down';
+                    iconUp.classList.add('hidden');
+                    iconDown.classList.remove('hidden');
+                } else if (scrollTop < lastScrollTopPos && scrollDirection !== 'up') {
+                    scrollDirection = 'up';
+                    iconDown.classList.add('hidden');
+                    iconUp.classList.remove('hidden');
                 }
                 
-                lastScrollTopPos = scrollTop;
-                lucide.createIcons();
+                lastScrollTopPos = scrollTop <= 0 ? 0 : scrollTop;
+
+                // 스크롤이 멈추면 일정 시간 후 버튼 숨김
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    btn.classList.remove('opacity-100', 'scale-100');
+                    btn.classList.add('scale-90');
+                    setTimeout(() => {
+                        if (btn.classList.contains('scale-90')) {
+                            btn.classList.add('hidden');
+                        }
+                    }, 300); // transition 지속 시간과 맞춤
+                }, 1500); // 1.5초 후 숨김
             });
 
             btn.addEventListener('click', () => {
@@ -1223,6 +1257,11 @@
                     mainEl.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             });
+
+            // 초기 및 동적 변경 감지
+            const observer = new MutationObserver(checkVisibility);
+            observer.observe(mainEl, { childList: true, subtree: true });
+            setTimeout(checkVisibility, 500);
         }
 
         // ==========================================
@@ -1355,6 +1394,19 @@
         }
 
         function switchTab(tabId) {
+            currentTabId = tabId;
+
+            // 탭 전환 시 스크롤 버튼 가시성 즉시 체크
+            const mainEl = document.getElementById('main-scroll-container');
+            const btn = document.getElementById('scroll-toggle-btn');
+            if (btn && mainEl) {
+                const allowedTabs = ['notice', 'tool', 'workspace'];
+                if (!allowedTabs.includes(currentTabId) || mainEl.scrollHeight <= mainEl.clientHeight + 10) {
+                    btn.classList.add('hidden');
+                    btn.classList.remove('opacity-100', 'scale-100');
+                }
+            }
+
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
 
@@ -1388,11 +1440,8 @@
             const activeBtn = document.getElementById('sub-' + toolId);
             activeBtn.classList.remove('font-medium', 'text-slate-400', 'hover:text-slate-700'); activeBtn.classList.add('font-bold', 'text-figjam', 'border-b-[3px]', 'border-figjam');
 
-            const memoBtn = document.getElementById('btn-tool-memo');
             const filterContainer = document.getElementById('design-filter-container');
             
-            if(memoBtn) { memoBtn.classList.remove('hidden'); memoBtn.classList.add('flex'); }
-
             if (toolId === 'design') {
                 if(filterContainer) { filterContainer.classList.remove('hidden'); }
             } else {
