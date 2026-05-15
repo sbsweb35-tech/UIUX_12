@@ -108,6 +108,10 @@
                         <i data-lucide="folder-open" class="w-5 h-5 pointer-events-none"></i>
                         <span class="text-[15px] pointer-events-none">작업 공간</span>
                     </button>
+                    <button id="btn-schedule" data-tab-id="schedule" onclick="window.switchTab('schedule')" class="menu-drag-item gnb-item w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-medium hover:bg-slate-50 hover:text-slate-800 transition-all duration-200 text-left">
+                        <i data-lucide="calendar-days" class="w-5 h-5 pointer-events-none"></i>
+                        <span class="text-[15px] pointer-events-none">일정표</span>
+                    </button>
                 </div>
             </nav>
 
@@ -176,6 +180,33 @@
                     <div id="render-daily-tasks" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5"></div>
                 </section>
 
+                <section class="mb-10">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-[18px] font-bold text-slate-800 flex items-center gap-2">
+                            <i data-lucide="calendar" class="w-5 h-5 text-blue-500"></i> 월간 일정표
+                        </h2>
+                        <div class="flex items-center gap-4 bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100">
+                            <button onclick="window.prevMonth()" class="text-slate-400 hover:text-figjam transition-colors p-1"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                            <span id="calendar-month-year" class="font-bold text-slate-700 text-[15px] min-w-[90px] text-center tracking-wide">2026. 05</span>
+                            <button onclick="window.nextMonth()" class="text-slate-400 hover:text-figjam transition-colors p-1"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-6 md:p-8 overflow-hidden">
+                        <div class="grid grid-cols-7 gap-px bg-slate-200 border border-slate-200 rounded-t-xl overflow-hidden">
+                            <div class="bg-slate-50 py-3 text-center text-[13px] font-extrabold text-red-500">일</div>
+                            <div class="bg-slate-50 py-3 text-center text-[13px] font-extrabold text-slate-600">월</div>
+                            <div class="bg-slate-50 py-3 text-center text-[13px] font-extrabold text-slate-600">화</div>
+                            <div class="bg-slate-50 py-3 text-center text-[13px] font-extrabold text-slate-600">수</div>
+                            <div class="bg-slate-50 py-3 text-center text-[13px] font-extrabold text-slate-600">목</div>
+                            <div class="bg-slate-50 py-3 text-center text-[13px] font-extrabold text-slate-600">금</div>
+                            <div class="bg-slate-50 py-3 text-center text-[13px] font-extrabold text-blue-500">토</div>
+                        </div>
+                        <div id="calendar-grid" class="grid grid-cols-7 gap-px bg-slate-200 border-x border-b border-slate-200 rounded-b-xl overflow-hidden mt-px">
+                            <!-- 달력 날짜 렌더링 영역 -->
+                        </div>
+                    </div>
+                </section>
+
                 <section>
                     <div class="flex items-center gap-6 mb-6 border-b border-slate-200">
                         <button id="sub-roadmap-schedule" onclick="window.switchRoadmapTab('schedule')" class="roadmap-tab-btn pb-3 text-[16px] font-bold text-figjam border-b-[3px] border-figjam transition-colors">수업 일정</button>
@@ -206,23 +237,7 @@
                             </div>
                             <div>
                                 <h4 class="text-[15px] font-bold text-slate-700 mb-4 pb-3 border-b border-slate-50">능력단위 세부 일정</h4>
-                                <div class="space-y-2.5">
-                                    <div class="flex flex-col lg:flex-row lg:items-center justify-between p-4.5 px-5 rounded-2xl bg-indigo-50/60 border border-indigo-100 shadow-sm transition-all">
-                                        <div class="flex items-center gap-3.5 mb-3 lg:mb-0"><span class="relative flex h-3 w-3 shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span></span><span class="font-bold text-[15px] text-indigo-900">스마트문화앱 UX 설계</span></div>
-                                        <div class="flex items-center gap-3"><span class="text-[12px] font-bold text-indigo-600 bg-white border border-indigo-200 px-3 py-1.5 rounded-lg shadow-sm">진행중</span><span class="text-[14px] text-indigo-600/80 font-semibold tracking-wide">2026.04.03 ~ 2026.05.22</span></div>
-                                    </div>
-                                    <div class="flex flex-col lg:flex-row lg:items-center justify-between p-4.5 px-5 rounded-2xl bg-indigo-50/60 border border-indigo-100 shadow-sm transition-all">
-                                        <div class="flex items-start lg:items-center gap-3.5 mb-3 lg:mb-0"><span class="relative flex h-3 w-3 shrink-0 mt-1.5 lg:mt-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span></span><span class="font-bold text-[15px] text-indigo-900 leading-snug">프로토타입 기초데이터 수집 및 스케치,<br>프로토타입 제작 및 사용성 테스트</span></div>
-                                        <div class="flex items-center gap-3 shrink-0"><span class="text-[12px] font-bold text-indigo-600 bg-white border border-indigo-200 px-3 py-1.5 rounded-lg shadow-sm">진행중</span><span class="text-[14px] text-indigo-600/80 font-semibold tracking-wide min-w-[155px] text-right">2026.04.03 ~ 2026.05.12</span></div>
-                                    </div>
-                                    <div class="flex flex-col lg:flex-row lg:items-center justify-between p-4.5 px-5 rounded-2xl hover:bg-slate-50 border border-transparent transition-all group">
-                                        <div class="flex items-center gap-3.5 mb-3 lg:mb-0"><span class="flex-shrink-0 w-2.5 h-2.5 rounded-full bg-slate-300 group-hover:bg-slate-400 transition-colors"></span><span class="font-bold text-[15px] text-slate-700">스마트문화앱 UI 디자인</span></div>
-                                        <div class="flex items-center gap-3 shrink-0"><span class="text-[12px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg">예정</span><span class="text-[14px] text-slate-500 font-semibold tracking-wide min-w-[155px] text-right">2026.05.22 ~ 2026.06.24</span></div>
-                                    </div>
-                                    <div class="flex flex-col lg:flex-row lg:items-center justify-between p-4.5 px-5 rounded-2xl hover:bg-slate-50 border border-transparent transition-all group">
-                                        <div class="flex items-center gap-3.5 mb-3 lg:mb-0"><span class="flex-shrink-0 w-2.5 h-2.5 rounded-full bg-slate-300 group-hover:bg-slate-400 transition-colors"></span><span class="font-bold text-[15px] text-slate-700">(비NCS 실기)취업 포트폴리오 제작</span></div>
-                                        <div class="flex items-center gap-3 shrink-0"><span class="text-[12px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg">예정</span><span class="text-[14px] text-slate-500 font-semibold tracking-wide min-w-[155px] text-right">2026.05.13 ~ 2026.06.24</span></div>
-                                    </div>
+                                <div id="render-unit-schedules" class="space-y-2.5">
                                 </div>
                             </div>
                         </div>
@@ -372,15 +387,44 @@
                     </div>
                 </div>
                 <div class="flex flex-row gap-6 w-full items-stretch" style="height: calc(100vh - 260px); min-height: 450px;"> 
-                    <div class="w-[300px] bg-white rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-4 flex flex-col shrink-0 z-10 border border-slate-100 overflow-y-auto"><div id="custom-legend" class="flex flex-col gap-1 w-full"></div></div>
-                    <div class="flex-1 bg-white rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-6 relative flex flex-col border border-slate-100 min-w-0"><div class="relative flex-1 w-full h-full min-h-0"><canvas id="progressChart"></canvas></div></div>
+                <div class="w-[300px] bg-white rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-4 flex flex-col shrink-0 z-10 border border-slate-100 overflow-y-auto"><div id="custom-legend" class="flex flex-col gap-1 w-full"></div></div>
+                <div class="flex-1 bg-white rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-6 relative flex flex-col border border-slate-100 min-w-0"><div class="relative flex-1 w-full h-full min-h-0"><canvas id="progressChart"></canvas></div></div>
+            </div>
+        </div>
+
+        <!-- 탭 5: 일정표 -->
+        <div id="tab-schedule" class="tab-content">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h1 class="text-[32px] font-bold text-slate-900 tracking-tight flex items-center gap-2 mb-2">전체 일정표 📅</h1>
+                    <p class="text-slate-500 text-[15px]">과정 전체의 주요 일정과 학습 스케줄을 한눈에 관리하세요.</p>
+                </div>
+                <div class="flex items-center gap-4 bg-white px-5 py-2.5 rounded-2xl shadow-sm border border-slate-100">
+                    <button onclick="window.prevScheduleMonth()" class="text-slate-400 hover:text-figjam transition-colors p-1.5 rounded-lg hover:bg-slate-50"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                    <span id="full-calendar-month-year" class="font-bold text-slate-700 text-[18px] min-w-[120px] text-center tracking-wide">2026. 05</span>
+                    <button onclick="window.nextScheduleMonth()" class="text-slate-400 hover:text-figjam transition-colors p-1.5 rounded-lg hover:bg-slate-50"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
                 </div>
             </div>
-
+            <div class="bg-white rounded-[24px] border border-slate-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] p-8 overflow-hidden">
+                <div class="grid grid-cols-7 gap-px bg-slate-200 border border-slate-200 rounded-t-xl overflow-hidden">
+                    <div class="bg-slate-50 py-3 text-center text-[14px] font-extrabold text-red-500">일</div>
+                    <div class="bg-slate-50 py-3 text-center text-[14px] font-extrabold text-slate-600">월</div>
+                    <div class="bg-slate-50 py-3 text-center text-[14px] font-extrabold text-slate-600">화</div>
+                    <div class="bg-slate-50 py-3 text-center text-[14px] font-extrabold text-slate-600">수</div>
+                    <div class="bg-slate-50 py-3 text-center text-[14px] font-extrabold text-slate-600">목</div>
+                    <div class="bg-slate-50 py-3 text-center text-[14px] font-extrabold text-slate-600">금</div>
+                    <div class="bg-slate-50 py-3 text-center text-[14px] font-extrabold text-blue-500">토</div>
+                </div>
+                <div id="full-calendar-grid" class="grid grid-cols-7 gap-px bg-slate-200 border-x border-b border-slate-200 rounded-b-xl overflow-hidden mt-px">
+                    <!-- 풀 달력 날짜 렌더링 영역 -->
+                </div>
+            </div>
         </div>
-    </main>
 
-    <!-- 모달 영역 -->
+    </div>
+</main>
+
+<!-- 모달 영역 -->
     
     <!-- 비밀번호 인증 모달 -->
     <div id="pwd-modal" class="fixed inset-0 bg-slate-900/20 hidden items-center justify-center z-[120] p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
@@ -458,6 +502,76 @@
     <!-- 학생 코멘트 모달 (강사 전용) -->
     <div id="student-comment-modal" class="fixed inset-0 bg-slate-900/20 hidden items-center justify-center z-[130] p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0"><div class="bg-white rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] w-full max-w-lg overflow-hidden transform transition-all border border-white"><div class="px-8 py-6 flex justify-between items-center bg-indigo-50/50 border-b border-indigo-100/50"><h2 class="text-xl font-extrabold text-slate-800 flex items-center gap-2"><i data-lucide="message-square" class="w-5 h-5 text-indigo-500"></i><span id="scm-title">학생 코멘트</span></h2><button onclick="window.closeCommentModal()" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100 hover:bg-slate-50"><i data-lucide="x" class="w-5 h-5"></i></button></div><div class="p-8"><p class="text-xs font-bold text-slate-500 mb-2">해당 학생의 특이사항이나 피드백을 기록하세요. (강사에게만 보입니다)</p><textarea id="scm-content" rows="6" class="w-full border-2 border-slate-100 rounded-xl p-4 text-sm font-medium focus:border-indigo-500 outline-none bg-slate-50 hover:bg-white focus:bg-white transition-colors"></textarea></div><div class="px-8 py-5 bg-slate-50/50 flex items-center justify-end gap-3 border-t border-slate-100"><button onclick="window.closeCommentModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shadow-sm transition-colors">취소</button><button onclick="window.saveCommentModal()" class="px-6 py-2.5 text-sm font-bold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 shadow-md transition-all active:scale-95 flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> 저장</button></div></div></div>
 
+    <!-- 일정 보기 모달 (공통) -->
+    <div id="schedule-view-modal" class="fixed inset-0 bg-slate-900/20 hidden items-center justify-center z-[140] p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <div class="bg-white rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] w-full max-w-md overflow-hidden transform transition-all border border-white">
+            <div class="px-8 py-6 flex justify-between items-center bg-slate-50 border-b border-slate-100">
+                <h2 class="text-xl font-extrabold text-slate-800 flex items-center gap-2"><i data-lucide="calendar" class="w-5 h-5 text-figjam"></i> 일정 상세</h2>
+                <button onclick="window.closeScheduleViewModal()" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100 hover:bg-slate-50"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="p-8 space-y-5">
+                <div>
+                    <span id="svm-date" class="text-[12px] font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-md mb-2 inline-block"></span>
+                    <h3 id="svm-title" class="text-xl font-bold text-slate-800 mt-2"></h3>
+                </div>
+                <div id="svm-links" class="space-y-3 pt-4 border-t border-slate-100">
+                    <!-- 연결된 항목 렌더링 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 일정 편집 모달 (강사 전용) -->
+    <div id="schedule-edit-modal" class="fixed inset-0 bg-slate-900/20 hidden items-center justify-center z-[140] p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <div class="bg-white rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] w-full max-w-md overflow-hidden transform transition-all border border-white">
+            <div class="px-8 py-6 flex justify-between items-center bg-slate-50 border-b border-slate-100">
+                <h2 class="text-xl font-extrabold text-slate-800 flex items-center gap-2"><i data-lucide="calendar-plus" class="w-5 h-5 text-figjam"></i> 일정 관리</h2>
+                <div class="flex items-center gap-2">
+                    <button onclick="window.deleteSchedule()" id="btn-shm-delete" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100 hover:bg-red-50 hidden" title="일정 삭제"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+                    <button onclick="window.closeScheduleModal()" class="text-slate-400 hover:text-red-500 transition-colors bg-white rounded-full p-2 shadow-sm border border-slate-100 hover:bg-slate-50"><i data-lucide="x" class="w-5 h-5"></i></button>
+                </div>
+            </div>
+            <div class="p-8 max-h-[60vh] overflow-y-auto space-y-5">
+                <input type="hidden" id="shm-id">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1.5">날짜</label>
+                    <input type="date" id="shm-date" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 hover:bg-white transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1.5">일정 내용</label>
+                    <input type="text" id="shm-title" placeholder="일정 내용을 입력하세요" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 hover:bg-white transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-2">색상 분류</label>
+                    <div class="flex gap-3">
+                        <label class="cursor-pointer group"><input type="radio" name="shm-color" value="indigo" class="hidden peer"><div class="w-8 h-8 rounded-full bg-indigo-500 peer-checked:ring-4 ring-indigo-200 transition-all flex items-center justify-center text-white shadow-sm"><i data-lucide="check" class="w-4 h-4 opacity-0 peer-checked:opacity-100"></i></div></label>
+                        <label class="cursor-pointer group"><input type="radio" name="shm-color" value="emerald" class="hidden peer"><div class="w-8 h-8 rounded-full bg-emerald-500 peer-checked:ring-4 ring-emerald-200 transition-all flex items-center justify-center text-white shadow-sm"><i data-lucide="check" class="w-4 h-4 opacity-0 peer-checked:opacity-100"></i></div></label>
+                        <label class="cursor-pointer group"><input type="radio" name="shm-color" value="pink" class="hidden peer"><div class="w-8 h-8 rounded-full bg-pink-500 peer-checked:ring-4 ring-pink-200 transition-all flex items-center justify-center text-white shadow-sm"><i data-lucide="check" class="w-4 h-4 opacity-0 peer-checked:opacity-100"></i></div></label>
+                        <label class="cursor-pointer group"><input type="radio" name="shm-color" value="figjam" class="hidden peer" checked><div class="w-8 h-8 rounded-full bg-figjam peer-checked:ring-4 ring-purple-200 transition-all flex items-center justify-center text-white shadow-sm"><i data-lucide="check" class="w-4 h-4 opacity-0 peer-checked:opacity-100"></i></div></label>
+                    </div>
+                </div>
+                <div class="pt-4 border-t border-slate-100 space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5 flex items-center gap-1"><i data-lucide="bell" class="w-3.5 h-3.5"></i> 공지사항 연결</label>
+                        <select id="shm-noticeId" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 transition-colors"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5 flex items-center gap-1"><i data-lucide="image" class="w-3.5 h-3.5"></i> Tool 카드 연결</label>
+                        <select id="shm-toolCardId" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 transition-colors"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5 flex items-center gap-1"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> 메모 연결</label>
+                        <select id="shm-memoId" class="w-full border-2 border-slate-100 rounded-xl p-2.5 focus:border-figjam outline-none text-sm font-bold bg-slate-50 transition-colors"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="px-8 py-5 bg-slate-50/50 flex items-center justify-end gap-3 border-t border-slate-100">
+                <button onclick="window.closeScheduleModal()" class="px-5 py-2.5 text-sm font-bold text-slate-500 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shadow-sm transition-colors">취소</button>
+                <button onclick="window.saveSchedule()" class="px-6 py-2.5 text-sm font-bold text-white bg-figjam rounded-xl hover:bg-[#7c4ced] shadow-md transition-all active:scale-95 flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> 저장</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 토스트 알림 영역 -->
     <div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-6 py-4 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] transition-all duration-300 translate-y-full opacity-0 flex items-center gap-3 z-[200] font-medium">
         <div class="w-6 h-6 rounded-full bg-emerald-400/20 flex items-center justify-center text-emerald-400"><i data-lucide="check" class="w-4 h-4"></i></div>
@@ -523,6 +637,9 @@
         let lastScrollTopPos = 0;
         let scrollHideTimeout = null;
 
+        let currentCalendarDate = new Date(); // 로드맵용 달력
+        let currentScheduleDate = new Date(); // 일정표 탭용 달력
+
         // Mock Data
         let noticeData = { posts: [{ id: 'n_1', title: 'UIUX 과정 개강 안내 및 공지사항', content: 'UIUX 디자인 과정 개강을 환영합니다!\n앞으로 잘 부탁드립니다.\n매일 출석체크와 일일과제를 꼭 확인해주세요.', date: '2025.12.08' }], activePopupId: 'n_1' };
         let roadmapData = {
@@ -531,6 +648,12 @@
                 { id: 'dt_1', status: '완료', icon: 'check-circle', title: 'Design Copy', link: '', isHidden: false },
                 { id: 'dt_2', status: '진행중', icon: 'pen-tool', title: '일러스트 심화 과제', link: 'https://classroom.google.com/c/ODIyMzY3MjEwNjMy/a/ODYxMTcxMTMzMzQy/details', isHidden: false },
                 { id: 'dt_3', status: '진행중', icon: 'book-open', title: '나의 오늘 학습', link: 'https://classroom.google.com/c/ODIyMzY3MjEwNjMy/a/ODU5MzY1MDcwNzUy/details', isHidden: false }
+            ],
+            unitSchedules: [
+                { id: 'us_1', title: '스마트문화앱 UX 설계', startDate: '2026-04-03', endDate: '2026-05-22', status: '진행중', color: 'indigo' },
+                { id: 'us_2', title: '프로토타입 기초데이터 수집 및 스케치, 프로토타입 제작 및 사용성 테스트', startDate: '2026-04-03', endDate: '2026-05-12', status: '진행중', color: 'indigo' },
+                { id: 'us_3', title: '스마트문화앱 UI 디자인', startDate: '2026-05-22', endDate: '2026-06-24', status: '예정', color: 'slate' },
+                { id: 'us_4', title: '(비NCS 실기)취업 포트폴리오 제작', startDate: '2026-05-13', endDate: '2026-06-24', status: '예정', color: 'slate' }
             ]
         };
         let toolData = { 
@@ -562,10 +685,16 @@
         const tasksList = ['로고', '패키 기획', '패키지 무드보드', '패키지 그리드', '패키지 와이어프레임', '패키지 초안', '패키지 수정안', '패키지 최종안', 'Web Wire', 'Web Wire Develop', 'Web Design', 'Web Design Develop'];
         const studentColors = ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#22c55e', '#10b981', '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6'];
         
-        let menuOrder = ['notice', 'roadmap', 'progress', 'tool', 'workspace'];
+        let menuOrder = ['notice', 'roadmap', 'progress', 'tool', 'workspace', 'schedule'];
         let workspaceData = studentsList.map((name, idx) => ({ id: 'ws_' + idx, name: name, avatar: name.charAt(0), links: [ { name: '브랜딩 피그잼', url: 'https://www.figma.com/figjam', icon: 'layout', color: 'purple' } ] }));
         let progressData = {};
         studentsList.forEach(std => { progressData[std] = {}; studentComments[std] = ""; tasksList.forEach(t => progressData[std][t] = 0); });
+
+        let scheduleData = [
+            { id: 'sch_1', date: '2026-05-15', title: '툴 수업/과제', color: 'indigo' },
+            { id: 'sch_2', date: '2026-05-15', title: '포트폴리오 점검', color: 'emerald' },
+            { id: 'sch_3', date: '2026-05-25', title: '포트폴리오 점검', color: 'emerald' }
+        ];
 
         // =========================================================================
         // 2. 단일 Global Function Mapping (오류의 원천 차단)
@@ -648,7 +777,8 @@
             if(activeBtn) { activeBtn.classList.remove('text-slate-500', 'font-medium'); activeBtn.classList.add('bg-figjam/10', 'text-figjam', 'font-bold'); }
             
             if (tabId === 'progress') setTimeout(() => { window.renderChart(); if (myChart) myChart.resize(); }, 50);
-            if (tabId === 'roadmap') setTimeout(window.updateCourseProgress, 50);
+            if (tabId === 'roadmap') setTimeout(() => { window.updateCourseProgress(); window.renderCalendar(); }, 50);
+            if (tabId === 'schedule') setTimeout(() => { window.renderFullCalendar(); }, 50);
             
             const mainEl = document.getElementById('main-scroll-container');
             if(mainEl) mainEl.dispatchEvent(new Event('scroll'));
@@ -765,62 +895,330 @@
             const ddayEl = document.getElementById('course-dday'); if(ddayEl) ddayEl.textContent = (diffDays > 0) ? `D-${diffDays}` : ((diffDays === 0) ? `D-Day` : `과정 종료`);
             const todayLabelEl = document.getElementById('course-today-label'); if(todayLabelEl) todayLabelEl.innerHTML = `오늘 (${String(today.getFullYear()).slice(-2)}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')})<div class="absolute -top-6 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-figjam rounded-full"></div>`;
         };
-        window.renderRoadmap = function() { window.renderTodayTask(); window.renderDailyTasks(); lucide.createIcons(); };
-
-        // --- 5. Tool 카드 및 필터 ---
-        window.toggleToolCardVisibility = function(toolId, levelId, cardId) { const idx = toolData[toolId][levelId].findIndex(c => c.id === cardId); if (idx > -1) { toolData[toolId][levelId][idx].isHidden = !toolData[toolId][levelId][idx].isHidden; window.saveToFirebase(); window.renderAllToolCards(); } };
-        window.renderToolCards = function(toolId, levelId) {
-            const grid = document.getElementById(`grid-${toolId}-${levelId}`); if (!grid) return; grid.innerHTML = '';
-            let cards = toolData[toolId][levelId] || [];
-            if (toolId === 'design' && currentDesignFilter !== 'all') cards = cards.filter(c => c.category === currentDesignFilter);
-            let displayCards = [...cards]; if (currentSortOrder === 'newest') displayCards.reverse();
+        
+        window.prevMonth = function() { currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1); window.renderCalendar(); };
+        window.nextMonth = function() { currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1); window.renderCalendar(); };
+        window.renderCalendar = function() {
+            const grid = document.getElementById('calendar-grid'); if(!grid) return; grid.innerHTML = '';
+            const year = currentCalendarDate.getFullYear(); const month = currentCalendarDate.getMonth(); const today = new Date();
+            document.getElementById('calendar-month-year').textContent = `${year}. ${String(month + 1).padStart(2, '0')}`;
             
-            if (currentToolLayout === 'grid') {
-                grid.className = 'tool-card-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 pt-4';
-                if (isEditMode) grid.insertAdjacentHTML('beforeend', `<div onclick="window.openToolCardModal('${toolId}', '${levelId}', 'new')" class="bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[20px] p-6 flex flex-col items-center justify-center text-slate-400 hover:text-figjam hover:border-figjam hover:bg-figjamLight/50 cursor-pointer h-full min-h-[300px]"><i data-lucide="plus-circle" class="w-10 h-10 mb-3"></i><span class="font-bold text-[15px]">카드 추가하기</span></div>`);
-                displayCards.forEach(card => {
-                    if (!isEditMode && card.isHidden) return;
-                    const hiddenClass = card.isHidden ? 'opacity-50 grayscale' : ''; const linkedMemo = memoData.find(m => m.cardId === card.id);
-                    const isTodayTask = roadmapData.todayTask && roadmapData.todayTask.cardId === card.id;
-                    const todayTaskBtnHtml = isTodayTask ? `<span class="text-emerald-500 bg-emerald-50 p-2 rounded-xl transition-all shadow-sm" title="오늘의 툴 과제"><i data-lucide="edit-3" class="w-4 h-4"></i></span>` : '';
-                    const memoBtnHtml = linkedMemo ? `<button onclick="window.openMemoViewModal('${linkedMemo.id}')" class="text-indigo-500 hover:text-white bg-indigo-50 hover:bg-indigo-500 p-2 rounded-xl transition-all shadow-sm" title="연결된 메모 보기"><i data-lucide="file-text" class="w-4 h-4"></i></button>` : '';
-                    const visibleBtnHtml = isEditMode ? `<button onclick="window.toggleToolCardVisibility('${toolId}', '${levelId}', '${card.id}')" class="text-slate-400 hover:text-amber-500 bg-slate-50 hover:bg-amber-50 p-2 rounded-xl transition-all"><i data-lucide="${card.isHidden ? 'eye-off' : 'eye'}" class="w-4 h-4"></i></button>` : '';
-                    const editBtnHtml = isEditMode ? `<button onclick="window.openToolCardModal('${toolId}', '${levelId}', '${card.id}')" class="text-slate-400 hover:text-figjam bg-slate-50 hover:bg-slate-100 p-2 rounded-xl transition-all"><i data-lucide="edit" class="w-4 h-4"></i></button>` : '';
-                    const deleteBtnHtml = isEditMode ? `<button onclick="window.promptDeleteToolCard('${toolId}', '${levelId}', '${card.id}')" class="text-slate-400 hover:text-red-500 bg-slate-50 hover:bg-red-50 p-2 rounded-xl transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : '';
-                    let linksHtml = ''; (card.links || []).forEach(l => { if(l.text) linksHtml += `<${l.url ? `a href="${l.url}" target="_blank"` : 'div'} class="flex items-start gap-2 group"><i data-lucide="youtube" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0 ${l.url ? 'group-hover:scale-110 transition-transform' : ''}"></i><p class="text-[13px] text-slate-600 font-medium leading-tight ${l.url ? 'group-hover:text-figjam transition-colors' : ''}">${l.text}</p></${l.url ? 'a' : 'div'}>`; });
-                    let btnsHtml = ''; (card.buttons || []).forEach((b, index) => { if(b.text) { const isFirst = index === 0; const btnClass = isFirst ? "w-full bg-figjamLight hover:bg-figjam/20 text-figjam font-bold py-2.5 rounded-xl transition-colors text-[13px] flex justify-center items-center gap-1.5" : "w-full bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-2.5 rounded-xl transition-colors text-[12px] flex justify-center items-center gap-1.5"; const iconHtml = (b.url && b.url.includes('drive')) ? (isFirst ? '<i data-lucide="folder-down" class="w-4 h-4"></i>' : '<i data-lucide="folder" class="w-4 h-4"></i>') : ''; btnsHtml += `<${b.url ? `a href="${b.url}" target="_blank"` : 'button'} class="${btnClass}">${iconHtml} ${b.text}</${b.url ? 'a' : 'button'}>`; } });
-                    grid.insertAdjacentHTML('beforeend', `<div data-card-id="${card.id}" class="tool-card-item bg-white rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all p-6 flex flex-col relative h-full scroll-mt-8 group/card ${hiddenClass}"><div class="absolute top-4 right-4 flex items-center gap-1.5 z-20 opacity-100 md:opacity-0 md:group-hover/card:opacity-100 transition-opacity">${todayTaskBtnHtml}${memoBtnHtml}${visibleBtnHtml}${editBtnHtml}${deleteBtnHtml}</div>${card.badge ? `<div class="absolute -top-4 left-6 bg-figjam text-white text-[12px] font-bold px-3.5 py-1.5 rounded-md shadow-sm">${card.badge}</div>` : ''}${card.title ? `<h3 class="font-bold text-slate-800 mt-2 mb-4 text-[15px] text-center border-b border-slate-50 pb-3 pr-6 pl-6">${card.title}</h3>` : '<div class="mt-2 mb-4 pb-3"></div>'}<div class="flex-1 space-y-3 mt-2">${linksHtml}${card.desc ? `<div class="mt-4 bg-slate-50 p-3 rounded-xl space-y-1.5 border border-slate-100">${card.desc.split('\n').map(line => `<p class="text-[11px] text-slate-500 leading-tight">${line}</p>`).join('')}</div>` : ''}</div><div class="mt-5 w-full space-y-2">${btnsHtml}</div>${card.badgeRight ? `<div class="absolute -bottom-3 -right-3 w-10 h-10 bg-[#10B981] text-white rounded-full flex items-center justify-center text-[13px] font-bold border-[3px] border-white shadow-md z-10">${card.badgeRight}</div>` : ''}</div>`);
+            const firstDay = new Date(year, month, 1).getDay(); const daysInMonth = new Date(year, month + 1, 0).getDate();
+            for(let i = 0; i < firstDay; i++) { grid.innerHTML += `<div class="bg-slate-50 min-h-[100px] p-2 opacity-50"></div>`; }
+            for(let i = 1; i <= daysInMonth; i++) {
+                const isToday = (year === today.getFullYear() && month === today.getMonth() && i === today.getDate());
+                const isSunday = new Date(year, month, i).getDay() === 0; const isSaturday = new Date(year, month, i).getDay() === 6;
+                let dateClass = "text-slate-700 font-bold";
+                if(isToday) dateClass = "bg-figjam text-white w-7 h-7 flex items-center justify-center rounded-full font-bold shadow-md";
+                else if(isSunday) dateClass = "text-red-500 font-bold"; else if(isSaturday) dateClass = "text-blue-500 font-bold";
+                
+                let scheduleHtml = '';
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const dayEvents = scheduleData.filter(s => s.date === dateStr);
+                const dayUnits = (roadmapData.unitSchedules || []).filter(u => dateStr >= u.startDate && dateStr <= u.endDate);
+                
+                dayUnits.forEach(u => {
+                    scheduleHtml += `<div class="mt-1 flex flex-col gap-1.5"><span class="text-[10px] font-bold bg-${u.color}-50 text-${u.color}-500 px-1.5 py-0.5 rounded truncate border border-${u.color}-100/50" title="${u.title}">${u.title}</span></div>`;
                 });
-            } else {
-                grid.className = 'tool-card-container flex flex-col border-t border-slate-100 pt-2 mt-4';
-                if (displayCards.length > 0 || isEditMode) grid.innerHTML = `<div class="grid grid-cols-12 gap-4 p-4 border-b border-slate-100 bg-slate-50/50 text-[13px] font-bold text-slate-500 items-center rounded-t-xl"><div class="col-span-1 text-center">NO</div><div class="col-span-6 md:col-span-7">제목 및 설명</div><div class="col-span-5 md:col-span-4 text-right pr-4">자료 및 기능</div></div>`;
-                if (isEditMode) grid.insertAdjacentHTML('beforeend', `<div onclick="window.openToolCardModal('${toolId}', '${levelId}', 'new')" class="p-4 flex flex-col items-center justify-center text-slate-400 hover:text-figjam hover:bg-figjamLight/50 cursor-pointer h-[80px] border-b border-slate-50"><i data-lucide="plus-circle" class="w-5 h-5 mb-1"></i><span class="font-bold text-[13px]">항목 추가하기</span></div>`);
-                displayCards.forEach((card, idx) => { 
-                    if (!isEditMode && card.isHidden) return;
-                    const hiddenClass = card.isHidden ? 'opacity-50 grayscale' : ''; const linkedMemo = memoData.find(m => m.cardId === card.id);
-                    const isTodayTask = roadmapData.todayTask && roadmapData.todayTask.cardId === card.id;
-                    const todayTaskBtnHtml = isTodayTask ? `<span class="text-emerald-500 bg-emerald-50 p-1.5 rounded-md transition-all shadow-sm" title="오늘의 툴 과제"><i data-lucide="edit-3" class="w-4 h-4"></i></span>` : '';
-                    const memoBtnHtml = linkedMemo ? `<button onclick="window.openMemoViewModal('${linkedMemo.id}')" class="text-indigo-500 hover:bg-indigo-50 p-1.5 rounded-md transition-all shadow-sm" title="연결된 메모 보기"><i data-lucide="file-text" class="w-4 h-4"></i></button>` : '';
-                    const visibleBtnHtml = isEditMode ? `<button onclick="window.toggleToolCardVisibility('${toolId}', '${levelId}', '${card.id}')" class="text-slate-400 hover:text-amber-500 hover:bg-amber-50 p-1.5 rounded-md transition-all"><i data-lucide="${card.isHidden ? 'eye-off' : 'eye'}" class="w-4 h-4"></i></button>` : '';
-                    const editBtnHtml = isEditMode ? `<button onclick="window.openToolCardModal('${toolId}', '${levelId}', '${card.id}')" class="text-slate-400 hover:text-figjam hover:bg-slate-100 p-1.5 rounded-md transition-all"><i data-lucide="edit" class="w-4 h-4"></i></button>` : '';
-                    const deleteBtnHtml = isEditMode ? `<button onclick="window.promptDeleteToolCard('${toolId}', '${levelId}', '${card.id}')" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : '';
-                    let badgesHtml = ''; (card.links || []).forEach(l => { if(l.text) badgesHtml += `<${l.url ? `a href="${l.url}" target="_blank"` : 'span'} class="inline-flex items-center gap-1 text-[11px] font-medium text-slate-600 bg-slate-100 px-2 py-1 rounded-md hover:bg-slate-200 shadow-sm"><i data-lucide="youtube" class="w-3.5 h-3.5 text-red-500"></i> <span class="truncate max-w-[120px]">${l.text}</span></${l.url ? 'a' : 'span'}>`; });
-                    (card.buttons || []).forEach(b => { if(b.text) badgesHtml += `<${b.url ? `a href="${b.url}" target="_blank"` : 'span'} class="inline-flex items-center gap-1 text-[11px] font-bold text-figjam bg-figjamLight px-2 py-1 rounded-md hover:bg-figjam hover:text-white shadow-sm">${b.text}</${b.url ? 'a' : 'span'}>`; });
-                    const num = currentSortOrder === 'newest' ? displayCards.length - idx : idx + 1; 
-                    grid.insertAdjacentHTML('beforeend', `<div data-card-id="${card.id}" class="tool-card-item grid grid-cols-12 gap-4 p-4 border-b border-slate-50 hover:bg-slate-50/80 items-center relative group/card transition-colors ${hiddenClass}"><div class="col-span-1 text-center text-[13px] font-bold text-slate-400">${num}</div><div class="col-span-6 md:col-span-7 flex flex-col pr-2"><div class="flex items-center gap-2">${card.badge ? `<span class="text-[11px] font-bold text-white bg-figjam px-2 py-0.5 rounded shadow-sm whitespace-nowrap">${card.badge}</span>` : ''}<h3 class="font-bold text-slate-800 text-[14px] truncate">${card.title || '제목 없음'}</h3></div>${card.desc ? `<p class="text-[12px] text-slate-500 line-clamp-1 mt-1">${card.desc.replace(/\n/g, ' ')}</p>` : ''}</div><div class="col-span-5 md:col-span-4 flex items-center justify-end gap-2 pr-2"><div class="flex flex-wrap items-center justify-end gap-1.5 flex-1">${badgesHtml}</div>${(isEditMode || memoBtnHtml || isTodayTask) ? `<div class="flex items-center gap-1 shrink-0 ml-2 pl-2 border-l border-slate-200">${todayTaskBtnHtml}${memoBtnHtml}${visibleBtnHtml}${editBtnHtml}${deleteBtnHtml}</div>` : ''}</div></div>`);
+
+                dayEvents.forEach(evt => {
+                    let icons = '';
+                    if(evt.noticeId) icons += '<i data-lucide="bell" class="w-3 h-3"></i>';
+                    if(evt.toolCardId) icons += '<i data-lucide="image" class="w-3 h-3"></i>';
+                    if(evt.memoId) icons += '<i data-lucide="file-text" class="w-3 h-3"></i>';
+
+                    const clickAction = isEditMode ? `onclick="event.stopPropagation(); window.openScheduleModal('${dateStr}', '${evt.id}')"` : `onclick="event.stopPropagation(); window.openScheduleViewModal('${evt.id}')"`;
+                    const cursorClass = 'cursor-pointer hover:opacity-80';
+
+                    scheduleHtml += `<div ${clickAction} class="mt-1.5 flex flex-col gap-1.5 ${cursorClass}"><span class="text-[11px] font-bold bg-${evt.color}-50 text-${evt.color}-600 px-2 py-1 rounded-md truncate border border-${evt.color}-100/50 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-${evt.color}-500 shrink-0"></span> <span class="truncate">${evt.title}</span> <span class="flex items-center gap-0.5 ml-auto opacity-70">${icons}</span></span></div>`;
                 });
+
+                grid.innerHTML += `<div class="bg-white min-h-[100px] p-2 hover:bg-slate-50 transition-colors border-t border-transparent relative flex flex-col group ${isEditMode ? 'cursor-pointer hover:ring-2 hover:ring-figjam/50 hover:z-10' : ''}" ${isEditMode ? `onclick="window.openScheduleModal('${dateStr}')"` : ''}><div class="flex justify-start mb-1"><span class="text-[14px] ${isToday ? 'flex justify-center w-full mt-1' : 'ml-1.5 mt-1.5'}"><span class="${dateClass} ${!isToday ? 'inline-block' : ''}">${i}</span></span></div>${scheduleHtml}${isEditMode ? `<button class="absolute top-2.5 right-2.5 opacity-0 group-hover:opacity-100 text-slate-300 hover:text-figjam transition-opacity bg-white shadow-sm p-0.5 rounded-full"><i data-lucide="plus" class="w-4 h-4"></i></button>` : ''}</div>`;
             }
-            if (displayCards.length === 0 && !isEditMode) grid.innerHTML = `<div class="col-span-full py-12 flex items-center justify-center text-slate-400 font-medium border-2 border-dashed border-slate-200 rounded-[24px] w-full">등록된 콘텐츠가 없습니다.</div>`;
+            const remainingSlots = (7 - ((firstDay + daysInMonth) % 7)) % 7;
+            for(let i = 0; i < remainingSlots; i++) { grid.innerHTML += `<div class="bg-slate-50 min-h-[100px] p-2 opacity-50"></div>`; }
+            lucide.createIcons();
         };
+
+        window.renderUnitSchedules = function() {
+            const container = document.getElementById('render-unit-schedules'); if(!container) return; container.innerHTML = '';
+            (roadmapData.unitSchedules || []).forEach(unit => {
+                const colorObj = unit.color === 'indigo' ? { bg: 'bg-indigo-50/60', border: 'border-indigo-100', text: 'text-indigo-900', labelBg: 'bg-white border-indigo-200 text-indigo-600', dot: 'bg-indigo-500', ping: 'bg-indigo-400' } : { bg: 'hover:bg-slate-50 border-transparent group', border: '', text: 'text-slate-700', labelBg: 'bg-slate-100 border-slate-200 text-slate-500', dot: 'bg-slate-300 group-hover:bg-slate-400', ping: '' };
+                const dotHtml = unit.status === '진행중' ? `<span class="relative flex h-3 w-3 shrink-0 mt-1.5 lg:mt-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full ${colorObj.ping} opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 ${colorObj.dot}"></span></span>` : `<span class="flex-shrink-0 w-2.5 h-2.5 rounded-full ${colorObj.dot} transition-colors"></span>`;
+                container.innerHTML += `<div class="flex flex-col lg:flex-row lg:items-center justify-between p-4.5 px-5 rounded-2xl ${colorObj.bg} border ${colorObj.border} shadow-sm transition-all"><div class="flex items-start lg:items-center gap-3.5 mb-3 lg:mb-0">${dotHtml}<span class="font-bold text-[15px] ${colorObj.text} leading-snug">${unit.title}</span></div><div class="flex items-center gap-3 shrink-0"><span class="text-[12px] font-bold ${colorObj.labelBg} border px-3 py-1.5 rounded-lg shadow-sm">${unit.status}</span><span class="text-[14px] ${unit.color === 'indigo' ? 'text-indigo-600/80' : 'text-slate-500'} font-semibold tracking-wide min-w-[155px] text-right">${unit.startDate.replace(/-/g, '.')} ~ ${unit.endDate.replace(/-/g, '.')}</span></div></div>`;
+            });
+        }
+
+        window.renderRoadmap = function() { window.renderTodayTask(); window.renderDailyTasks(); window.renderUnitSchedules(); window.renderCalendar(); lucide.createIcons(); };
+
+        // --- 4.5 일정표 (구글 캘린더 스타일) ---
+        window.prevScheduleMonth = function() { currentScheduleDate.setMonth(currentScheduleDate.getMonth() - 1); window.renderFullCalendar(); };
+        window.nextScheduleMonth = function() { currentScheduleDate.setMonth(currentScheduleDate.getMonth() + 1); window.renderFullCalendar(); };
+        window.renderFullCalendar = function() {
+            const grid = document.getElementById('full-calendar-grid'); if(!grid) return; grid.innerHTML = '';
+            const year = currentScheduleDate.getFullYear(); const month = currentScheduleDate.getMonth(); const today = new Date();
+            document.getElementById('full-calendar-month-year').textContent = `${year}. ${String(month + 1).padStart(2, '0')}`;
+            
+            const firstDay = new Date(year, month, 1).getDay(); const daysInMonth = new Date(year, month + 1, 0).getDate();
+            for(let i = 0; i < firstDay; i++) { grid.innerHTML += `<div class="bg-slate-50 min-h-[140px] p-2 opacity-50"></div>`; }
+            for(let i = 1; i <= daysInMonth; i++) {
+                const isToday = (year === today.getFullYear() && month === today.getMonth() && i === today.getDate());
+                const isSunday = new Date(year, month, i).getDay() === 0; const isSaturday = new Date(year, month, i).getDay() === 6;
+                let dateClass = "text-slate-700 font-bold";
+                if(isToday) dateClass = "bg-figjam text-white w-8 h-8 flex items-center justify-center rounded-full font-bold shadow-md";
+                else if(isSunday) dateClass = "text-red-500 font-bold"; else if(isSaturday) dateClass = "text-blue-500 font-bold";
+                
+                let scheduleHtml = '';
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const dayEvents = scheduleData.filter(s => s.date === dateStr);
+                const dayUnits = (roadmapData.unitSchedules || []).filter(u => dateStr >= u.startDate && dateStr <= u.endDate);
+                
+                dayUnits.forEach(u => {
+                    scheduleHtml += `<div class="mt-1 flex flex-col gap-1.5"><span class="text-[11px] font-bold bg-${u.color}-50 text-${u.color}-500 px-2 py-1.5 rounded-lg truncate border border-${u.color}-100/50" title="${u.title}">단위: ${u.title}</span></div>`;
+                });
+
+                dayEvents.forEach(evt => {
+                    let icons = '';
+                    if(evt.noticeId) icons += '<i data-lucide="bell" class="w-3.5 h-3.5"></i>';
+                    if(evt.toolCardId) icons += '<i data-lucide="image" class="w-3.5 h-3.5"></i>';
+                    if(evt.memoId) icons += '<i data-lucide="file-text" class="w-3.5 h-3.5"></i>';
+
+                    const clickAction = isEditMode ? `onclick="event.stopPropagation(); window.openScheduleModal('${dateStr}', '${evt.id}')"` : `onclick="event.stopPropagation(); window.openScheduleViewModal('${evt.id}')"`;
+                    const cursorClass = 'cursor-pointer hover:opacity-80';
+                    scheduleHtml += `<div ${clickAction} class="mt-1.5 flex flex-col gap-1.5 ${cursorClass}"><span class="text-[12px] font-bold bg-${evt.color}-50 text-${evt.color}-600 px-2 py-1.5 rounded-lg truncate border border-${evt.color}-100/50 flex items-center gap-1.5 shadow-sm"><span class="w-2 h-2 rounded-full bg-${evt.color}-500 shrink-0"></span> <span class="truncate">${evt.title}</span> <span class="flex items-center gap-1 ml-auto opacity-70">${icons}</span></span></div>`;
+                });
+
+                grid.innerHTML += `<div class="bg-white min-h-[140px] p-3 hover:bg-slate-50 transition-colors border-t border-transparent relative flex flex-col group ${isEditMode ? 'cursor-pointer hover:ring-2 hover:ring-figjam/50 hover:z-10' : ''}" ${isEditMode ? `onclick="window.openScheduleModal('${dateStr}')"` : ''}><div class="flex justify-start mb-2"><span class="text-[15px] ${isToday ? 'flex justify-center w-full' : 'ml-1 mt-1'}"><span class="${dateClass} ${!isToday ? 'inline-block' : ''}">${i}</span></span></div>${scheduleHtml}${isEditMode ? `<button class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 text-slate-300 hover:text-figjam transition-opacity bg-white rounded-full shadow-sm p-0.5"><i data-lucide="plus" class="w-5 h-5"></i></button>` : ''}</div>`;
+            }
+            const remainingSlots = (7 - ((firstDay + daysInMonth) % 7)) % 7;
+            for(let i = 0; i < remainingSlots; i++) { grid.innerHTML += `<div class="bg-slate-50 min-h-[140px] p-2 opacity-50"></div>`; }
+            lucide.createIcons();
+        };
+
+        window.openScheduleModal = function(dateStr, eventId = null) {
+            document.getElementById('shm-date').value = dateStr;
+            document.getElementById('shm-id').value = eventId || 'new';
+            
+            const noticeSelect = document.getElementById('shm-noticeId');
+            const toolSelect = document.getElementById('shm-toolCardId');
+            const memoSelect = document.getElementById('shm-memoId');
+            
+            // Populate Dropdowns
+            noticeSelect.innerHTML = '<option value="">연결 안함</option>';
+            (noticeData.posts || []).forEach(p => noticeSelect.innerHTML += `<option value="${p.id}">${p.title}</option>`);
+            
+            toolSelect.innerHTML = '<option value="">연결 안함</option>';
+            ['photoshop', 'illustrator', 'figma', 'design'].forEach(t => { ['basic', 'advanced'].forEach(l => { (toolData[t][l] || []).forEach(c => { toolSelect.innerHTML += `<option value="${c.id}">[${t}] ${c.title || '제목 없음'}</option>`; }); }); });
+            
+            memoSelect.innerHTML = '<option value="">연결 안함</option>';
+            memoData.forEach(m => memoSelect.innerHTML += `<option value="${m.id}">${m.title}</option>`);
+
+            const deleteBtn = document.getElementById('btn-shm-delete');
+            if (eventId) {
+                const evt = scheduleData.find(s => s.id === eventId);
+                if (evt) {
+                    document.getElementById('shm-title').value = evt.title;
+                    const radio = document.querySelector(`input[name="shm-color"][value="${evt.color}"]`);
+                    if (radio) radio.checked = true;
+                    noticeSelect.value = evt.noticeId || '';
+                    toolSelect.value = evt.toolCardId || '';
+                    memoSelect.value = evt.memoId || '';
+                }
+                deleteBtn.classList.remove('hidden');
+            } else {
+                document.getElementById('shm-title').value = '';
+                document.querySelector(`input[name="shm-color"][value="figjam"]`).checked = true;
+                noticeSelect.value = ''; toolSelect.value = ''; memoSelect.value = '';
+                deleteBtn.classList.add('hidden');
+            }
+            
+            const modal = document.getElementById('schedule-edit-modal');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => modal.classList.add('opacity-100'), 10);
+        };
+        
+        window.closeScheduleModal = function() {
+            const modal = document.getElementById('schedule-edit-modal');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
+        };
+
+        window.saveSchedule = function() {
+            const id = document.getElementById('shm-id').value;
+            const date = document.getElementById('shm-date').value;
+            const title = document.getElementById('shm-title').value.trim();
+            const color = document.querySelector('input[name="shm-color"]:checked').value;
+            const noticeId = document.getElementById('shm-noticeId').value;
+            const toolCardId = document.getElementById('shm-toolCardId').value;
+            const memoId = document.getElementById('shm-memoId').value;
+            
+            if (!title) return window.showToast('일정 내용을 입력해주세요.');
+            
+            if (id === 'new') {
+                scheduleData.push({ id: 'sch_' + Date.now(), date, title, color, noticeId, toolCardId, memoId });
+            } else {
+                const idx = scheduleData.findIndex(s => s.id === id);
+                if (idx > -1) scheduleData[idx] = { id, date, title, color, noticeId, toolCardId, memoId };
+            }
+            
+            window.saveToFirebase();
+            window.renderFullCalendar();
+            window.renderCalendar(); // 로드맵 달력도 동기화
+            window.closeScheduleModal();
+            window.showToast('일정이 저장되었습니다.');
+        };
+
+        window.deleteSchedule = function() {
+            const id = document.getElementById('shm-id').value;
+            scheduleData = scheduleData.filter(s => s.id !== id);
+            window.saveToFirebase();
+            window.renderFullCalendar();
+            window.renderCalendar(); // 로드맵 달력도 동기화
+            window.closeScheduleModal();
+            window.showToast('일정이 삭제되었습니다.');
+        };
+
+        window.openScheduleViewModal = function(id) {
+            const evt = scheduleData.find(s => s.id === id);
+            if(!evt) return;
+            document.getElementById('svm-title').textContent = evt.title;
+            document.getElementById('svm-date').textContent = evt.date.replace(/-/g, '. ');
+            
+            const linksContainer = document.getElementById('svm-links');
+            linksContainer.innerHTML = '';
+            let hasLinks = false;
+            
+            if(evt.noticeId) {
+                const notice = noticeData.posts.find(p => p.id === evt.noticeId);
+                if(notice) {
+                    hasLinks = true;
+                    linksContainer.innerHTML += `<button onclick="window.closeScheduleViewModal(); window.switchTab('notice'); window.openNoticeViewModal('${notice.id}')" class="w-full flex items-center justify-between p-3 bg-white border border-slate-200 hover:border-figjam hover:shadow-sm rounded-xl transition-all text-left"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center"><i data-lucide="bell" class="w-4 h-4"></i></div><div><p class="text-[11px] font-bold text-slate-400">연결된 공지사항</p><p class="text-[14px] font-bold text-slate-700 truncate max-w-[200px] sm:max-w-[250px]">${notice.title}</p></div></div><i data-lucide="chevron-right" class="w-4 h-4 text-slate-300"></i></button>`;
+                }
+            }
+            if(evt.toolCardId) {
+                let toolCard = null; let foundTool = ''; let foundLevel = '';
+                ['photoshop', 'illustrator', 'figma', 'design'].forEach(t => { ['basic', 'advanced'].forEach(l => { const c = (toolData[t][l] || []).find(card => card.id === evt.toolCardId); if(c) { toolCard = c; foundTool = t; foundLevel = l; } }); });
+                if(toolCard) {
+                    hasLinks = true;
+                    linksContainer.innerHTML += `<button onclick="window.closeScheduleViewModal(); window.switchTab('tool'); window.switchTool('${foundTool}'); window.switchLevel('${foundTool}', '${foundLevel}'); setTimeout(() => { const card = document.querySelector('[data-card-id=\\'${toolCard.id}\\']'); if(card) { card.scrollIntoView({behavior: 'smooth', block: 'center'}); card.classList.add('ring-4', 'ring-figjam/50'); setTimeout(() => card.classList.remove('ring-4', 'ring-figjam/50'), 1500); } }, 150);" class="w-full flex items-center justify-between p-3 bg-white border border-slate-200 hover:border-figjam hover:shadow-sm rounded-xl transition-all text-left"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center"><i data-lucide="image" class="w-4 h-4"></i></div><div><p class="text-[11px] font-bold text-slate-400">연결된 Tool 카드</p><p class="text-[14px] font-bold text-slate-700 truncate max-w-[200px] sm:max-w-[250px]">[${foundTool}] ${toolCard.title}</p></div></div><i data-lucide="chevron-right" class="w-4 h-4 text-slate-300"></i></button>`;
+                }
+            }
+            if(evt.memoId) {
+                const memo = memoData.find(m => m.id === evt.memoId);
+                if(memo) {
+                    hasLinks = true;
+                    linksContainer.innerHTML += `<button onclick="window.closeScheduleViewModal(); window.openMemoViewModal('${memo.id}')" class="w-full flex items-center justify-between p-3 bg-white border border-slate-200 hover:border-figjam hover:shadow-sm rounded-xl transition-all text-left"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-500 flex items-center justify-center"><i data-lucide="file-text" class="w-4 h-4"></i></div><div><p class="text-[11px] font-bold text-slate-400">연결된 메모</p><p class="text-[14px] font-bold text-slate-700 truncate max-w-[200px] sm:max-w-[250px]">${memo.title}</p></div></div><i data-lucide="chevron-right" class="w-4 h-4 text-slate-300"></i></button>`;
+                }
+            }
+            
+            if(!hasLinks) {
+                linksContainer.innerHTML = '<p class="text-sm text-slate-400 text-center py-4 font-medium">연결된 항목이 없습니다.</p>';
+            }
+            
+            const modal = document.getElementById('schedule-view-modal');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => modal.classList.add('opacity-100'), 10);
+            lucide.createIcons();
+        };
+
+        window.closeScheduleViewModal = function() {
+            const modal = document.getElementById('schedule-view-modal');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
+        };
+
+        // --- 5. Tool 카드 및 디자인 필터 ---
         window.renderAllToolCards = function() { ['photoshop', 'illustrator', 'figma', 'design'].forEach(toolId => { ['basic', 'advanced'].forEach(levelId => { window.renderToolCards(toolId, levelId); }); }); if(isEditMode) window.bindToolCardDragAndDrop(); lucide.createIcons(); };
+
+        window.renderToolCards = function(toolId, levelId) {
+            const container = document.getElementById(`grid-${toolId}-${levelId}`);
+            if (!container) return;
+            container.innerHTML = '';
+            
+            if (currentToolLayout === 'grid') container.className = 'tool-card-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6';
+            else container.className = 'tool-card-container flex flex-col gap-4';
+
+            let cards = [...(toolData[toolId][levelId] || [])];
+            // 최신순/과거순 정렬
+            if (currentSortOrder === 'newest') cards.reverse();
+
+            // "카드 추가하기"를 무조건 첫 번째(최상단 왼쪽)에 렌더링
+            if (isEditMode) {
+                const addBtnClass = currentToolLayout === 'grid' 
+                    ? 'bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[24px] p-6 flex flex-col items-center justify-center text-slate-400 hover:text-figjam hover:border-figjam hover:bg-figjamLight/50 transition-all cursor-pointer min-h-[220px]' 
+                    : 'bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[20px] p-4 flex items-center justify-center text-slate-400 hover:text-figjam hover:border-figjam hover:bg-figjamLight/50 transition-all cursor-pointer w-full h-[100px]';
+                container.innerHTML += `<div onclick="window.openToolCardModal('${toolId}', '${levelId}', 'new')" class="${addBtnClass}"><i data-lucide="plus-circle" class="w-8 h-8 mb-2"></i><span class="font-bold text-[14px]">카드 추가하기</span></div>`;
+            }
+
+            cards.forEach(card => {
+                if (!isEditMode && card.isHidden) return;
+                if (toolId === 'design' && currentDesignFilter !== 'all' && card.category !== currentDesignFilter) return;
+
+                const isTodayTask = roadmapData.todayTask && roadmapData.todayTask.cardId === card.id;
+                const todayBadge = isTodayTask ? `<div class="absolute -top-3 -right-3 bg-red-500 text-white text-[11px] font-extrabold px-3 py-1.5 rounded-full shadow-md z-20 animate-bounce flex items-center gap-1"><i data-lucide="star" class="w-3.5 h-3.5"></i> 오늘 과제</div>` : '';
+
+                const linkedMemos = memoData.filter(m => m.cardId === card.id);
+                const memoBadge = linkedMemos.length > 0 ? `<button onclick="window.switchMemoTool('${toolId}'); window.switchMemoLevel('${levelId}'); window.openMemoListModal();" class="absolute -top-3 -left-3 bg-indigo-500 text-white text-[11px] font-extrabold px-2.5 py-1.5 rounded-full shadow-md z-20 flex items-center gap-1 hover:bg-indigo-600 transition-colors" title="관련 메모 보기"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> ${linkedMemos.length}</button>` : '';
+
+                const hiddenClass = card.isHidden ? 'opacity-50 grayscale' : '';
+                const editBtnsHtml = isEditMode ? `<div class="absolute top-3 right-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-20"><button onclick="event.stopPropagation(); window.promptDeleteToolCard('${toolId}', '${levelId}', '${card.id}')" class="text-slate-400 hover:text-red-500 bg-white shadow-sm hover:bg-red-50 p-1.5 rounded-lg transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button><button onclick="event.stopPropagation(); window.openToolCardModal('${toolId}', '${levelId}', '${card.id}')" class="text-slate-400 hover:text-figjam bg-white shadow-sm hover:bg-slate-50 p-1.5 rounded-lg transition-all"><i data-lucide="edit" class="w-4 h-4"></i></button></div>` : '';
+
+                let linksHtml = ''; (card.links || []).forEach(l => { linksHtml += `<a href="${l.url || '#'}" target="_blank" class="block text-[13px] font-bold text-slate-600 hover:text-figjam truncate transition-colors py-1 flex items-center gap-2"><i data-lucide="play-circle" class="w-4 h-4 text-slate-400 shrink-0"></i> <span class="truncate">${l.text}</span></a>`; });
+                let buttonsHtml = ''; (card.buttons || []).forEach(b => { buttonsHtml += `<a href="${b.url || '#'}" target="_blank" class="flex-1 py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl text-[12px] font-bold transition-all shadow-sm flex justify-center items-center gap-1.5 border border-slate-100"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> ${b.text}</a>`; });
+                const buttonsContainer = buttonsHtml ? `<div class="flex gap-2 mt-4 pt-4 border-t border-slate-50">${buttonsHtml}</div>` : '';
+
+                const descHtml = card.desc ? `<p class="text-[13px] text-slate-500 font-medium leading-relaxed mb-4 line-clamp-3">${card.desc.replace(/\n/g, '<br>')}</p>` : '';
+                const categoryHtml = (toolId === 'design' && card.category) ? `<span class="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md mb-2 inline-block">${card.category}</span>` : '';
+                const badgeLeftHtml = card.badge ? `<span class="text-[12px] font-extrabold text-figjam bg-figjamLight px-2 py-1 rounded-md shadow-sm border border-figjamBorder">${card.badge}</span>` : '';
+                const badgeRightHtml = card.badgeRight ? `<span class="text-[12px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md shadow-sm border border-emerald-100">${card.badgeRight}</span>` : '';
+                let badgesWrap = (badgeLeftHtml || badgeRightHtml) ? `<div class="flex justify-between items-center mb-3">${badgeLeftHtml} ${badgeRightHtml}</div>` : '';
+
+                if (currentToolLayout === 'grid') {
+                    container.innerHTML += `<div class="tool-card-item bg-white p-6 rounded-[24px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all flex flex-col relative group min-h-[220px] ${hiddenClass}" data-card-id="${card.id}">${todayBadge}${memoBadge}${editBtnsHtml}${categoryHtml}${badgesWrap}<h3 class="font-bold text-slate-800 text-[17px] mb-3 leading-snug pr-8">${card.title || '제목 없음'}</h3>${descHtml}<div class="space-y-1 mb-2 flex-1">${linksHtml}</div>${buttonsContainer}</div>`;
+                } else {
+                    container.innerHTML += `<div class="tool-card-item bg-white p-5 rounded-[20px] border border-slate-100 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.05)] transition-all flex flex-col md:flex-row gap-5 relative group items-start md:items-center ${hiddenClass}" data-card-id="${card.id}">${todayBadge}${memoBadge}${editBtnsHtml}<div class="flex-1 min-w-0 pr-8 md:pr-0">${categoryHtml}${badgesWrap}<h3 class="font-bold text-slate-800 text-[17px] mb-2 leading-snug">${card.title || '제목 없음'}</h3>${descHtml}</div><div class="w-full md:w-[280px] shrink-0 flex flex-col gap-3 md:pl-5 md:border-l border-slate-100"><div class="space-y-1">${linksHtml}</div>${buttonsContainer}</div></div>`;
+                }
+            });
+        };
+
         window.addToolLinkRow = function(text='', url='') { document.getElementById('tcm-links-container').insertAdjacentHTML('beforeend', `<div class="flex items-center gap-2 tcm-link-item bg-white p-2 rounded-lg border border-slate-100 shadow-sm"><div class="flex-1 flex flex-col gap-2"><input type="text" placeholder="텍스트 (예: 관련 영상)" value="${text}" class="link-text w-full border-2 border-slate-100 rounded-md p-2 text-xs font-bold outline-none focus:border-figjam bg-slate-50"><input type="text" placeholder="URL 주소" value="${url}" class="link-url w-full border-2 border-slate-100 rounded-md p-2 text-xs font-medium outline-none focus:border-figjam bg-slate-50"></div><button type="button" onclick="this.parentElement.remove()" class="text-slate-300 hover:text-red-500 p-2 shrink-0 bg-slate-50 hover:bg-red-50 rounded-lg transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>`); lucide.createIcons(); };
         window.addToolButtonRow = function(text='', url='') { document.getElementById('tcm-buttons-container').insertAdjacentHTML('beforeend', `<div class="flex items-center gap-2 tcm-button-item bg-white p-2 rounded-lg border border-slate-100 shadow-sm"><div class="flex-1 flex flex-col gap-2"><input type="text" placeholder="버튼 텍스트 (예: 과제 제출)" value="${text}" class="btn-text w-full border-2 border-slate-100 rounded-md p-2 text-xs font-bold outline-none focus:border-figjam bg-slate-50"><input type="text" placeholder="URL 주소" value="${url}" class="btn-url w-full border-2 border-slate-100 rounded-md p-2 text-xs font-medium outline-none focus:border-figjam bg-slate-50"></div><button type="button" onclick="this.parentElement.remove()" class="text-slate-300 hover:text-red-500 p-2 shrink-0 bg-slate-50 hover:bg-red-50 rounded-lg transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>`); lucide.createIcons(); };
-        window.openToolCardModal = function(toolId, levelId, cardId) { document.getElementById('tcm-toolId').value = toolId; document.getElementById('tcm-levelId').value = levelId; document.getElementById('tcm-cardId').value = cardId; let card = { badge: '', badgeRight: '', title: '', desc: '', category: '', links: [], buttons: [] }; if (cardId !== 'new') card = toolData[toolId][levelId].find(c => c.id === cardId) || card; document.getElementById('tcm-badge').value = card.badge || ''; document.getElementById('tcm-badgeRight').value = card.badgeRight || ''; document.getElementById('tcm-title').value = card.title || ''; document.getElementById('tcm-desc').value = card.desc || ''; const catWrapper = document.getElementById('tcm-category-wrapper'); if (toolId === 'design') { catWrapper.classList.remove('hidden'); document.getElementById('tcm-category').value = card.category || ''; } else { catWrapper.classList.add('hidden'); } document.getElementById('tcm-links-container').innerHTML = ''; document.getElementById('tcm-buttons-container').innerHTML = ''; (card.links || []).forEach(l => window.addToolLinkRow(l.text, l.url)); (card.buttons || []).forEach(b => window.addToolButtonRow(b.text, b.url)); if(cardId === 'new' && (!card.links || card.links.length === 0)) window.addToolLinkRow(); if(cardId === 'new' && (!card.buttons || card.buttons.length === 0)) window.addToolButtonRow(); const modal = document.getElementById('tool-card-modal'); modal.classList.remove('hidden'); modal.classList.add('flex'); setTimeout(() => modal.classList.add('opacity-100'), 10); };
+        
+        window.openToolCardModal = function(toolId, levelId, cardId) { 
+            document.getElementById('tcm-toolId').value = toolId; document.getElementById('tcm-levelId').value = levelId; document.getElementById('tcm-cardId').value = cardId; 
+            let card = { badge: '', badgeRight: '', title: '', desc: '', category: '', links: [], buttons: [] }; 
+            if (cardId !== 'new') card = toolData[toolId][levelId].find(c => c.id === cardId) || card; 
+            document.getElementById('tcm-badge').value = card.badge || ''; document.getElementById('tcm-badgeRight').value = card.badgeRight || ''; 
+            document.getElementById('tcm-title').value = card.title || ''; document.getElementById('tcm-desc').value = card.desc || ''; 
+            const catWrapper = document.getElementById('tcm-category-wrapper'); 
+            if (toolId === 'design') { catWrapper.classList.remove('hidden'); document.getElementById('tcm-category').value = card.category || ''; } 
+            else { catWrapper.classList.add('hidden'); } 
+            document.getElementById('tcm-links-container').innerHTML = ''; document.getElementById('tcm-buttons-container').innerHTML = ''; 
+            (card.links || []).forEach(l => window.addToolLinkRow(l.text, l.url)); (card.buttons || []).forEach(b => window.addToolButtonRow(b.text, b.url)); 
+            if(cardId === 'new' && (!card.links || card.links.length === 0)) window.addToolLinkRow(); 
+            if(cardId === 'new' && (!card.buttons || card.buttons.length === 0)) window.addToolButtonRow(); 
+            const modal = document.getElementById('tool-card-modal'); modal.classList.remove('hidden'); modal.classList.add('flex'); 
+            setTimeout(() => modal.classList.add('opacity-100'), 10); 
+        };
+        
         window.closeToolCardModal = function() { const modal = document.getElementById('tool-card-modal'); modal.classList.remove('opacity-100'); setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300); };
-        window.saveToolCard = function() { const toolId = document.getElementById('tcm-toolId').value; const levelId = document.getElementById('tcm-levelId').value; let cardId = document.getElementById('tcm-cardId').value; const newLinks = []; document.querySelectorAll('.tcm-link-item').forEach(item => { const txt = item.querySelector('.link-text').value.trim(); const url = item.querySelector('.link-url').value.trim(); if (txt || url) newLinks.push({ text: txt, url: url }); }); const newButtons = []; document.querySelectorAll('.tcm-button-item').forEach(item => { const txt = item.querySelector('.btn-text').value.trim(); const url = item.querySelector('.btn-url').value.trim(); if (txt || url) newButtons.push({ text: txt, url: url }); }); let isHiddenStatus = false; if (cardId !== 'new') { const existCard = toolData[toolId][levelId].find(c => c.id === cardId); if(existCard) isHiddenStatus = existCard.isHidden; } const newCardInfo = { id: cardId === 'new' ? `card_${Date.now()}` : cardId, badge: document.getElementById('tcm-badge')?.value?.trim() || '', badgeRight: document.getElementById('tcm-badgeRight')?.value?.trim() || '', title: document.getElementById('tcm-title')?.value?.trim() || '', desc: document.getElementById('tcm-desc')?.value?.trim() || '', category: toolId === 'design' ? document.getElementById('tcm-category')?.value?.trim() || '' : '', isHidden: isHiddenStatus, links: newLinks, buttons: newButtons }; if (cardId === 'new') toolData[toolId][levelId].push(newCardInfo); else { const idx = toolData[toolId][levelId].findIndex(c => c.id === cardId); if (idx > -1) toolData[toolId][levelId][idx] = newCardInfo; } window.saveToFirebase(); window.renderAllToolCards(); window.closeToolCardModal(); window.showToast('카드 정보가 저장되었습니다.'); };
+        
+        window.saveToolCard = function() { 
+            const toolId = document.getElementById('tcm-toolId').value; const levelId = document.getElementById('tcm-levelId').value; let cardId = document.getElementById('tcm-cardId').value; 
+            const newLinks = []; document.querySelectorAll('.tcm-link-item').forEach(item => { const txt = item.querySelector('.link-text').value.trim(); const url = item.querySelector('.link-url').value.trim(); if (txt || url) newLinks.push({ text: txt, url: url }); }); 
+            const newButtons = []; document.querySelectorAll('.tcm-button-item').forEach(item => { const txt = item.querySelector('.btn-text').value.trim(); const url = item.querySelector('.btn-url').value.trim(); if (txt || url) newButtons.push({ text: txt, url: url }); }); 
+            let isHiddenStatus = false; 
+            if (cardId !== 'new') { const existCard = toolData[toolId][levelId].find(c => c.id === cardId); if(existCard) isHiddenStatus = existCard.isHidden; } 
+            const newCardInfo = { id: cardId === 'new' ? `card_${Date.now()}` : cardId, badge: document.getElementById('tcm-badge')?.value?.trim() || '', badgeRight: document.getElementById('tcm-badgeRight')?.value?.trim() || '', title: document.getElementById('tcm-title')?.value?.trim() || '', desc: document.getElementById('tcm-desc')?.value?.trim() || '', category: toolId === 'design' ? document.getElementById('tcm-category')?.value?.trim() || '' : '', isHidden: isHiddenStatus, links: newLinks, buttons: newButtons }; 
+            if (cardId === 'new') toolData[toolId][levelId].push(newCardInfo); 
+            else { const idx = toolData[toolId][levelId].findIndex(c => c.id === cardId); if (idx > -1) toolData[toolId][levelId][idx] = newCardInfo; } 
+            window.saveToFirebase(); window.renderAllToolCards(); window.closeToolCardModal(); window.showToast('카드 정보가 저장되었습니다.'); 
+        };
+
         window.promptDeleteToolCard = function(toolId, levelId, cardId) { currentDeleteToolCardInfo = { toolId, levelId, cardId }; const modal = document.getElementById('tool-delete-confirm-modal'); modal.classList.remove('hidden'); modal.classList.add('flex'); setTimeout(() => modal.classList.add('opacity-100'), 10); };
         window.closeToolDeleteConfirm = function() { const modal = document.getElementById('tool-delete-confirm-modal'); modal.classList.remove('opacity-100'); setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); currentDeleteToolCardInfo = null; }, 300); };
         window.executeDeleteToolCard = function() { if(!currentDeleteToolCardInfo) return; const { toolId, levelId, cardId } = currentDeleteToolCardInfo; toolData[toolId][levelId] = toolData[toolId][levelId].filter(c => c.id !== cardId); window.saveToFirebase(); window.renderAllToolCards(); window.closeToolDeleteConfirm(); window.showToast('카드가 삭제되었습니다.'); };
+        
         window.bindToolCardDragAndDrop = function() {
             const containers = document.querySelectorAll('.tool-card-container');
             containers.forEach(container => {
@@ -897,31 +1295,51 @@
         window.toggleDataset = function(index) { if(!myChart) return; if (myChart.isDatasetVisible(index)) myChart.hide(index); else myChart.show(index); };
         window.updateLegendStyle = function(index) { if(!myChart) return; const btn = document.getElementById(`legend-btn-${index}`); if(!btn) return; if (myChart.isDatasetVisible(index)) btn.classList.remove('opacity-40'); else btn.classList.add('opacity-40'); };
         window.renderChart = function() { const ctx = document.getElementById('progressChart'); if(!ctx) return; const datasets = studentsList.map((std, index) => { return { label: std, data: tasksList.map(t => progressData[std][t] || 0), borderColor: studentColors[index % studentColors.length], backgroundColor: studentColors[index % studentColors.length] + '15', borderWidth: 2, pointBackgroundColor: '#ffffff', pointBorderColor: studentColors[index % studentColors.length], pointBorderWidth: 2, pointRadius: 4, pointHoverRadius: 6, tension: 0.3, fill: true }; }); if (myChart) { myChart.data.datasets = datasets; myChart.update(); } else { myChart = new Chart(ctx, { type: 'line', data: { labels: tasksList, datasets: datasets }, options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)', titleFont: { family: 'Pretendard', size: 13, weight: 'bold' }, bodyFont: { family: 'Pretendard', size: 12 }, padding: 12, cornerRadius: 8, callbacks: { label: function(context) { return ` ${context.dataset.label}: ${context.parsed.y}%`; } } } }, scales: { y: { min: 0, max: 100, grid: { color: '#f1f5f9', borderDash: [5, 5] }, ticks: { font: { family: 'Pretendard', size: 11, weight: 'bold' }, color: '#94a3b8', stepSize: 20 } }, x: { grid: { display: false }, ticks: { font: { family: 'Pretendard', size: 11, weight: 'bold' }, color: '#64748b', maxRotation: 45, minRotation: 45 } } } } }); } window.renderStudentLegend(); };
-        window.openModal = function(studentName) { currentEditingStudent = studentName; document.getElementById('modal-title').textContent = `${studentName} 진척도 수정`; const grid = document.getElementById('modal-form-grid'); grid.innerHTML = ''; tasksList.forEach((task, index) => { grid.innerHTML += `<div class="relative bg-slate-50 p-4 rounded-xl border border-slate-100 shadow-sm group hover:border-figjam/50 transition-colors"><label class="block text-[11px] font-bold text-slate-500 mb-2 truncate" title="${task}"><span class="text-slate-300 mr-1">${index + 1}.</span>${task}</label><div class="relative"><input type="number" id="input-${index}" value="${progressData[studentName][task]}" min="0" max="100" class="w-full bg-white border border-slate-200 rounded-lg py-2 pl-3 pr-8 text-sm font-bold text-slate-700 outline-none focus:border-figjam focus:ring-1 focus:ring-figjam shadow-inner transition-all"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold pointer-events-none">%</span></div></div>`; }); const modal = document.getElementById('modal'); modal.classList.remove('hidden'); modal.classList.add('flex'); setTimeout(() => { modal.classList.add('opacity-100'); document.getElementById('input-0').focus(); }, 10); document.getElementById('modal-form-grid').onkeydown = function(e) { if (e.key === 'Enter') { e.preventDefault(); window.saveData(); } }; };
-        window.closeModal = function() { const modal = document.getElementById('modal'); modal.classList.remove('opacity-100'); setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300); };
-        window.saveData = function() { tasksList.forEach((task, index) => { const val = document.getElementById(`input-${index}`)?.value || 0; progressData[currentEditingStudent][task] = Math.max(0, Math.min(100, parseInt(val) || 0)); }); window.saveToFirebase(); window.renderChart(); window.updateSummary(); window.closeModal(); window.showToast('진척도가 수정되었습니다.'); };
-        window.copyProgressData = function() { const dataToCopy = { students: studentsList, tasks: tasksList, progress: progressData }; navigator.clipboard.writeText(JSON.stringify(dataToCopy, null, 2)).then(() => window.showToast("데이터가 클립보드에 복사되었습니다.")).catch(err => window.showToast("복사 실패: " + err)); };
+        window.openModal = function(studentName) { 
+            currentEditingStudent = studentName; 
+            document.getElementById('modal-title').textContent = `${studentName} 진척도 수정`; 
+            const grid = document.getElementById('modal-form-grid'); grid.innerHTML = ''; 
+            tasksList.forEach((task, index) => { 
+                grid.innerHTML += `<div class="relative bg-slate-50 p-4 rounded-xl border border-slate-100 shadow-sm group hover:border-figjam/50 transition-colors"><label class="block text-[11px] font-bold text-slate-500 mb-2 truncate" title="${task}"><span class="text-slate-300 mr-1">${index + 1}.</span>${task}</label><div class="relative"><input type="number" id="input-${index}" value="${progressData[studentName][task]}" min="0" max="100" class="w-full bg-white border border-slate-200 rounded-lg py-2 pl-3 pr-8 text-sm font-bold text-slate-700 outline-none focus:border-figjam focus:ring-1 focus:ring-figjam shadow-inner transition-all"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold pointer-events-none">%</span></div></div>`; 
+            }); 
+            const modal = document.getElementById('modal'); 
+            modal.classList.remove('hidden'); modal.classList.add('flex'); 
+            setTimeout(() => modal.classList.add('opacity-100'), 10); 
+        };
+        window.closeModal = function() { const modal = document.getElementById('modal'); modal.classList.remove('opacity-100'); setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); currentEditingStudent = ''; }, 300); };
+        window.saveData = function() { if(!currentEditingStudent) return; tasksList.forEach((task, index) => { const val = parseInt(document.getElementById(`input-${index}`).value) || 0; progressData[currentEditingStudent][task] = Math.min(100, Math.max(0, val)); }); window.saveToFirebase(); window.renderChart(); window.updateSummary(); window.closeModal(); window.showToast('진척도가 저장되었습니다.'); };
+        window.copyProgressData = function() { let text = "이름\t" + tasksList.join("\t") + "\n"; studentsList.forEach(std => { text += std + "\t" + tasksList.map(t => progressData[std][t] + "%").join("\t") + "\n"; }); navigator.clipboard.writeText(text).then(() => window.showToast("클립보드에 복사되었습니다. (엑셀에 붙여넣기)")).catch(() => window.showToast("복사 실패")); };
         
-        window.openCommentModal = function(studentName) { currentEditingStudent = studentName; document.getElementById('scm-title').textContent = `${studentName} 코멘트`; document.getElementById('scm-content').value = studentComments[studentName] || ""; const modal = document.getElementById('student-comment-modal'); modal.classList.remove('hidden'); modal.classList.add('flex'); setTimeout(() => modal.classList.add('opacity-100'), 10); };
+        window.openCommentModal = function(std) { document.getElementById('scm-title').textContent = `${std} 코멘트`; document.getElementById('scm-content').value = studentComments[std] || ''; currentEditingStudent = std; const modal = document.getElementById('student-comment-modal'); modal.classList.remove('hidden'); modal.classList.add('flex'); setTimeout(() => modal.classList.add('opacity-100'), 10); };
         window.closeCommentModal = function() { const modal = document.getElementById('student-comment-modal'); modal.classList.remove('opacity-100'); setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300); };
-        window.saveCommentModal = function() { studentComments[currentEditingStudent] = document.getElementById('scm-content')?.value || ""; window.saveToFirebase(); window.closeCommentModal(); window.showToast('코멘트가 저장되었습니다.'); window.renderStudentLegend(); };
+        window.saveCommentModal = function() { if(!currentEditingStudent) return; studentComments[currentEditingStudent] = document.getElementById('scm-content').value; window.saveToFirebase(); window.closeCommentModal(); window.showToast('코멘트가 저장되었습니다.'); };
 
-        // --- 9. 시스템 관리 ---
-        window.openBackupModal = function() { const state = { menuOrder, noticeData, memoData, designFilters, progressData, toolData, roadmapData, workspaceData, studentComments }; document.getElementById('backup-textarea').value = JSON.stringify(state, null, 2); const modal = document.getElementById('backup-modal'); modal.classList.remove('hidden'); modal.classList.add('flex'); setTimeout(() => modal.classList.add('opacity-100'), 10); };
-        window.closeBackupModal = function() { const modal = document.getElementById('backup-modal'); modal.classList.remove('opacity-100'); setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300); };
-        window.copyBackup = function() { navigator.clipboard.writeText(document.getElementById('backup-textarea').value).then(() => window.showToast("백업코드가 복사되었습니다.")).catch(() => window.showToast("복사 실패")); };
-        window.restoreBackup = function() { try { const str = document.getElementById('backup-textarea')?.value; const state = JSON.parse(str); if(state.menuOrder) menuOrder = state.menuOrder; if(state.noticeData) noticeData = state.noticeData; if(state.memoData) memoData = state.memoData; if(state.designFilters) designFilters = state.designFilters; if(state.progressData) progressData = state.progressData; if(state.toolData) toolData = window.migrateToolDataFormat(state.toolData); if(state.roadmapData) roadmapData = state.roadmapData; if(state.workspaceData) workspaceData = state.workspaceData; if(state.studentComments) studentComments = state.studentComments; window.saveToFirebase(); window.renderAll(); window.updateEditModeUI(); window.closeBackupModal(); window.showToast("데이터가 성공적으로 복원되었습니다."); } catch(e) { alert("잘못된 데이터 형식입니다. 코드를 다시 확인해주세요."); } };
+        window.renderAll = function() {
+            window.applyMenuOrder(); 
+            window.renderNoticeBoard(); 
+            window.renderRoadmap(); 
+            window.renderAllToolCards();
+            if(document.getElementById('memo-list-modal').classList.contains('flex')) { window.renderMemoList(); }
+            window.renderWorkspace(); 
+            window.renderStudentLegend(); 
+            window.updateSummary();
+            const isProgressActive = document.getElementById('tab-progress').classList.contains('active');
+            if (isProgressActive) { window.renderChart(); }
+            if (document.getElementById('tab-schedule').classList.contains('active')) { window.renderFullCalendar(); }
+            lucide.createIcons();
+            if (!hasCheckedGlobalPopup) { hasCheckedGlobalPopup = true; window.checkGlobalPopup(); }
+            window.updateCourseProgress();
+        };
 
-        // --- 10. 기타 초기화 및 데이터 로드 ---
-        window.migrateToolDataFormat = function(data) { if (!data) return data; const newData = JSON.parse(JSON.stringify(data)); ['photoshop', 'illustrator', 'figma', 'design'].forEach(tool => { if (!newData[tool]) return; ['basic', 'advanced'].forEach(level => { if (!newData[tool][level]) return; newData[tool][level] = newData[tool][level].map(card => { if (!card.links) { let links = []; if (card.yText1) links.push({ text: card.yText1, url: card.yUrl1 || '' }); if (card.yText2) links.push({ text: card.yText2, url: card.yUrl2 || '' }); let buttons = []; if (card.bText1) buttons.push({ text: card.bText1, url: card.bUrl1 || '' }); if (card.bText2) buttons.push({ text: card.bText2, url: card.bUrl2 || '' }); return { id: card.id, badge: card.badge || '', badgeRight: card.badgeRight || '', title: card.title || '', desc: card.desc || '', category: card.category || '', isHidden: card.isHidden || false, links: links, buttons: buttons }; } return card; }); }); }); return newData; };
+        window.applyMenuOrder = function() { const container = document.getElementById('menu-item-container'); menuOrder.forEach(id => { const el = document.getElementById('btn-' + id); if (el) container.appendChild(el); }); };
 
         window.saveToFirebase = async function() {
             if (db && auth && auth.currentUser) {
                 const stateRef = doc(db, 'uiux_dashboard', 'shared_state');
-                try { await setDoc(stateRef, { menuOrder, notice: noticeData, memo: memoData, designFilters, progress: progressData, tool: toolData, roadmap: roadmapData, workspace: workspaceData, studentComments, lastUpdated: Date.now() }); } 
+                try { await setDoc(stateRef, { menuOrder, notice: noticeData, memo: memoData, designFilters, progress: progressData, tool: toolData, roadmap: roadmapData, workspace: workspaceData, studentComments, schedule: scheduleData, lastUpdated: Date.now() }); } 
                 catch(e) { console.error("클라우드 저장 실패", e); }
             } else {
-                localStorage.setItem('menuOrder_v1', JSON.stringify(menuOrder)); localStorage.setItem('noticeData_v1', JSON.stringify(noticeData)); localStorage.setItem('memoData_v1', JSON.stringify(memoData)); localStorage.setItem('designFilters_v1', JSON.stringify(designFilters)); localStorage.setItem('roadmapData_v1', JSON.stringify(roadmapData)); localStorage.setItem('toolCardsData_v19', JSON.stringify(toolData)); localStorage.setItem('workspaceData_v3', JSON.stringify(workspaceData)); localStorage.setItem('assignmentData_v2', JSON.stringify(progressData)); localStorage.setItem('studentComments_v1', JSON.stringify(studentComments));
+                localStorage.setItem('menuOrder_v1', JSON.stringify(menuOrder)); localStorage.setItem('noticeData_v1', JSON.stringify(noticeData)); localStorage.setItem('memoData_v1', JSON.stringify(memoData)); localStorage.setItem('designFilters_v1', JSON.stringify(designFilters)); localStorage.setItem('roadmapData_v1', JSON.stringify(roadmapData)); localStorage.setItem('toolCardsData_v19', JSON.stringify(toolData)); localStorage.setItem('workspaceData_v3', JSON.stringify(workspaceData)); localStorage.setItem('assignmentData_v2', JSON.stringify(progressData)); localStorage.setItem('studentComments_v1', JSON.stringify(studentComments)); localStorage.setItem('scheduleData_v1', JSON.stringify(scheduleData));
             }
         };
 
@@ -931,10 +1349,11 @@
             const md = localStorage.getItem('memoData_v1') || localStorage.getItem('memoData'); if (md) memoData = JSON.parse(md);
             const df = localStorage.getItem('designFilters_v1'); if (df) designFilters = JSON.parse(df);
             const rm = localStorage.getItem('roadmapData_v1') || localStorage.getItem('roadmapData'); if (rm) roadmapData = JSON.parse(rm);
-            const tl = localStorage.getItem('toolCardsData_v19') || localStorage.getItem('toolCardsData_v18') || localStorage.getItem('toolCardsData_v1') || localStorage.getItem('toolCardsData'); if (tl) { toolData = window.migrateToolDataFormat(JSON.parse(tl)); } 
-            const ws = localStorage.getItem('workspaceData_v3') || localStorage.getItem('workspaceData_v2') || localStorage.getItem('workspaceData_v1') || localStorage.getItem('workspaceData'); if (ws) workspaceData = JSON.parse(ws); 
-            const pg = localStorage.getItem('assignmentData_v2') || localStorage.getItem('assignmentData_v1') || localStorage.getItem('assignmentData'); if (pg) progressData = JSON.parse(pg);
+            const tl = localStorage.getItem('toolCardsData_v19'); if (tl) toolData = JSON.parse(tl);
+            const ws = localStorage.getItem('workspaceData_v3'); if (ws) workspaceData = JSON.parse(ws); 
+            const pg = localStorage.getItem('assignmentData_v2'); if (pg) progressData = JSON.parse(pg);
             const sc = localStorage.getItem('studentComments_v1'); if (sc) studentComments = JSON.parse(sc);
+            const sd = localStorage.getItem('scheduleData_v1'); if (sd) scheduleData = JSON.parse(sd);
             window.updateDesignFilterSelects(); window.renderAll();
         };
 
@@ -946,7 +1365,7 @@
                         onSnapshot(stateRef, (docSnap) => {
                             if (docSnap.exists()) {
                                 const data = docSnap.data();
-                                if(data.menuOrder) menuOrder = data.menuOrder; if(data.notice) noticeData = data.notice; if(data.memo) memoData = data.memo; if(data.designFilters) designFilters = data.designFilters; if(data.progress) progressData = data.progress; if(data.tool) toolData = window.migrateToolDataFormat(data.tool); if(data.roadmap) roadmapData = data.roadmap; if(data.workspace) workspaceData = data.workspace; if(data.studentComments) studentComments = data.studentComments;
+                                if(data.menuOrder) menuOrder = data.menuOrder; if(data.notice) noticeData = data.notice; if(data.memo) memoData = data.memo; if(data.designFilters) designFilters = data.designFilters; if(data.progress) progressData = data.progress; if(data.tool) toolData = data.tool; if(data.roadmap) roadmapData = data.roadmap; if(data.workspace) workspaceData = data.workspace; if(data.studentComments) studentComments = data.studentComments; if(data.schedule) scheduleData = data.schedule;
                                 const cloudStatus = document.getElementById('cloud-status');
                                 if(cloudStatus) { cloudStatus.textContent = "클라우드 연동됨"; cloudStatus.classList.remove('opacity-0', 'text-slate-400'); cloudStatus.classList.add('opacity-100', 'text-emerald-500'); }
                                 window.updateDesignFilterSelects(); window.renderAll();
@@ -957,39 +1376,6 @@
             } else { window.loadFromLocal(); }
         };
 
-        window.renderAll = function() {
-            window.applyMenuOrder(); window.renderNoticeBoard(); window.renderRoadmap(); window.renderAllToolCards();
-            if(document.getElementById('memo-list-modal').classList.contains('flex')) { window.renderMemoList(); }
-            window.renderWorkspace(); window.renderStudentLegend(); window.updateSummary();
-            const isProgressActive = document.getElementById('tab-progress').classList.contains('active');
-            if (isProgressActive) { window.renderChart(); }
-            lucide.createIcons();
-            if (!hasCheckedGlobalPopup) { hasCheckedGlobalPopup = true; window.checkGlobalPopup(); }
-            window.updateCourseProgress();
-        };
-
-        window.initMenuDragAndDrop = function() {
-            const container = document.getElementById('menu-item-container'); let draggedItem = null;
-            const items = container.querySelectorAll('.menu-drag-item');
-            items.forEach(item => {
-                item.addEventListener('dragstart', function(e) { if (!isEditMode) { e.preventDefault(); return; } draggedItem = this; e.dataTransfer.effectAllowed = 'move'; setTimeout(() => this.classList.add('opacity-40', 'bg-slate-100', 'scale-95'), 0); });
-                item.addEventListener('dragover', function(e) { e.preventDefault(); if (!isEditMode || !draggedItem || this === draggedItem) return; const bounding = this.getBoundingClientRect(); const offset = e.clientY - bounding.top; if (offset > bounding.height / 2) { this.after(draggedItem); } else { this.before(draggedItem); } });
-                item.addEventListener('dragend', function(e) { if (!isEditMode) return; this.classList.remove('opacity-40', 'bg-slate-100', 'scale-95'); draggedItem = null; window.saveMenuOrder(); });
-            });
-        };
-
-        window.saveMenuOrder = function() {
-            const container = document.getElementById('menu-item-container');
-            const items = container.querySelectorAll('.menu-drag-item');
-            menuOrder = Array.from(items).map(item => item.getAttribute('data-tab-id'));
-            window.saveToFirebase(); window.showToast('메뉴 순서가 저장되었습니다.');
-        };
-
-        window.applyMenuOrder = function() {
-            const container = document.getElementById('menu-item-container'); if (!container) return;
-            menuOrder.forEach(tabId => { const btn = document.getElementById(`btn-${tabId}`); if (btn) container.appendChild(btn); });
-        };
-
         window.initScrollToggle = function() {
             const mainEl = document.getElementById('main-scroll-container');
             const btn = document.getElementById('scroll-toggle-btn');
@@ -998,7 +1384,7 @@
             if (!mainEl || !btn || !iconUp || !iconDown) return;
 
             const checkVisibility = () => {
-                const allowedTabs = ['notice', 'tool', 'workspace'];
+                const allowedTabs = ['notice', 'tool', 'workspace', 'schedule'];
                 if (!allowedTabs.includes(currentTabId) || mainEl.scrollHeight <= mainEl.clientHeight + 10) {
                     btn.classList.add('hidden', 'translate-y-4'); btn.classList.remove('opacity-100', 'translate-y-0');
                     return false;
@@ -1007,44 +1393,44 @@
             };
 
             mainEl.addEventListener('scroll', () => {
-                if(!checkVisibility()) return; 
                 const scrollTop = mainEl.scrollTop; const scrollHeight = mainEl.scrollHeight; const clientHeight = mainEl.clientHeight;
-                btn.classList.remove('hidden', 'translate-y-4'); btn.classList.add('opacity-100', 'translate-y-0');
+                if (!checkVisibility()) return;
 
-                if (scrollTop <= 10) { 
-                    scrollDirection = 'down'; iconUp.classList.add('hidden'); iconUp.classList.remove('flex'); iconDown.classList.remove('hidden'); iconDown.classList.add('flex'); 
-                } 
-                else if (scrollTop + clientHeight >= scrollHeight - 10) { 
-                    scrollDirection = 'up'; iconDown.classList.add('hidden'); iconDown.classList.remove('flex'); iconUp.classList.remove('hidden'); iconUp.classList.add('flex'); 
-                } 
-                else if (scrollTop > lastScrollTopPos) { 
-                    scrollDirection = 'down'; iconUp.classList.add('hidden'); iconUp.classList.remove('flex'); iconDown.classList.remove('hidden'); iconDown.classList.add('flex'); 
-                } 
-                else if (scrollTop < lastScrollTopPos) { 
-                    scrollDirection = 'up'; iconDown.classList.add('hidden'); iconDown.classList.remove('flex'); iconUp.classList.remove('hidden'); iconUp.classList.add('flex'); 
+                if (scrollTop <= 10 && scrollDirection !== 'down') {
+                    scrollDirection = 'down'; iconUp.classList.add('hidden'); iconDown.classList.remove('hidden');
+                } else if (scrollTop + clientHeight >= scrollHeight - 10 && scrollDirection !== 'up') {
+                    scrollDirection = 'up'; iconDown.classList.add('hidden'); iconUp.classList.remove('hidden');
+                } else if (scrollTop > lastScrollTopPos && scrollDirection !== 'down') {
+                    scrollDirection = 'down'; iconUp.classList.add('hidden'); iconDown.classList.remove('hidden');
+                } else if (scrollTop < lastScrollTopPos && scrollDirection !== 'up') {
+                    scrollDirection = 'up'; iconDown.classList.add('hidden'); iconUp.classList.remove('hidden');
                 }
-                
                 lastScrollTopPos = scrollTop <= 0 ? 0 : scrollTop;
-                clearTimeout(scrollHideTimeout);
-                scrollHideTimeout = setTimeout(() => {
-                    btn.classList.remove('opacity-100', 'translate-y-0'); btn.classList.add('translate-y-4');
-                    setTimeout(() => { if (btn.classList.contains('translate-y-4')) btn.classList.add('hidden'); }, 300);
-                }, 1500); 
+
+                btn.classList.remove('hidden', 'translate-y-4'); btn.classList.add('opacity-100', 'translate-y-0');
+                if(scrollHideTimeout) clearTimeout(scrollHideTimeout);
+                scrollHideTimeout = setTimeout(() => { btn.classList.add('translate-y-4', 'opacity-0'); setTimeout(() => { if(btn.classList.contains('opacity-0')) btn.classList.add('hidden'); }, 300); }, 1500);
             });
 
             btn.addEventListener('click', () => {
                 if (scrollDirection === 'down') mainEl.scrollTo({ top: mainEl.scrollHeight, behavior: 'smooth' });
                 else mainEl.scrollTo({ top: 0, behavior: 'smooth' });
             });
-            setTimeout(checkVisibility, 500);
         };
 
-        // --- 11. 초기 구동 ---
-        window.addEventListener('DOMContentLoaded', () => {
+        // 초기화 실행
+        window.onload = function() {
             window.initFirebaseAndLoad();
-            window.initMenuDragAndDrop();
             window.initScrollToggle();
-        });
+            lucide.createIcons();
+            
+            // 좌측 메뉴 드래그 앤 드롭
+            const menuContainer = document.getElementById('menu-item-container');
+            let draggedMenu = null;
+            menuContainer.addEventListener('dragstart', (e) => { if(!isEditMode) { e.preventDefault(); return; } draggedMenu = e.target.closest('.menu-drag-item'); e.dataTransfer.effectAllowed = 'move'; setTimeout(() => draggedMenu.classList.add('opacity-50'), 0); });
+            menuContainer.addEventListener('dragover', (e) => { e.preventDefault(); if(!isEditMode || !draggedMenu) return; const target = e.target.closest('.menu-drag-item'); if(target && target !== draggedMenu) { const bounding = target.getBoundingClientRect(); const offset = e.clientY - bounding.top; if(offset > bounding.height / 2) target.after(draggedMenu); else target.before(draggedMenu); } });
+            menuContainer.addEventListener('dragend', () => { if(!isEditMode || !draggedMenu) return; draggedMenu.classList.remove('opacity-50'); draggedMenu = null; menuOrder = Array.from(menuContainer.children).map(el => el.getAttribute('data-tab-id')); window.saveToFirebase(); });
+        };
     </script>
 </body>
 </html>
